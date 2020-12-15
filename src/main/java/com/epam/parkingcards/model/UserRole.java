@@ -24,9 +24,4 @@ public class UserRole {
 
     @Column(name = "role")
     private String role;
-
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private Set<User> users;
 }

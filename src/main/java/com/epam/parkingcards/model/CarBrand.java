@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
@@ -28,8 +29,7 @@ public class CarBrand {
     @Column(name = "deleted")
     private boolean isDeleted;
 
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "brand_id")
     private Set<CarModel> models;
 }

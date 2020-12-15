@@ -39,13 +39,12 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private UserRole role;
 
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private Set<Car> cars;
 
 }
