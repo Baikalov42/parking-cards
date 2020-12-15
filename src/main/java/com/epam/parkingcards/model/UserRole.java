@@ -20,7 +20,7 @@ import java.util.Set;
 public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
+    private long id;
 
     @Column(name = "role")
     private String role;
