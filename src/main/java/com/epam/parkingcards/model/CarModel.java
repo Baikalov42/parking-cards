@@ -28,15 +28,9 @@ public class CarModel {
     @Column
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "brand_id")
-    private CarBrand brand;
+    @Column(name = "brand_id")
+    private long brandId;
 
     @Column(name = "deleted")
     private boolean isDeleted;
-
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @OneToMany(mappedBy = "model", fetch = FetchType.EAGER)
-    private Set<Car> cars;
 }

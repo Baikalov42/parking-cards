@@ -1,8 +1,10 @@
 package com.epam.parkingcards.controller;
 
+import com.epam.parkingcards.dao.CarBrandDao;
 import com.epam.parkingcards.dao.CarDao;
 import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.model.Car;
+import com.epam.parkingcards.model.CarBrand;
 import com.epam.parkingcards.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,8 @@ public class DaoTestController {
     private UserDao userDao;
     @Autowired
     private CarDao carDao;
+    @Autowired
+    private CarBrandDao carBrandDao;
 
     @GetMapping("/users")
     public Iterable<User> getAllUsers() {
@@ -28,5 +32,9 @@ public class DaoTestController {
     public Iterable<Car> getAllCars() {
         return carDao.findAll();
     }
-    //TODO: delete when implementing REST interface
+
+    @GetMapping("/brands")
+    public Iterable<CarBrand> getAllBrands() {
+        return carBrandDao.findAll();
+    }
 }
