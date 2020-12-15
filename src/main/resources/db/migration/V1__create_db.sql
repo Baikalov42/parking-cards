@@ -1,17 +1,20 @@
+CREATE TABLE IF NOT EXISTS roles (id bigserial PRIMARY KEY, role text);
+
 CREATE TABLE IF NOT EXISTS users
 (id bigserial PRIMARY KEY,
 first_name text NOT NULL,
 last_name text NOT NULL,
 phone text,
 email text NOT NULL,
-role text);
+role_id bigint,
+FOREIGN KEY (role_id) REFERENCES roles (id));
 
-CREATE TABLE IF NOT EXISTS car_brands (id bigserial PRIMARY KEY, name text, deleted boolean);
+CREATE TABLE IF NOT EXISTS car_brands (id bigserial PRIMARY KEY, name text, deleted boolean DEFAULT false);
 
 CREATE TABLE IF NOT EXISTS car_models (id bigserial PRIMARY KEY,
   name text NOT NULL,
   brand_id bigint,
-  deleted boolean,
+  deleted boolean DEFAULT false,
   FOREIGN KEY (brand_id) REFERENCES car_brands (id));
 
 CREATE TABLE IF NOT EXISTS cars

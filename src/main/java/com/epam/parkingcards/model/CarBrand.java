@@ -1,6 +1,8 @@
 package com.epam.parkingcards.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,9 +22,14 @@ public class CarBrand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
+    @Column(name = "deleted")
+    private boolean isDeleted;
+
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
     private Set<CarModel> models;
 }
