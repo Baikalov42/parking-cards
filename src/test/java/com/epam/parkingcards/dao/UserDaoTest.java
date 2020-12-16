@@ -1,14 +1,15 @@
 package com.epam.parkingcards.dao;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class UserDaoTest {
 
@@ -22,6 +23,6 @@ public class UserDaoTest {
 
     @Test
     public void testGetOne() {
-        assertThat(userDao.getOne(1L).getRole().getRole()).isEqualTo("admin");
+        assertThat(userDao.getOne(4L).getRoles().size()).isEqualTo(2);
     }
 }
