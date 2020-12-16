@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users_roles
 (
     user_id BIGINT references users (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
     role_id BIGINT references roles (role_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    UNIQUE (user_id, role_id)
+    PRIMARY KEY (user_id, role_id)
 );
 
 create TABLE IF NOT EXISTS brands
@@ -32,9 +32,8 @@ create TABLE IF NOT EXISTS models
 (
     model_id   BIGSERIAL PRIMARY KEY,
     model_name text UNIQUE NOT NULL,
-    brand_id   BIGINT,
-    deleted    boolean DEFAULT false,
-    FOREIGN KEY (brand_id) REFERENCES brands (brand_id)
+    brand_id   BIGINT references brands (brand_id),
+    deleted    boolean DEFAULT false
 );
 
 create TABLE IF NOT EXISTS cars
