@@ -3,7 +3,7 @@ package com.epam.parkingcards.controller.response;
 import lombok.Data;
 
 @Data
-public class ModelResponse {
+public class CarModelResponse {
 
     private long id;
     private String modelName;

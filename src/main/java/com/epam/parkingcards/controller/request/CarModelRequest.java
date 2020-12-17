@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class ModelRequest {
+public class CarModelRequest {
 
     public static final String MODEL_NAME_PATTERN = "[A-Za-z0-9]{2,30}";
 

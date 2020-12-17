@@ -33,7 +33,7 @@ public class Car {
     @JoinColumn(name = "model_id", referencedColumnName = "model_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Model model;
+    private CarModel carModel;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
