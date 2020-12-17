@@ -14,7 +14,6 @@ public class CarModelRequest {
 
     private long id;
 
-    @NotEmpty
     @Min(value = 1, message = "Brand id should be greater than zero")
     private long branId;
 

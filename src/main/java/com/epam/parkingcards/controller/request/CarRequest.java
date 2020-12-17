@@ -18,7 +18,6 @@ public class CarRequest {
     @Min(value = 1, message = "Model id should be greater than zero")
     private long modelId;
 
-    @NotEmpty
     @Min(value = 1, message = "User id should be greater than zero")
     private long userId;
 

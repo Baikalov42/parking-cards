@@ -1,64 +1,143 @@
 package com.epam.parkingcards.controller;
 
+import com.epam.parkingcards.controller.mapper.CarBrandMapper;
+import com.epam.parkingcards.controller.mapper.CarMapper;
+import com.epam.parkingcards.controller.mapper.CarModelMapper;
+import com.epam.parkingcards.controller.mapper.UserMapper;
+import com.epam.parkingcards.controller.request.CarBrandRequest;
+import com.epam.parkingcards.controller.request.CarModelRequest;
+import com.epam.parkingcards.controller.request.UserRegistrationRequest;
+import com.epam.parkingcards.controller.request.UserRequest;
+import com.epam.parkingcards.controller.response.CarBrandResponse;
+import com.epam.parkingcards.controller.response.CarModelResponse;
+import com.epam.parkingcards.controller.response.CarResponse;
+import com.epam.parkingcards.controller.response.UserResponse;
 import com.epam.parkingcards.dao.CarBrandDao;
 import com.epam.parkingcards.dao.CarDao;
+import com.epam.parkingcards.dao.CarModelDao;
 import com.epam.parkingcards.dao.UserDao;
-import com.epam.parkingcards.model.Car;
-import com.epam.parkingcards.model.CarBrand;
-import com.epam.parkingcards.model.Role;
 import com.epam.parkingcards.model.User;
+import com.epam.parkingcards.service.CarBrandService;
+import com.epam.parkingcards.service.CarModelService;
+import com.epam.parkingcards.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 public class DaoTestController {
+
     @Autowired
     private UserDao userDao;
     @Autowired
     private CarDao carDao;
     @Autowired
     private CarBrandDao carBrandDao;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private CarMapper carMapper;
+    @Autowired
+    private CarBrandMapper carBrandMapper;
+    @Autowired
+    private CarModelMapper carModelMapper;
+    @Autowired
+    private CarModelDao carModelDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CarModelService carModelService;
+    @Autowired
+    private CarBrandService carBrandService;
 
     @GetMapping("/users")
-    public String getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         List<User> all = userDao.findAll();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        for (User user : all) {
-            stringBuilder.append(user.getEmail());
-            stringBuilder.append(" ");
-            Set<Role> roles = user.getRoles();
-            for (Role role : roles) {
-                stringBuilder.append(role.getName());
-                stringBuilder.append(" ");
-            }
-            stringBuilder.append("\n");
+        return userMapper.toUserResponses(all);
+    }
+
+    @GetMapping("/users/{id}")
+    public UserResponse getUserById(@PathVariable long id) {
+        return userMapper.toUserResponse(userDao.getOne(id));
+    }
+
+    @PostMapping("/users")
+    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest,
+                           BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "ERRORRRR";
         }
-        return all.toString();
+        System.err.println(userRegistrationRequest);
+        long id = userService.register(userMapper.toUser(userRegistrationRequest));
+        return String.valueOf(id);
+    }
+
+    @PutMapping("/users")
+    public UserResponse update(@RequestBody @Valid UserRequest userRequest,
+                               BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.toString());
+        }
+        System.err.println(userRequest);
+        return userMapper.toUserResponse(
+                userService.update(
+                        userMapper.toUser(userRequest)));
     }
 
     @GetMapping("/cars")
-    public String getAllCars() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        List<Car> all = carDao.findAll();
-        for (Car car : all) {
-            stringBuilder.append(car.getLicensePlate());
-            stringBuilder.append(" ");
-            stringBuilder.append(car.getId());
-            stringBuilder.append("\n");
-        }
-        return stringBuilder.toString();
+    public List<CarResponse> getAllCars() {
+        return carMapper.toCarResponses(carDao.findAll());
     }
 
     @GetMapping("/brands")
-    public Iterable<CarBrand> getAllBrands() {
-        return carBrandDao.findAll();
+    public List<CarBrandResponse> getAllBrands() {
+        return carBrandMapper.toCarBrandResponses(carBrandDao.findAll());
     }
+    @PutMapping("/brands")
+    public CarBrandResponse update(@Valid @RequestBody CarBrandRequest carBrandRequest,
+                                   BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.toString());
+        }
+
+        System.err.println(carBrandRequest);
+        return carBrandMapper.toCarBrandResponse(
+                carBrandService.update(
+                        carBrandMapper.toCarBrand(carBrandRequest)));
+    }
+
+    @GetMapping("/models")
+    public List<CarModelResponse> getAllModels() {
+        return carModelMapper.toCarModelResponses(carModelDao.findAll());
+    }
+
+    @PutMapping("/models")
+    public CarModelResponse update(@Valid @RequestBody CarModelRequest carModelRequest,
+                                   BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.toString());
+        }
+
+        System.err.println(carModelRequest);
+        return carModelMapper.toCarModelResponse(
+                carModelService.update(
+                        carModelMapper.toCarModel(carModelRequest)));
+    }
+
 
     @GetMapping("/admin")
     public String admin() {
