@@ -4,35 +4,34 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "models")
-public class Model {
+@Table(name = "brands")
+public class CarBrand {
 
     @Id
-    @Column(name = "model_id")
+    @Column(name = "brand_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "model_name")
+    @Column(name = "brand_name")
     private String name;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "brand_id", referencedColumnName = "brand_id")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Brand brand;
 
     @Column(name = "deleted")
     private boolean isDeleted;
+
+    @OneToMany(mappedBy = "carBrand", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<CarModel> carModels;
 }

@@ -1,10 +1,10 @@
 package com.epam.parkingcards.controller;
 
-import com.epam.parkingcards.dao.BrandDao;
+import com.epam.parkingcards.dao.CarBrandDao;
 import com.epam.parkingcards.dao.CarDao;
 import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.model.Car;
-import com.epam.parkingcards.model.Brand;
+import com.epam.parkingcards.model.CarBrand;
 import com.epam.parkingcards.model.Role;
 import com.epam.parkingcards.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class DaoTestController {
     @Autowired
     private CarDao carDao;
     @Autowired
-    private BrandDao brandDao;
+    private CarBrandDao carBrandDao;
 
     @GetMapping("/users")
     public String getAllUsers() {
@@ -56,8 +56,8 @@ public class DaoTestController {
     }
 
     @GetMapping("/brands")
-    public Iterable<Brand> getAllBrands() {
-        return brandDao.findAll();
+    public Iterable<CarBrand> getAllBrands() {
+        return carBrandDao.findAll();
     }
 
     @GetMapping("/admin")

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class BrandRequest {
+public class CarBrandRequest {
 
     public static final String BRAND_NAME_PATTERN = "[A-Za-z]{2,29}";
 

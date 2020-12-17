@@ -1,37 +1,37 @@
 package com.epam.parkingcards.service;
 
-import com.epam.parkingcards.dao.ModelDao;
-import com.epam.parkingcards.model.Model;
+import com.epam.parkingcards.dao.CarModelDao;
+import com.epam.parkingcards.model.CarModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 @Service
-public class ModelService {
+public class CarModelService {
 
     private static final int PAGE_SIZE = 10;
 
     @Autowired
-    private ModelDao modelDao;
+    private CarModelDao carModelDao;
 
-    public long create(Model model) {
+    public long create(CarModel carModel) {
         return 0;
     }
 
-    public Model findById(long id) {
+    public CarModel findById(long id) {
         return null;
     }
 
-    public Collection<Model> findAll(int pageNumber) {
+    public Collection<CarModel> findAll(int pageNumber) {
         return null;
     }
 
-    public Collection<Model> findAllByBrand(long brandId, int pageNumber) {
+    public Collection<CarModel> findAllByBrand(long brandId, int pageNumber) {
         return null;
     }
 
-    public Model update(Model model) {
+    public CarModel update(CarModel carModel) {
         return null;
     }
 
