@@ -21,9 +21,9 @@ public class UserDaoTest {
 
     @Test
     public void given_userDao_when_findUserByPlate_then_returnValidUser() {
-        Optional<User> found = userDao.findByLicensePlate("A123BC178");
+        Optional<User> found = userDao.findByLicensePlate("O666OO178");
         assertThat(found.isPresent());
-        assertThat(found.get().getFirstName()).isEqualTo("Ivan");
+        assertThat(found.get().getFirstName()).isEqualTo("Irina");
     }
 
     @Test
