@@ -11,10 +11,12 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     UserDao userDao;
 
     @Override
-    public void updateWithoutPasswordAndCars(User user) {
-        Optional<User> entityUser = userDao.findById(user.getId());
-        user.setPassword(entityUser.orElseThrow(() -> new NotFoundException("No such user!")).getPassword());
-        user.setCars(entityUser.orElseThrow(() -> new NotFoundException("No such user!")).getCars());
+    public User updateWithoutPasswordAndCars(User user) {
+        User entityUser = userDao.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("There is no user with id = %s", user.getId())));
+        user.setPassword(entityUser.getPassword());
+        user.setCars(entityUser.getCars());
         userDao.saveAndFlush(user);
+        return user;
     }
 }
