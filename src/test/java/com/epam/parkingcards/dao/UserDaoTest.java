@@ -1,5 +1,6 @@
 package com.epam.parkingcards.dao;
 
+import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,13 +38,12 @@ public class UserDaoTest {
         updateUser.setPhone("+79219213454");
 
         userDao.updateWithoutPasswordAndCars(updateUser);
-        Optional<User> updated = userDao.findById(1L);
-        assertThat(updated.isPresent());
-        assertThat(updated.get().getFirstName()).isEqualTo("Roman");
-        assertThat(updated.get().getCars()).isNotEmpty();
-        assertThat(updated.get().getCars()).isNotNull();
-        assertThat(updated.get().getPassword()).isNotNull();
-        assertThat(updated.get().getPassword()).isNotEmpty();
+        User updated = userDao.findById(1L).orElseThrow(() -> new NotFoundException("There is no user with id 1"));
+        assertThat(updated.getFirstName()).isEqualTo("Roman");
+        assertThat(updated.getCars()).isNotEmpty();
+        assertThat(updated.getCars()).isNotNull();
+        assertThat(updated.getPassword()).isNotNull();
+        assertThat(updated.getPassword()).isNotEmpty();
     }
 
     @Test
