@@ -105,6 +105,7 @@ public class DaoTestController {
     public List<CarBrandResponse> getAllBrands() {
         return carBrandMapper.toCarBrandResponses(carBrandDao.findAll());
     }
+
     @PutMapping("/brands")
     public CarBrandResponse update(@Valid @RequestBody CarBrandRequest carBrandRequest,
                                    BindingResult bindingResult) {
@@ -113,7 +114,6 @@ public class DaoTestController {
             throw new ValidationException(bindingResult.toString());
         }
 
-        System.err.println(carBrandRequest);
         return carBrandMapper.toCarBrandResponse(
                 carBrandService.update(
                         carBrandMapper.toCarBrand(carBrandRequest)));
@@ -131,13 +131,10 @@ public class DaoTestController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.toString());
         }
-
-        System.err.println(carModelRequest);
         return carModelMapper.toCarModelResponse(
                 carModelService.update(
                         carModelMapper.toCarModel(carModelRequest)));
     }
-
 
     @GetMapping("/admin")
     public String admin() {
