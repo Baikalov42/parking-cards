@@ -54,29 +54,13 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
     }
 
-    //TODO implement method in userDao : findUserByCarId
-    public User findByCarId(long carId) {
-     /*   return userDao.findByCarId(carId)
-                .orElseThrow(() -> new NotFoundException(String.format("By car id=%d, User not found", carId)));*/
-        return null;
-    }
-
-    public long findIdByEmail(String email) {
+    public long getIdByEmail(String email) {
         return this.findByEmail(email).getId();
     }
 
     public User findByEmail(String email) {
         return userDao.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(String.format("By email %s, User not found", email)));
-    }
-
-    public List<Car> findCarsByUserEmail(String email) {
-
-        User user = findByEmail(email);
-        if (user.getCars().isEmpty()) {
-            throw new NotFoundException(String.format("By user email: %s, cars not found", email));
-        }
-        return new ArrayList<>(user.getCars());
     }
 
     public User findByLicensePlate(String licensePlate) {
@@ -102,6 +86,8 @@ public class UserService {
         validateForExistence(user.getId());
 
         try {
+            //TODO method: updateWithoutPasswordAndCars, dont work. Application failed.
+            //TODO  Need realize this, with entityManager.createQuery() or entityManager.merge()
             return userDao.updateWithoutPasswordAndCars(user);
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Updating error, User: %s", user), e);
@@ -121,7 +107,7 @@ public class UserService {
 
     private Set<Role> getDefaultRoles() {
 
-        //TODO: create method findByRoleName in dao
+        //TODO: create method in RoleDao: findByName
         Role roleUser = roleDao.findById(1L).orElseThrow(
                 () -> new NotFoundException("Role not found"));
 

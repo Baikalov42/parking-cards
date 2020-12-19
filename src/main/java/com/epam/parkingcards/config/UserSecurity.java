@@ -18,7 +18,7 @@ public class UserSecurity {
         return user.getId() == userId;
     }
 
-    public boolean hasCarId(Authentication authentication, Long carId) {
+    public boolean hasCar(Authentication authentication, Long carId) {
 
         User user = userService.findByEmail(authentication.getName());
         for (Car car : user.getCars()) {

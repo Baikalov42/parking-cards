@@ -58,7 +58,7 @@ public class CarService {
         return result;
     }
 
-    //TODO implement updateCarIgnoreUserId
+    //TODO create method in DAO : updateCarIgnoreUserId
     public Car update(Car car) {
         idValidator.validate(car.getId());
 
@@ -84,9 +84,13 @@ public class CarService {
         validateForExistence(id);
 
         try {
-            User user = userService.findByCarId(id);
-            user.getCars().removeIf(x -> x.getId() == id);
+            findById(id)
+                    .getUser()
+                    .getCars()
+                    .removeIf(x -> x.getId() == id);
+
             carDao.deleteById(id);
+
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
         }

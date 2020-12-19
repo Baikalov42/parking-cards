@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -59,7 +60,6 @@ public class MeRestController {
     @Autowired
     private UserSecurity userSecurity;
 
-
     @GetMapping
     public UserResponse getUser(Principal principal) {
         User user = userService.findByEmail(principal.getName());
@@ -71,7 +71,7 @@ public class MeRestController {
                                    Authentication authentication) {
 
         User user = userMapper.toUser(userRequest);
-        long userId = userService.findIdByEmail(authentication.getName());
+        long userId = userService.getIdByEmail(authentication.getName());
         user.setId(userId);
 
         return userMapper.toUserResponse(userService.update(user));
@@ -80,17 +80,17 @@ public class MeRestController {
     @GetMapping("/cars")
     public List<CarResponse> getMyCars(Principal principal) {
 
-        List<Car> cars = userService.findCarsByUserEmail(principal.getName());
+        User user = userService.findByEmail(principal.getName());
+        List<Car> cars = new ArrayList<>(user.getCars());
         return carMapper.toCarResponses(cars);
     }
-
 
     @PostMapping("/cars")
     public long addCar(@Valid @RequestBody CarCreateRequest carCreateRequest,
                        Authentication authentication) {
 
         Car car = carMapper.toCar(carCreateRequest);
-        long userId = userService.findIdByEmail(authentication.getName());
+        long userId = userService.getIdByEmail(authentication.getName());
         car.getUser().setId(userId);
 
         return carService.create(car);
@@ -100,16 +100,15 @@ public class MeRestController {
     public CarResponse updateMyCarById(@Valid @RequestBody CarRequest carRequest,
                                        Authentication authentication) {
 
-        System.err.println(carRequest);
-        if (!userSecurity.hasCarId(authentication, carRequest.getId())) {
+        if (!userSecurity.hasCar(authentication, carRequest.getId())) {
             throw new ValidationException("user dont have car, with id " + carRequest.getId());
         }
-        long userId = userService.findIdByEmail(authentication.getName());
+        long userId = userService.getIdByEmail(authentication.getName());
 
-        Car forUpdate = carMapper.toCar(carRequest);
-        forUpdate.getUser().setId(userId);
+        Car toUpdate = carMapper.toCar(carRequest);
+        toUpdate.getUser().setId(userId);
 
-        Car updated = carService.update(forUpdate);
+        Car updated = carService.update(toUpdate);
         return carMapper.toCarResponse(updated);
     }
 
@@ -117,10 +116,9 @@ public class MeRestController {
     public void deleteMyCarById(@PathVariable long carId,
                                 Authentication authentication) {
 
-        if (!userSecurity.hasCarId(authentication, carId)) {
+        if (!userSecurity.hasCar(authentication, carId)) {
             throw new ValidationException("user dont have car, with id " + carId);
         }
-        System.err.println(carId);
         carService.deleteById(carId);
     }
 

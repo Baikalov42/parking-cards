@@ -60,6 +60,18 @@ public class DaoTestController {
     @Autowired
     private CarBrandService carBrandService;
 
+    @PostMapping("/users")
+    public String register(@RequestBody @Valid UserCreateRequest userCreateRequest,
+                           BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "ERRORRRR";
+        }
+
+        long id = userService.register(userMapper.toUser(userCreateRequest));
+        return String.valueOf(id);
+    }
+
     @GetMapping("/users")
     public List<UserResponse> getAllUsers(Principal principal) {
         System.err.println(principal);
@@ -67,6 +79,7 @@ public class DaoTestController {
 
         return userMapper.toUserResponses(all);
     }
+
     @GetMapping("/my-page/{id}")
     public UserResponse getMyUser(@PathVariable long id) {
         return userMapper.toUserResponse(userDao.getOne(id));
@@ -75,18 +88,6 @@ public class DaoTestController {
     @GetMapping("/users/{id}")
     public UserResponse getUserById(@PathVariable long id) {
         return userMapper.toUserResponse(userDao.getOne(id));
-    }
-
-    @PostMapping("/users")
-    public String register(@RequestBody @Valid UserCreateRequest userCreateRequest,
-                           BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return "ERRORRRR";
-        }
-        System.err.println(userCreateRequest);
-        long id = userService.register(userMapper.toUser(userCreateRequest));
-        return String.valueOf(id);
     }
 
     @PutMapping("/users")
