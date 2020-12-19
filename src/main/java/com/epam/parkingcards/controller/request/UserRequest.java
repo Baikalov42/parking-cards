@@ -14,8 +14,11 @@ public class UserRequest {
     public static final String NAME_PATTERN = "[A-Za-z]{2,30}";
     public static final String PHONE_PATTERN = "[+][0-9]{11}";
 
-    @Min(value = 1, message = "Id should be greater than zero")
+/*
+    @NotEmpty(message = "User id must not be empty")
+    @Min(value = 1, message = "User id should be greater than zero")
     private long id;
+*/
 
     @NotEmpty(message = "Name field must not be empty")
     @Pattern(regexp = NAME_PATTERN, message = "Only latin letters")

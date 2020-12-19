@@ -1,6 +1,6 @@
 package com.epam.parkingcards.controller.mapper;
 
-import com.epam.parkingcards.controller.request.UserRegistrationRequest;
+import com.epam.parkingcards.controller.request.UserCreateRequest;
 import com.epam.parkingcards.controller.request.UserRequest;
 import com.epam.parkingcards.controller.response.UserResponse;
 import com.epam.parkingcards.model.User;
@@ -17,7 +17,7 @@ public class UserMapper {
     @Autowired
     private CarMapper carMapper;
 
-    public User toUser(UserRegistrationRequest userRequest) {
+    public User toUser(UserCreateRequest userRequest) {
 
         User user = new User();
         user.setEmail(userRequest.getEmail());
@@ -33,7 +33,6 @@ public class UserMapper {
     public User toUser(UserRequest userRequest) {
 
         User user = new User();
-        user.setId(userRequest.getId());
         user.setEmail(userRequest.getEmail());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
@@ -41,6 +40,7 @@ public class UserMapper {
 
         return user;
     }
+
 
     public UserResponse toUserResponse(User user) {
         UserResponse userResponse = new UserResponse();

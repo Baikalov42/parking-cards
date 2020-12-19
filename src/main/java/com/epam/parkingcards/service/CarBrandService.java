@@ -27,7 +27,7 @@ public class CarBrandService {
 
     public long create(CarBrand carBrand) {
         try {
-            return carBrandDao.save(carBrand).getId();
+            return carBrandDao.saveAndFlush(carBrand).getId();
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Creation error, brand: %s ", carBrand), e);
         }

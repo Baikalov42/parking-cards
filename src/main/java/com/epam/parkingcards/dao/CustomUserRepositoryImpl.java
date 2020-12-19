@@ -4,8 +4,6 @@ import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
-
 public class CustomUserRepositoryImpl implements CustomUserRepository {
     @Autowired
     UserDao userDao;

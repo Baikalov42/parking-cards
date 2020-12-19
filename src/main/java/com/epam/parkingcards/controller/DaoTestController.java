@@ -6,7 +6,7 @@ import com.epam.parkingcards.controller.mapper.CarModelMapper;
 import com.epam.parkingcards.controller.mapper.UserMapper;
 import com.epam.parkingcards.controller.request.CarBrandRequest;
 import com.epam.parkingcards.controller.request.CarModelRequest;
-import com.epam.parkingcards.controller.request.UserRegistrationRequest;
+import com.epam.parkingcards.controller.request.UserCreateRequest;
 import com.epam.parkingcards.controller.request.UserRequest;
 import com.epam.parkingcards.controller.response.CarBrandResponse;
 import com.epam.parkingcards.controller.response.CarModelResponse;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -60,10 +61,15 @@ public class DaoTestController {
     private CarBrandService carBrandService;
 
     @GetMapping("/users")
-    public List<UserResponse> getAllUsers() {
-        List<User> all = userDao.findAll();
+    public List<UserResponse> getAllUsers(Principal principal) {
+        System.err.println(principal);
+        List<User> all = userService.findAll(0);
 
         return userMapper.toUserResponses(all);
+    }
+    @GetMapping("/my-page/{id}")
+    public UserResponse getMyUser(@PathVariable long id) {
+        return userMapper.toUserResponse(userDao.getOne(id));
     }
 
     @GetMapping("/users/{id}")
@@ -72,14 +78,14 @@ public class DaoTestController {
     }
 
     @PostMapping("/users")
-    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest,
+    public String register(@RequestBody @Valid UserCreateRequest userCreateRequest,
                            BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "ERRORRRR";
         }
-        System.err.println(userRegistrationRequest);
-        long id = userService.register(userMapper.toUser(userRegistrationRequest));
+        System.err.println(userCreateRequest);
+        long id = userService.register(userMapper.toUser(userCreateRequest));
         return String.valueOf(id);
     }
 
@@ -146,8 +152,8 @@ public class DaoTestController {
         return "hello guest";
     }
 
-    @GetMapping("/me")
+/*    @GetMapping("/me")
     public String forUser() {
         return "hello me";
-    }
+    }*/
 }

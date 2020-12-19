@@ -5,6 +5,7 @@ import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
+import com.epam.parkingcards.model.Car;
 import com.epam.parkingcards.model.Role;
 import com.epam.parkingcards.model.User;
 import com.epam.parkingcards.service.utils.IdValidator;
@@ -17,8 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,9 +36,6 @@ public class UserService {
     private IdValidator idValidator;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @PersistenceContext
-    private EntityManager entityManager;
-
 
     public long register(User user) {
         try {
@@ -52,10 +49,20 @@ public class UserService {
     }
 
     public User findById(long id) {
-
         idValidator.validate(id);
         return userDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
+    }
+
+    //TODO implement method in userDao : findUserByCarId
+    public User findByCarId(long carId) {
+     /*   return userDao.findByCarId(carId)
+                .orElseThrow(() -> new NotFoundException(String.format("By car id=%d, User not found", carId)));*/
+        return null;
+    }
+
+    public long findIdByEmail(String email) {
+        return this.findByEmail(email).getId();
     }
 
     public User findByEmail(String email) {
@@ -63,13 +70,21 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(String.format("By email %s, User not found", email)));
     }
 
+    public List<Car> findCarsByUserEmail(String email) {
+
+        User user = findByEmail(email);
+        if (user.getCars().isEmpty()) {
+            throw new NotFoundException(String.format("By user email: %s, cars not found", email));
+        }
+        return new ArrayList<>(user.getCars());
+    }
+
     public User findByLicensePlate(String licensePlate) {
-        //TODO implement
-        return null;
+        return userDao.findByLicensePlate(licensePlate)
+                .orElseThrow(() -> new NotFoundException(String.format("By license plate %s, User not found", licensePlate)));
     }
 
     public List<User> findAll(int pageNumber) {
-
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<User> result = userDao.findAll(pageable).getContent();
 
@@ -85,22 +100,12 @@ public class UserService {
 
         idValidator.validate(user.getId());
         validateForExistence(user.getId());
-        User fromDb = userDao.getOne(user.getId());
-        user.setPassword(fromDb.getPassword());
-        //TODO fix. Named query for update
+
         try {
-            return userDao.saveAndFlush(user);
+            return userDao.updateWithoutPasswordAndCars(user);
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Updating error, User: %s", user), e);
         }
-    }
-
-    public void assignRole(long userId, long roleId) {
-        //TODO implement
-    }
-
-    public void revokeRole(long userId, long roleId) {
-        //TODO implement
     }
 
     public void deleteById(long id) {
@@ -116,6 +121,7 @@ public class UserService {
 
     private Set<Role> getDefaultRoles() {
 
+        //TODO: create method findByRoleName in dao
         Role roleUser = roleDao.findById(1L).orElseThrow(
                 () -> new NotFoundException("Role not found"));
 
