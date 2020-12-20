@@ -44,6 +44,7 @@ public class UserDaoTest {
         assertThat(updated.getCars()).isNotNull();
         assertThat(updated.getPassword()).isNotNull();
         assertThat(updated.getPassword()).isNotEmpty();
+        userDao.findAll().forEach(System.err::println);
     }
 
     @Test
