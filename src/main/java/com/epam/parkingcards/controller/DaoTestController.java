@@ -22,6 +22,7 @@ import com.epam.parkingcards.service.CarModelService;
 import com.epam.parkingcards.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,11 @@ public class DaoTestController {
         return String.valueOf(id);
     }
 
+    @DeleteMapping("users/{id}")
+    public void deleteUser(@PathVariable long id) {
+        userService.deleteById(id);
+    }
+
     @GetMapping("/users")
     public List<UserResponse> getAllUsers(Principal principal) {
         System.err.println(principal);
@@ -97,10 +103,8 @@ public class DaoTestController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.toString());
         }
-        System.err.println(userRequest);
-        return userMapper.toUserResponse(
-                userService.update(
-                        userMapper.toUser(userRequest)));
+        User updated = userService.update(userMapper.toUser(userRequest));
+        return userMapper.toUserResponse(updated);
     }
 
     @GetMapping("/cars")

@@ -17,16 +17,15 @@ public class UserMapper {
     @Autowired
     private CarMapper carMapper;
 
-    public User toUser(UserCreateRequest userRequest) {
+    public User toUser(UserCreateRequest userCreateRequest) {
 
         User user = new User();
-        user.setEmail(userRequest.getEmail());
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setPassword(userRequest.getPassword());
-        user.setPhone(userRequest.getPhone());
+        user.setEmail(userCreateRequest.getEmail());
+        user.setFirstName(userCreateRequest.getFirstName());
+        user.setLastName(userCreateRequest.getLastName());
+        user.setPassword(userCreateRequest.getPassword());
+        user.setPhone(userCreateRequest.getPhone());
 
-        System.err.println(user);
         return user;
     }
 

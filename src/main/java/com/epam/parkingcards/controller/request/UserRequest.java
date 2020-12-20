@@ -3,7 +3,6 @@ package com.epam.parkingcards.controller.request;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -13,12 +12,6 @@ public class UserRequest {
 
     public static final String NAME_PATTERN = "[A-Za-z]{2,30}";
     public static final String PHONE_PATTERN = "[+][0-9]{11}";
-
-/*
-    @NotEmpty(message = "User id must not be empty")
-    @Min(value = 1, message = "User id should be greater than zero")
-    private long id;
-*/
 
     @NotEmpty(message = "Name field must not be empty")
     @Pattern(regexp = NAME_PATTERN, message = "Only latin letters")
