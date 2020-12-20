@@ -6,8 +6,6 @@ import lombok.Data;
 public class CarModelResponse {
 
     private long id;
-    private String modelName;
-
-    private long carId;
-    private String brandName;
+    private String name;
+    private CarBrandResponse brand;
 }

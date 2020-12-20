@@ -19,11 +19,11 @@ public class CarModelDaoTest {
 
     @Test
     public void given_carModelDao_when_loadingDeleted_then_sizeIsCorrect() {
+        assertThat(carModelDao.findAll().size()).isEqualTo(11);
         CarModel deletedModel = carModelDao.getOne(1L);
         deletedModel.setDeleted(true);
         carModelDao.saveAndFlush(deletedModel);
-        assertThat(carModelDao.findByIsDeletedTrue().size()).isEqualTo(1);
-        assertThat(carModelDao.findByIsDeletedFalse().size()).isEqualTo(10);
+        assertThat(carModelDao.findAll().size()).isEqualTo(10);
     }
 
 }

@@ -14,9 +14,8 @@ public class CarModelRequest {
 
     private long id;
 
-    @NotEmpty
     @Min(value = 1, message = "Brand id should be greater than zero")
-    private long branId;
+    private long brandId;
 
     @NotEmpty(message = "Model name field must not be empty")
     @Pattern(regexp = MODEL_NAME_PATTERN, message = "Only latin letters and numbers")

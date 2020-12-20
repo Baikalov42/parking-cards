@@ -27,15 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User currentUser = userDao.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Email %s not found", email)));
 
-        System.err.println(currentUser);
-
         return new org.springframework.security.core.userdetails
                 .User(currentUser.getEmail(), currentUser.getPassword(), mapRolesToAuthorities(currentUser.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-
-        System.err.println(roles);
 
         return roles.stream()
                 .map(r -> new SimpleGrantedAuthority(r.getName()))

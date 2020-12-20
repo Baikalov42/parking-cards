@@ -1,14 +1,17 @@
 package com.epam.parkingcards.controller.request;
 
+import com.epam.parkingcards.controller.validation.annotation.PasswordMatches;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class UserRequest {
+@PasswordMatches
+public class UserCreateRequest {
 
     public static final String NAME_PATTERN = "[A-Za-z]{2,30}";
     public static final String PHONE_PATTERN = "[+][0-9]{11}";
@@ -32,4 +35,10 @@ public class UserRequest {
     @NotEmpty(message = "Model id must not be empty")
     private String email;
 
+    @NotNull
+    @NotEmpty(message = "Password must not be empty")
+    @Size(min = 4, message = "At least 4 symbols")
+    private String password;
+
+    private String confirmPassword;
 }

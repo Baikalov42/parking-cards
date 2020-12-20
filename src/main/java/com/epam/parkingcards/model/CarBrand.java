@@ -3,6 +3,7 @@ package com.epam.parkingcards.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Where(clause = "deleted = false")
 @Table(name = "brands")
 public class CarBrand {
 
