@@ -1,5 +1,6 @@
-package com.epam.parkingcards.dao;
+package com.epam.parkingcards.dao.impl;
 
+import com.epam.parkingcards.dao.CustomCarRepository;
 import com.epam.parkingcards.model.Car;
 import org.springframework.transaction.annotation.Transactional;
 
