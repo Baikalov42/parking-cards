@@ -39,6 +39,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 // .antMatchers("/my-page/{id}/**").access("@userSecurity.hasUserId(authentication, #id)")
                 .antMatchers("/admin/**").hasRole("admin")
                 .antMatchers("/index/**").anonymous()
+                .antMatchers("/register/**").anonymous()
                 .and()
                 .httpBasic()
                 .and()
