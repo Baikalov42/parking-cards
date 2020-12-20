@@ -18,7 +18,7 @@ public class CarModelMapper {
 
     public CarModel toCarModel(CarModelRequest carModelRequest) {
         CarBrand carBrand = new CarBrand();
-        carBrand.setId(carModelRequest.getBranId());
+        carBrand.setId(carModelRequest.getBrandId());
 
         CarModel carModel = new CarModel();
         carModel.setId(carModelRequest.getId());

@@ -6,7 +6,7 @@ import com.epam.parkingcards.controller.mapper.CarModelMapper;
 import com.epam.parkingcards.controller.mapper.UserMapper;
 import com.epam.parkingcards.controller.request.CarBrandRequest;
 import com.epam.parkingcards.controller.request.CarModelRequest;
-import com.epam.parkingcards.controller.request.UserRegistrationRequest;
+import com.epam.parkingcards.controller.request.UserCreateRequest;
 import com.epam.parkingcards.controller.request.UserRequest;
 import com.epam.parkingcards.controller.response.CarBrandResponse;
 import com.epam.parkingcards.controller.response.CarModelResponse;
@@ -22,6 +22,7 @@ import com.epam.parkingcards.service.CarModelService;
 import com.epam.parkingcards.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -59,28 +61,39 @@ public class DaoTestController {
     @Autowired
     private CarBrandService carBrandService;
 
-    @GetMapping("/users")
-    public List<UserResponse> getAllUsers() {
-        List<User> all = userDao.findAll();
-
-        return userMapper.toUserResponses(all);
-    }
-
-    @GetMapping("/users/{id}")
-    public UserResponse getUserById(@PathVariable long id) {
-        return userMapper.toUserResponse(userDao.getOne(id));
-    }
-
     @PostMapping("/users")
-    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest,
+    public String register(@RequestBody @Valid UserCreateRequest userCreateRequest,
                            BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "ERRORRRR";
         }
-        System.err.println(userRegistrationRequest);
-        long id = userService.register(userMapper.toUser(userRegistrationRequest));
+
+        long id = userService.register(userMapper.toUser(userCreateRequest));
         return String.valueOf(id);
+    }
+
+    @DeleteMapping("users/{id}")
+    public void deleteUser(@PathVariable long id) {
+        userService.deleteById(id);
+    }
+
+    @GetMapping("/users")
+    public List<UserResponse> getAllUsers(Principal principal) {
+        System.err.println(principal);
+        List<User> all = userService.findAll(0);
+
+        return userMapper.toUserResponses(all);
+    }
+
+    @GetMapping("/my-page/{id}")
+    public UserResponse getMyUser(@PathVariable long id) {
+        return userMapper.toUserResponse(userDao.getOne(id));
+    }
+
+    @GetMapping("/users/{id}")
+    public UserResponse getUserById(@PathVariable long id) {
+        return userMapper.toUserResponse(userDao.getOne(id));
     }
 
     @PutMapping("/users")
@@ -90,10 +103,8 @@ public class DaoTestController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.toString());
         }
-        System.err.println(userRequest);
-        return userMapper.toUserResponse(
-                userService.update(
-                        userMapper.toUser(userRequest)));
+        User updated = userService.update(userMapper.toUser(userRequest));
+        return userMapper.toUserResponse(updated);
     }
 
     @GetMapping("/cars")
@@ -105,6 +116,7 @@ public class DaoTestController {
     public List<CarBrandResponse> getAllBrands() {
         return carBrandMapper.toCarBrandResponses(carBrandDao.findAll());
     }
+
     @PutMapping("/brands")
     public CarBrandResponse update(@Valid @RequestBody CarBrandRequest carBrandRequest,
                                    BindingResult bindingResult) {
@@ -113,7 +125,6 @@ public class DaoTestController {
             throw new ValidationException(bindingResult.toString());
         }
 
-        System.err.println(carBrandRequest);
         return carBrandMapper.toCarBrandResponse(
                 carBrandService.update(
                         carBrandMapper.toCarBrand(carBrandRequest)));
@@ -131,13 +142,10 @@ public class DaoTestController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.toString());
         }
-
-        System.err.println(carModelRequest);
         return carModelMapper.toCarModelResponse(
                 carModelService.update(
                         carModelMapper.toCarModel(carModelRequest)));
     }
-
 
     @GetMapping("/admin")
     public String admin() {
@@ -149,8 +157,8 @@ public class DaoTestController {
         return "hello guest";
     }
 
-    @GetMapping("/me")
+/*    @GetMapping("/me")
     public String forUser() {
         return "hello me";
-    }
+    }*/
 }

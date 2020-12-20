@@ -5,6 +5,7 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.Car;
+import com.epam.parkingcards.model.User;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -12,8 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -32,11 +33,8 @@ public class CarService {
 
     public long create(Car car) {
 
-        idValidator.validate(
-                car.getCarModel().getId(),
-                car.getUser().getId());
         try {
-            return carDao.save(car).getId();
+            return carDao.saveAndFlush(car).getId();
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Creation error, Car: %s ", car), e);
         }
@@ -60,11 +58,9 @@ public class CarService {
         return result;
     }
 
+    //TODO create method in DAO : updateCarIgnoreUserId
     public Car update(Car car) {
-        idValidator.validate(
-                car.getId(),
-                car.getCarModel().getId(),
-                car.getUser().getId());
+        idValidator.validate(car.getId());
 
         this.validateForExistence(car.getId());
         userService.validateForExistence(car
@@ -81,12 +77,20 @@ public class CarService {
         }
     }
 
+    @Transactional
     public void deleteById(long id) {
+
         idValidator.validate(id);
         validateForExistence(id);
 
         try {
+            findById(id)
+                    .getUser()
+                    .getCars()
+                    .removeIf(x -> x.getId() == id);
+
             carDao.deleteById(id);
+
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
         }

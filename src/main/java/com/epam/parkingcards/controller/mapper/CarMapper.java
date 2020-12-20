@@ -1,5 +1,6 @@
 package com.epam.parkingcards.controller.mapper;
 
+import com.epam.parkingcards.controller.request.CarCreateRequest;
 import com.epam.parkingcards.controller.request.CarRequest;
 import com.epam.parkingcards.controller.response.CarResponse;
 import com.epam.parkingcards.model.Car;
@@ -22,7 +23,6 @@ public class CarMapper {
     public Car toCar(CarRequest carRequest) {
 
         User user = new User();
-        user.setId(carRequest.getUserId());
 
         CarModel carModel = new CarModel();
         carModel.setId(carRequest.getModelId());
@@ -30,6 +30,21 @@ public class CarMapper {
         Car car = new Car();
         car.setId(carRequest.getId());
         car.setLicensePlate(carRequest.getLicensePlate());
+        car.setUser(user);
+        car.setCarModel(carModel);
+
+        return car;
+    }
+
+    public Car toCar(CarCreateRequest carCreateRequest) {
+
+        User user = new User();
+
+        CarModel carModel = new CarModel();
+        carModel.setId(carCreateRequest.getModelId());
+
+        Car car = new Car();
+        car.setLicensePlate(carCreateRequest.getLicensePlate());
         car.setUser(user);
         car.setCarModel(carModel);
 

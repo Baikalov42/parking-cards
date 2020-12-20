@@ -8,9 +8,12 @@ import com.epam.parkingcards.model.CarModel;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,7 +30,7 @@ public class CarModelService {
 
     public long create(CarModel carModel) {
         try {
-            return carModelDao.save(carModel).getId();
+            return carModelDao.saveAndFlush(carModel).getId();
         } catch (DataAccessException e) {
             throw new DaoException("Creation error, model: " + carModel, e);
         }
@@ -40,21 +43,26 @@ public class CarModelService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
     }
 
-    public Collection<CarModel> findAll(int pageNumber) {
-        //TODO: filtering find all
-        return null;
+    //TODO: filtering find all
+    public List<CarModel> findAll(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
+        List<CarModel> result = carModelDao.findAll(pageable).getContent();
+
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
+        }
+        return result;
     }
 
-    public List<CarModel> findAllByBrand(long brandId, int pageNumber) {
-        //TODO: filtering find all
-        return null;
+    //TODO: filtering find all or create method findAllByBrand in dao;
+    public List<CarModel> findAllByBrand(long brandId) {
+        return new ArrayList<>(carBrandService.findById(brandId).getCarModels());
     }
 
     public CarModel update(CarModel carModel) {
 
-        idValidator.validate(
-                carModel.getId(),
-                carModel.getCarBrand().getId());
+        idValidator.validate(carModel.getId());
 
         validateForExistence(carModel.getId());
         carBrandService.validateForExistence(carModel

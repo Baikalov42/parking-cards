@@ -8,12 +8,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class CarRequest {
-
+public class CarCreateRequest {
     private static final String LICENSE_PLATE_PATTERN = "^[ABEKMHOPCTYX][0-9]{3}[ABEKMHOPCTYX]{2}[0-9]{2,3}$";
 
-    @Min(value = 1, message = "Car id should be greater than zero")
-    private long id;
 
     @Min(value = 1, message = "Model id should be greater than zero")
     private long modelId;

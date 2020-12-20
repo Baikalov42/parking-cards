@@ -35,7 +35,8 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/me/**").hasRole("user")
+                .antMatchers("/me/**").hasAnyRole("user", "admin")
+                // .antMatchers("/my-page/{id}/**").access("@userSecurity.hasUserId(authentication, #id)")
                 .antMatchers("/admin/**").hasRole("admin")
                 .antMatchers("/index/**").anonymous()
                 .and()

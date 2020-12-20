@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @PasswordMatches
-public class UserRegistrationRequest {
+public class UserCreateRequest {
 
     public static final String NAME_PATTERN = "[A-Za-z]{2,30}";
     public static final String PHONE_PATTERN = "[+][0-9]{11}";
