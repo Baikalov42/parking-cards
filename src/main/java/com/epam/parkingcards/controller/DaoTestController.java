@@ -93,7 +93,7 @@ public class DaoTestController {
 
     @GetMapping("/users/{id}")
     public UserResponse getUserById(@PathVariable long id) {
-        return userMapper.toUserResponse(userDao.getOne(id));
+        return userMapper.toUserResponse(userService.findById(id));
     }
 
     @PutMapping("/users")
