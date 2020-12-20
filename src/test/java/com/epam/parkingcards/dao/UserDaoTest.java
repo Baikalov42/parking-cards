@@ -23,7 +23,7 @@ public class UserDaoTest {
     private UserDao userDao;
 
     @Test
-    public void given_userDao_when_findUserByPlate_then_returnValidUser() {
+    public void when_findUserByPlate_should_returnValidUser() {
         Optional<User> found = userDao.findByLicensePlate("O666OO178");
         assertThat(found.isPresent());
         assertThat(found.get().getFirstName()).isEqualTo("Irina");
@@ -44,16 +44,5 @@ public class UserDaoTest {
         assertThat(updated.getCars()).isNotNull();
         assertThat(updated.getPassword()).isNotNull();
         assertThat(updated.getPassword()).isNotEmpty();
-        userDao.findAll().forEach(System.err::println);
-    }
-
-    @Test
-    public void testFindAll() {
-        assertThat(userDao.findAll().size() == 3);
-    }
-
-    @Test
-    public void testGetOne() {
-        assertThat(userDao.getOne(4L).getRoles().size()).isEqualTo(2);
     }
 }

@@ -5,7 +5,6 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.Car;
-import com.epam.parkingcards.model.User;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -58,7 +57,6 @@ public class CarService {
         return result;
     }
 
-    //TODO create method in DAO : updateCarIgnoreUserId
     public Car update(Car car) {
         idValidator.validate(car.getId());
 
@@ -71,7 +69,7 @@ public class CarService {
                 .getId());
 
         try {
-            return carDao.saveAndFlush(car);
+            return carDao.updateCarWithoutUserId(car);
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Updating error, Car: %s", car), e);
         }

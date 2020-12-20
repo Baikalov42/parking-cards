@@ -25,6 +25,8 @@ public class CarBrandService {
     @Autowired
     private IdValidator idValidator;
 
+    //TODO: check if there is soft deleted brand with the same name
+    //TODO: if found, set deleted to false
     public long create(CarBrand carBrand) {
         try {
             return carBrandDao.saveAndFlush(carBrand).getId();
@@ -44,7 +46,6 @@ public class CarBrandService {
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<CarBrand> result = carBrandDao.findAll(pageable).getContent();
-        //TODO: filtering find all
 
         if (result.isEmpty()) {
             throw new NotFoundException(
@@ -53,6 +54,7 @@ public class CarBrandService {
         return result;
     }
 
+    //TODO: Think about situation when setting the same name as soft-deleted one
     public CarBrand update(CarBrand carBrand) {
 
         idValidator.validate(carBrand.getId());
@@ -68,11 +70,9 @@ public class CarBrandService {
         idValidator.validate(id);
         try {
             CarBrand carBrand = carBrandDao.findById(id)
-                    .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
-
+                    .orElseThrow(() -> new NotFoundException(String.format("By id %d, CarBrand not found", id)));
             carBrand.setDeleted(true);
             carBrandDao.saveAndFlush(carBrand);
-            //TODO: is ok ?
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
         }

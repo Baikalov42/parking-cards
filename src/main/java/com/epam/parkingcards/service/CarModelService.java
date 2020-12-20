@@ -28,6 +28,8 @@ public class CarModelService {
     @Autowired
     private IdValidator idValidator;
 
+    //TODO: check if there is soft deleted model with the same name
+    //TODO: if found, set deleted to false
     public long create(CarModel carModel) {
         try {
             return carModelDao.saveAndFlush(carModel).getId();
@@ -43,7 +45,6 @@ public class CarModelService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
     }
 
-    //TODO: filtering find all
     public List<CarModel> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<CarModel> result = carModelDao.findAll(pageable).getContent();
@@ -55,11 +56,12 @@ public class CarModelService {
         return result;
     }
 
-    //TODO: filtering find all or create method findAllByBrand in dao;
+    //TODO: check changed logic - whe retrieve models from CarModelDao, this way we will get only not deleted items
     public List<CarModel> findAllByBrand(long brandId) {
-        return new ArrayList<>(carBrandService.findById(brandId).getCarModels());
+        return new ArrayList<>(carModelDao.findByCarBrand(carBrandService.findById(brandId)));
     }
 
+    //TODO: Think about situation when setting the same name as soft-deleted one
     public CarModel update(CarModel carModel) {
 
         idValidator.validate(carModel.getId());
@@ -84,7 +86,6 @@ public class CarModelService {
 
             carModel.setDeleted(true);
             carModelDao.saveAndFlush(carModel);
-            //TODO: is ok ?
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
         }

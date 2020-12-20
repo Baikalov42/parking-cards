@@ -86,8 +86,6 @@ public class UserService {
         validateForExistence(user.getId());
 
         try {
-            //TODO method: updateWithoutPasswordAndCars, dont work. Application failed.
-            //TODO  Need realize this, with entityManager.createQuery() or entityManager.merge()
             return userDao.updateWithoutPasswordAndCars(user);
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Updating error, User: %s", user), e);
@@ -106,9 +104,7 @@ public class UserService {
     }
 
     private Set<Role> getDefaultRoles() {
-
-        //TODO: create method in RoleDao: findByName
-        Role roleUser = roleDao.findById(1L).orElseThrow(
+        Role roleUser = roleDao.findByName("ROLE_user").orElseThrow(
                 () -> new NotFoundException("Role not found"));
 
         Set<Role> roles = new HashSet<>();
