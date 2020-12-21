@@ -1,7 +1,7 @@
 package com.epam.parkingcards.dao.impl;
 
 import com.epam.parkingcards.dao.CustomCarRepository;
-import com.epam.parkingcards.model.Car;
+import com.epam.parkingcards.model.CarEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -13,15 +13,15 @@ public class CustomCarRepositoryImpl implements CustomCarRepository {
 
     @Override
     @Transactional
-    public Car updateCarWithoutUserId(Car car) {
-        Car entityCar = entityManager.find(Car.class, car.getId());
+    public CarEntity updateCarWithoutUserId(CarEntity carEntity) {
 
-        entityCar.setCarModel(car.getCarModel());
-        entityCar.setLicensePlate(car.getLicensePlate());
-        entityCar.setUser(car.getUser());
+        CarEntity entityCarEntity = entityManager.find(CarEntity.class, carEntity.getId());
+        entityCarEntity.setModelEntity(carEntity.getModelEntity());
+        entityCarEntity.setLicensePlate(carEntity.getLicensePlate());
+        entityCarEntity.setUserEntity(carEntity.getUserEntity());
 
-        entityManager.merge(entityCar);
+        entityManager.merge(entityCarEntity);
         entityManager.flush();
-        return entityCar;
+        return entityCarEntity;
     }
 }

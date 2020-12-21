@@ -1,11 +1,11 @@
 package com.epam.parkingcards.web.controller.admin;
 
-import com.epam.parkingcards.web.mapper.CarBrandMapper;
+import com.epam.parkingcards.web.mapper.BrandMapper;
 import com.epam.parkingcards.web.request.admin.BrandCreateRequest;
 import com.epam.parkingcards.web.request.admin.BrandUpdateRequest;
-import com.epam.parkingcards.web.response.CarBrandResponse;
-import com.epam.parkingcards.model.CarBrand;
-import com.epam.parkingcards.service.CarBrandService;
+import com.epam.parkingcards.web.response.BrandResponse;
+import com.epam.parkingcards.model.BrandEntity;
+import com.epam.parkingcards.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,25 +17,25 @@ import java.util.List;
 public class BrandController {
 
     @Autowired
-    private CarBrandService carBrandService;
+    private BrandService brandService;
     @Autowired
-    private CarBrandMapper carBrandMapper;
+    private BrandMapper brandMapper;
 
     /**
      * Get all brands
      */
     @GetMapping("/page/{pageNumber}")
-    public List<CarBrandResponse> getAllBrands(@PathVariable int pageNumber) {
-        return carBrandMapper.toCarBrandResponses(carBrandService.findAll(pageNumber));
+    public List<BrandResponse> getAllBrands(@PathVariable int pageNumber) {
+        return brandMapper.toCarBrandResponses(brandService.findAll(pageNumber));
     }
 
     /**
      * Get brand by id
      */
     @GetMapping("/{brandId}")
-    public CarBrandResponse getBrandById(@PathVariable long brandId) {
-        CarBrand carBrand = carBrandService.findById(brandId);
-        return carBrandMapper.toCarBrandResponse(carBrand);
+    public BrandResponse getBrandById(@PathVariable long brandId) {
+        BrandEntity brandEntity = brandService.findById(brandId);
+        return brandMapper.toCarBrandResponse(brandEntity);
     }
 
     /**
@@ -43,7 +43,7 @@ public class BrandController {
      */
     @PostMapping()
     public String register(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
-        long id = carBrandService.create(carBrandMapper.toCarBrand(brandCreateRequest));
+        long id = brandService.create(brandMapper.toCarBrand(brandCreateRequest));
         return String.valueOf(id);
     }
 
@@ -51,9 +51,9 @@ public class BrandController {
      * Update car brand
      */
     @PutMapping()
-    public CarBrandResponse update(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
-        CarBrand updated = carBrandService.update(carBrandMapper.toCarBrand(brandUpdateRequest));
-        return carBrandMapper.toCarBrandResponse(updated);
+    public BrandResponse update(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
+        BrandEntity updated = brandService.update(brandMapper.toCarBrand(brandUpdateRequest));
+        return brandMapper.toCarBrandResponse(updated);
     }
 
     /**
@@ -61,6 +61,6 @@ public class BrandController {
      */
     @DeleteMapping("/{brandId}")
     public void deleteCarBrand(@PathVariable long brandId) {
-        carBrandService.deleteSoftById(brandId);
+        brandService.deleteSoftById(brandId);
     }
 }

@@ -3,9 +3,8 @@ package com.epam.parkingcards.web.controller.admin;
 import com.epam.parkingcards.web.mapper.CarMapper;
 import com.epam.parkingcards.web.request.admin.CarCreateRequest;
 import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
-import com.epam.parkingcards.web.request.me.MeCarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;
-import com.epam.parkingcards.model.Car;
+import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +34,8 @@ public class CarController {
      */
     @GetMapping("/{carId}")
     public CarResponse getUserById(@Valid @PathVariable long carId) {
-        Car car = carService.findById(carId);
-        return carMapper.toCarResponse(car);
+        CarEntity carEntity = carService.findById(carId);
+        return carMapper.toCarResponse(carEntity);
     }
 
     /**
@@ -51,10 +50,9 @@ public class CarController {
     /**
      * Update car
      */
-    //todo Машина обновляется, но маппер не срабатывает, возвращет нулл-поинтер
     @PutMapping
     public CarResponse update(@RequestBody @Valid CarUpdateRequest carUpdateRequest) {
-        Car updated = carService.update(carMapper.toCar(carUpdateRequest));
+        CarEntity updated = carService.update(carMapper.toCar(carUpdateRequest));
         return carMapper.toCarResponse(updated);
     }
 

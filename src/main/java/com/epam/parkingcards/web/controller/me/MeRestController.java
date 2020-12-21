@@ -1,21 +1,21 @@
 package com.epam.parkingcards.web.controller.me;
 
 import com.epam.parkingcards.config.UserSecurity;
-import com.epam.parkingcards.web.mapper.CarBrandMapper;
+import com.epam.parkingcards.web.mapper.BrandMapper;
 import com.epam.parkingcards.web.mapper.CarMapper;
-import com.epam.parkingcards.web.mapper.CarModelMapper;
+import com.epam.parkingcards.web.mapper.ModelMapper;
 import com.epam.parkingcards.web.mapper.UserMapper;
 import com.epam.parkingcards.web.request.me.MeCarCreateRequest;
 import com.epam.parkingcards.web.request.me.MeCarUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeUserUpdateRequest;
-import com.epam.parkingcards.web.response.CarBrandResponse;
-import com.epam.parkingcards.web.response.CarModelResponse;
+import com.epam.parkingcards.web.response.BrandResponse;
+import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.web.response.CarResponse;
 import com.epam.parkingcards.web.response.UserResponse;
-import com.epam.parkingcards.model.Car;
-import com.epam.parkingcards.model.User;
-import com.epam.parkingcards.service.CarBrandService;
-import com.epam.parkingcards.service.CarModelService;
+import com.epam.parkingcards.model.CarEntity;
+import com.epam.parkingcards.model.UserEntity;
+import com.epam.parkingcards.service.BrandService;
+import com.epam.parkingcards.service.ModelService;
 import com.epam.parkingcards.service.CarService;
 import com.epam.parkingcards.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,56 +44,56 @@ public class MeRestController {
     @Autowired
     private CarService carService;
     @Autowired
-    private CarBrandService carBrandService;
+    private BrandService brandService;
     @Autowired
-    private CarModelService carModelService;
+    private ModelService modelService;
 
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private CarMapper carMapper;
     @Autowired
-    private CarModelMapper carModelMapper;
+    private ModelMapper modelMapper;
     @Autowired
-    private CarBrandMapper carBrandMapper;
+    private BrandMapper brandMapper;
 
     @Autowired
     private UserSecurity userSecurity;
 
     @GetMapping
     public UserResponse getUser(Principal principal) {
-        User user = userService.findByEmail(principal.getName());
-        return userMapper.toUserResponse(user);
+        UserEntity userEntity = userService.findByEmail(principal.getName());
+        return userMapper.toUserResponse(userEntity);
     }
 
     @PutMapping
     public UserResponse updateUser(@Valid @RequestBody MeUserUpdateRequest meUserUpdateRequest,
                                    Authentication authentication) {
 
-        User user = userMapper.toUser(meUserUpdateRequest);
+        UserEntity userEntity = userMapper.toUser(meUserUpdateRequest);
         long userId = userService.getIdByEmail(authentication.getName());
-        user.setId(userId);
+        userEntity.setId(userId);
 
-        return userMapper.toUserResponse(userService.update(user));
+        return userMapper.toUserResponse(userService.update(userEntity));
     }
 
     @GetMapping("/cars")
     public List<CarResponse> getMyCars(Principal principal) {
 
-        User user = userService.findByEmail(principal.getName());
-        List<Car> cars = new ArrayList<>(user.getCars());
-        return carMapper.toCarResponses(cars);
+        UserEntity userEntity = userService.findByEmail(principal.getName());
+        List<CarEntity> carEntities = new ArrayList<>(userEntity.getCarEntities());
+        return carMapper.toCarResponses(carEntities);
     }
 
     @PostMapping("/cars")
     public long addCar(@Valid @RequestBody MeCarCreateRequest meCarCreateRequest,
                        Authentication authentication) {
 
-        Car car = carMapper.toCar(meCarCreateRequest);
+        CarEntity carEntity = carMapper.toCar(meCarCreateRequest);
         long userId = userService.getIdByEmail(authentication.getName());
-        car.getUser().setId(userId);
+        carEntity.getUserEntity().setId(userId);
 
-        return carService.create(car);
+        return carService.create(carEntity);
     }
 
     @PutMapping("/cars")
@@ -105,10 +105,10 @@ public class MeRestController {
         }
         long userId = userService.getIdByEmail(authentication.getName());
 
-        Car toUpdate = carMapper.toCar(meCarUpdateRequest);
-        toUpdate.getUser().setId(userId);
+        CarEntity toUpdate = carMapper.toCar(meCarUpdateRequest);
+        toUpdate.getUserEntity().setId(userId);
 
-        Car updated = carService.update(toUpdate);
+        CarEntity updated = carService.update(toUpdate);
         return carMapper.toCarResponse(updated);
     }
 
@@ -123,12 +123,12 @@ public class MeRestController {
     }
 
     @GetMapping("/models/page/{pageNumber}")
-    public List<CarModelResponse> getAllModels(@PathVariable int pageNumber) {
-        return carModelMapper.toCarModelResponses(carModelService.findAll(pageNumber));
+    public List<ModelResponse> getAllModels(@PathVariable int pageNumber) {
+        return modelMapper.toCarModelResponses(modelService.findAll(pageNumber));
     }
 
     @GetMapping("/brands/page/{pageNumber}")
-    public List<CarBrandResponse> getAllBrands(@PathVariable int pageNumber) {
-        return carBrandMapper.toCarBrandResponses(carBrandService.findAll(pageNumber));
+    public List<BrandResponse> getAllBrands(@PathVariable int pageNumber) {
+        return brandMapper.toCarBrandResponses(brandService.findAll(pageNumber));
     }
 }

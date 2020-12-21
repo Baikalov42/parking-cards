@@ -1,8 +1,7 @@
 package com.epam.parkingcards.model;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Column;
@@ -15,11 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "cars")
-public class Car {
+public class CarEntity {
 
     @Id
     @Column(name = "car_id")
@@ -33,13 +31,13 @@ public class Car {
     @JoinColumn(name = "model_id", referencedColumnName = "model_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private CarModel carModel;
+    private ModelEntity modelEntity;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private User user;
+    private UserEntity userEntity;
 
 
 }

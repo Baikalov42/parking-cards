@@ -1,7 +1,7 @@
 package com.epam.parkingcards.dao;
 
-import com.epam.parkingcards.model.Car;
+import com.epam.parkingcards.model.CarEntity;
 
 public interface CustomCarRepository {
-    Car updateCarWithoutUserId(Car car);
+    CarEntity updateCarWithoutUserId(CarEntity carEntity);
 }

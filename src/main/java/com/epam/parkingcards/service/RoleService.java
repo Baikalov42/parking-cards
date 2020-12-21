@@ -2,7 +2,7 @@ package com.epam.parkingcards.service;
 
 import com.epam.parkingcards.dao.RoleDao;
 import com.epam.parkingcards.exception.NotFoundException;
-import com.epam.parkingcards.model.Role;
+import com.epam.parkingcards.model.RoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +19,9 @@ public class RoleService {
     @Autowired
     private RoleDao roleDao;
 
-    public List<Role> findAll(int pageNumber) {
+    public List<RoleEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<Role> result = roleDao.findAll(pageable).getContent();
+        List<RoleEntity> result = roleDao.findAll(pageable).getContent();
 
         if (result.isEmpty()) {
             throw new NotFoundException(

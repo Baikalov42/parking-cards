@@ -22,7 +22,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,11 +51,11 @@ public class User {
     )
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Role> roles = new HashSet<>();
+    private Set<RoleEntity> roleEntities = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Car> cars = new HashSet<>();
+    private Set<CarEntity> carEntities = new HashSet<>();
 
 }

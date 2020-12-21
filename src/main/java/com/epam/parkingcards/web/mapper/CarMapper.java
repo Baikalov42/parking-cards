@@ -1,13 +1,16 @@
 package com.epam.parkingcards.web.mapper;
 
+import com.epam.parkingcards.dao.BrandDao;
+import com.epam.parkingcards.dao.ModelDao;
+import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.web.request.admin.CarCreateRequest;
 import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeCarCreateRequest;
 import com.epam.parkingcards.web.request.me.MeCarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;
-import com.epam.parkingcards.model.Car;
-import com.epam.parkingcards.model.CarModel;
-import com.epam.parkingcards.model.User;
+import com.epam.parkingcards.model.CarEntity;
+import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,87 +21,96 @@ import java.util.List;
 public class CarMapper {
 
     @Autowired
-    private CarModelMapper carModelMapper;
+    private ModelDao modelDao;
 
-    public Car toCar(CarCreateRequest carCreateRequest) {
+    @Autowired
+    private BrandDao brandDao;
 
-        User user = new User();
-        user.setId(carCreateRequest.getUserId());
+    @Autowired
+    UserDao userDao;
 
-        CarModel carModel = new CarModel();
-        carModel.setId(carCreateRequest.getModelId());
+    @Autowired
+    private ModelMapper modelMapper;
 
-        Car car = new Car();
-        car.setLicensePlate(carCreateRequest.getLicensePlate());
-        car.setUser(user);
-        car.setCarModel(carModel);
+    public CarEntity toCar(CarCreateRequest carCreateRequest) {
 
-        return car;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(carCreateRequest.getUserId());
+
+        ModelEntity modelEntity = new ModelEntity();
+        modelEntity.setId(carCreateRequest.getModelId());
+
+        CarEntity carEntity = new CarEntity();
+        carEntity.setLicensePlate(carCreateRequest.getLicensePlate());
+        carEntity.setUserEntity(userEntity);
+        carEntity.setModelEntity(modelEntity);
+
+        return carEntity;
     }
 
-    public Car toCar(CarUpdateRequest carUpdateRequest) {
+    public CarEntity toCar(CarUpdateRequest carUpdateRequest) {
 
-        User user = new User();
-        user.setId(carUpdateRequest.getUserId());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(carUpdateRequest.getUserId());
 
-        CarModel carModel = new CarModel();
-        carModel.setId(carUpdateRequest.getModelId());
+        ModelEntity modelEntity = new ModelEntity();
+        modelEntity.setId(carUpdateRequest.getModelId());
 
-        Car car = new Car();
-        car.setId(carUpdateRequest.getId());
-        car.setLicensePlate(carUpdateRequest.getLicensePlate());
-        car.setUser(user);
-        car.setCarModel(carModel);
+        CarEntity carEntity = new CarEntity();
+        carEntity.setId(carUpdateRequest.getId());
+        carEntity.setLicensePlate(carUpdateRequest.getLicensePlate());
+        carEntity.setUserEntity(userDao.getOne(carUpdateRequest.getUserId()));
+        carEntity.setModelEntity(modelDao.getOne(carUpdateRequest.getModelId()));
 
-        return car;
+        return carEntity;
     }
 
-    public Car toCar(MeCarUpdateRequest meCarUpdateRequest) {
+    public CarEntity toCar(MeCarUpdateRequest meCarUpdateRequest) {
 
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
 
-        CarModel carModel = new CarModel();
-        carModel.setId(meCarUpdateRequest.getModelId());
+        ModelEntity modelEntity = new ModelEntity();
+        modelEntity.setId(meCarUpdateRequest.getModelId());
 
-        Car car = new Car();
-        car.setId(meCarUpdateRequest.getId());
-        car.setLicensePlate(meCarUpdateRequest.getLicensePlate());
-        car.setUser(user);
-        car.setCarModel(carModel);
+        CarEntity carEntity = new CarEntity();
+        carEntity.setId(meCarUpdateRequest.getId());
+        carEntity.setLicensePlate(meCarUpdateRequest.getLicensePlate());
+        carEntity.setUserEntity(userEntity);
+        carEntity.setModelEntity(modelEntity);
 
-        return car;
+        return carEntity;
     }
 
-    public Car toCar(MeCarCreateRequest meCarCreateRequest) {
+    public CarEntity toCar(MeCarCreateRequest meCarCreateRequest) {
 
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
 
-        CarModel carModel = new CarModel();
-        carModel.setId(meCarCreateRequest.getModelId());
+        ModelEntity modelEntity = new ModelEntity();
+        modelEntity.setId(meCarCreateRequest.getModelId());
 
-        Car car = new Car();
-        car.setLicensePlate(meCarCreateRequest.getLicensePlate());
-        car.setUser(user);
-        car.setCarModel(carModel);
+        CarEntity carEntity = new CarEntity();
+        carEntity.setLicensePlate(meCarCreateRequest.getLicensePlate());
+        carEntity.setUserEntity(userEntity);
+        carEntity.setModelEntity(modelEntity);
 
-        return car;
+        return carEntity;
     }
 
-    public CarResponse toCarResponse(Car car) {
+    public CarResponse toCarResponse(CarEntity carEntity) {
 
         CarResponse carResponse = new CarResponse();
-        carResponse.setId(car.getId());
-        carResponse.setLicensePlate(car.getLicensePlate());
-        carResponse.setModel(carModelMapper.toCarModelResponse(car.getCarModel()));
+        carResponse.setId(carEntity.getId());
+        carResponse.setLicensePlate(carEntity.getLicensePlate());
+        carResponse.setModel(modelMapper.toCarModelResponse(carEntity.getModelEntity()));
 
         return carResponse;
     }
 
-    public List<CarResponse> toCarResponses(List<Car> cars) {
+    public List<CarResponse> toCarResponses(List<CarEntity> carEntities) {
 
         List<CarResponse> carResponses = new ArrayList<>();
-        for (Car car : cars) {
-            carResponses.add(toCarResponse(car));
+        for (CarEntity carEntity : carEntities) {
+            carResponses.add(toCarResponse(carEntity));
         }
         return carResponses;
     }

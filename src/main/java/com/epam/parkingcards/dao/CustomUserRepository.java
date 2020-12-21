@@ -1,7 +1,7 @@
 package com.epam.parkingcards.dao;
 
-import com.epam.parkingcards.model.User;
+import com.epam.parkingcards.model.UserEntity;
 
 public interface CustomUserRepository {
-    User updateWithoutPasswordAndCars(User user);
+    UserEntity updateWithoutPasswordAndCars(UserEntity userEntity);
 }

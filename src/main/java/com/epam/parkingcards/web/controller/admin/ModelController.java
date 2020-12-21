@@ -1,11 +1,11 @@
 package com.epam.parkingcards.web.controller.admin;
 
-import com.epam.parkingcards.web.mapper.CarModelMapper;
+import com.epam.parkingcards.web.mapper.ModelMapper;
 import com.epam.parkingcards.web.request.admin.ModelCreateRequest;
 import com.epam.parkingcards.web.request.admin.ModelUpdateRequest;
-import com.epam.parkingcards.web.response.CarModelResponse;
-import com.epam.parkingcards.model.CarModel;
-import com.epam.parkingcards.service.CarModelService;
+import com.epam.parkingcards.web.response.ModelResponse;
+import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,43 +17,42 @@ import java.util.List;
 public class ModelController {
 
     @Autowired
-    private CarModelService carModelService;
+    private ModelService modelService;
     @Autowired
-    private CarModelMapper carModelMapper;
+    private ModelMapper modelMapper;
 
     /**
      * Get all models
      */
     @GetMapping("/page/{pageNumber}")
-    public List<CarModelResponse> getAllModels(@PathVariable int pageNumber) {
-        return carModelMapper.toCarModelResponses(carModelService.findAll(pageNumber));
+    public List<ModelResponse> getAllModels(@PathVariable int pageNumber) {
+        return modelMapper.toCarModelResponses(modelService.findAll(pageNumber));
     }
 
     /**
      * Get model by id
      */
     @GetMapping("/{modelId}")
-    public CarModelResponse getModelById(@PathVariable long modelId) {
-        CarModel carModel = carModelService.findById(modelId);
-        return carModelMapper.toCarModelResponse(carModel);
+    public ModelResponse getModelById(@PathVariable long modelId) {
+        ModelEntity modelEntity = modelService.findById(modelId);
+        return modelMapper.toCarModelResponse(modelEntity);
     }
 
     /**
      * Get model by brand id
      */
     @GetMapping("/get-by-brand/{brandId}")
-    public List<CarModelResponse> getModelByBrandId(@PathVariable long brandId) {
-        List<CarModel> carModel = carModelService.findAllByBrand(brandId);
-        return carModelMapper.toCarModelResponses(carModel);
+    public List<ModelResponse> getModelByBrandId(@PathVariable long brandId) {
+        List<ModelEntity> modelEntity = modelService.findAllByBrand(brandId);
+        return modelMapper.toCarModelResponses(modelEntity);
     }
 
     /**
      * Create model
      */
-    //todo модель создается, но в общем списке getAllModels не отображается
     @PostMapping()
     public String register(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
-        long id = carModelService.create(carModelMapper.toCarModel(modelCreateRequest));
+        long id = modelService.create(modelMapper.toCarModel(modelCreateRequest));
         return String.valueOf(id);
     }
 
@@ -61,9 +60,9 @@ public class ModelController {
      * Update car model
      */
     @PutMapping()
-    public CarModelResponse update(@RequestBody @Valid ModelUpdateRequest modelUpdateRequest) {
-        CarModel updated = carModelService.update(carModelMapper.toCarModel(modelUpdateRequest));
-        return carModelMapper.toCarModelResponse(updated);
+    public ModelResponse update(@RequestBody @Valid ModelUpdateRequest modelUpdateRequest) {
+        ModelEntity updated = modelService.update(modelMapper.toCarModel(modelUpdateRequest));
+        return modelMapper.toCarModelResponse(updated);
     }
 
     /**
@@ -71,6 +70,6 @@ public class ModelController {
      */
     @DeleteMapping("/{modelId}")
     public void deleteCarModel(@PathVariable long modelId) {
-        carModelService.deleteSoftById(modelId);
+        modelService.deleteSoftById(modelId);
     }
 }

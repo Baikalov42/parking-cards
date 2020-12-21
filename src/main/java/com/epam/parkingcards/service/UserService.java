@@ -5,9 +5,8 @@ import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
-import com.epam.parkingcards.model.Car;
-import com.epam.parkingcards.model.Role;
-import com.epam.parkingcards.model.User;
+import com.epam.parkingcards.model.RoleEntity;
+import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,18 +35,18 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public long register(User user) {
+    public long register(UserEntity userEntity) {
         try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(getDefaultRoles());
-            return userDao.save(user).getId();
+            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+            userEntity.setRoleEntities(getDefaultRoles());
+            return userDao.save(userEntity).getId();
 
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Creation error, User: %s ", user), e);
+            throw new DaoException(String.format("Creation error, User: %s ", userEntity), e);
         }
     }
 
-    public User findById(long id) {
+    public UserEntity findById(long id) {
         idValidator.validate(id);
         return userDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
@@ -58,19 +56,19 @@ public class UserService {
         return this.findByEmail(email).getId();
     }
 
-    public User findByEmail(String email) {
+    public UserEntity findByEmail(String email) {
         return userDao.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(String.format("By email %s, User not found", email)));
     }
 
-    public User findByLicensePlate(String licensePlate) {
+    public UserEntity findByLicensePlate(String licensePlate) {
         return userDao.findByLicensePlate(licensePlate)
                 .orElseThrow(() -> new NotFoundException(String.format("By license plate %s, User not found", licensePlate)));
     }
 
-    public List<User> findAll(int pageNumber) {
+    public List<UserEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<User> result = userDao.findAll(pageable).getContent();
+        List<UserEntity> result = userDao.findAll(pageable).getContent();
 
         if (result.isEmpty()) {
             throw new NotFoundException(
@@ -80,15 +78,15 @@ public class UserService {
     }
 
     @Transactional
-    public User update(User user) {
+    public UserEntity update(UserEntity userEntity) {
 
-        idValidator.validate(user.getId());
-        validateForExistence(user.getId());
+        idValidator.validate(userEntity.getId());
+        validateForExistence(userEntity.getId());
 
         try {
-            return userDao.updateWithoutPasswordAndCars(user);
+            return userDao.updateWithoutPasswordAndCars(userEntity);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Updating error, User: %s", user), e);
+            throw new DaoException(String.format("Updating error, User: %s", userEntity), e);
         }
     }
 
@@ -103,14 +101,14 @@ public class UserService {
         }
     }
 
-    private Set<Role> getDefaultRoles() {
-        Role roleUser = roleDao.findByName("ROLE_user").orElseThrow(
+    private Set<RoleEntity> getDefaultRoles() {
+        RoleEntity roleEntityUser = roleDao.findByName("ROLE_user").orElseThrow(
                 () -> new NotFoundException("Role not found"));
 
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleUser);
+        Set<RoleEntity> roleEntities = new HashSet<>();
+        roleEntities.add(roleEntityUser);
 
-        return roles;
+        return roleEntities;
     }
 
     public void validateForExistence(long id) {

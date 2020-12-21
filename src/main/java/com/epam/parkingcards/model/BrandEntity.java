@@ -3,7 +3,6 @@ package com.epam.parkingcards.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,9 +16,8 @@ import java.util.Set;
 
 @Data
 @Entity
-@Where(clause = "deleted = false")
 @Table(name = "brands")
-public class CarBrand {
+public class BrandEntity {
 
     @Id
     @Column(name = "brand_id")
@@ -32,8 +30,8 @@ public class CarBrand {
     @Column(name = "deleted")
     private boolean isDeleted;
 
-    @OneToMany(mappedBy = "carBrand", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brandEntity", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<CarModel> carModels;
+    private Set<ModelEntity> modelEntities;
 }
