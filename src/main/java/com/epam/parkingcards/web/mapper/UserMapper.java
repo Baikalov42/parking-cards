@@ -4,7 +4,7 @@ import com.epam.parkingcards.web.request.UserRegistrationRequest;
 import com.epam.parkingcards.web.request.admin.UserUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeUserUpdateRequest;
 import com.epam.parkingcards.web.response.UserResponse;
-import com.epam.parkingcards.model.User;
+import com.epam.parkingcards.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,63 +18,63 @@ public class UserMapper {
     @Autowired
     private CarMapper carMapper;
 
-    public User toUser(UserRegistrationRequest userRegistrationRequest) {
+    public UserEntity toUser(UserRegistrationRequest userRegistrationRequest) {
 
-        User user = new User();
-        user.setEmail(userRegistrationRequest.getEmail());
-        user.setFirstName(userRegistrationRequest.getFirstName());
-        user.setLastName(userRegistrationRequest.getLastName());
-        user.setPassword(userRegistrationRequest.getPassword());
-        user.setPhone(userRegistrationRequest.getPhone());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(userRegistrationRequest.getEmail());
+        userEntity.setFirstName(userRegistrationRequest.getFirstName());
+        userEntity.setLastName(userRegistrationRequest.getLastName());
+        userEntity.setPassword(userRegistrationRequest.getPassword());
+        userEntity.setPhone(userRegistrationRequest.getPhone());
 
-        return user;
+        return userEntity;
     }
 
-    public User toUser(UserUpdateRequest userUpdateRequest) {
+    public UserEntity toUser(UserUpdateRequest userUpdateRequest) {
 
-        User user = new User();
-        user.setId(userUpdateRequest.getId());
-        user.setEmail(userUpdateRequest.getEmail());
-        user.setFirstName(userUpdateRequest.getFirstName());
-        user.setLastName(userUpdateRequest.getLastName());
-        user.setPhone(userUpdateRequest.getPhone());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userUpdateRequest.getId());
+        userEntity.setEmail(userUpdateRequest.getEmail());
+        userEntity.setFirstName(userUpdateRequest.getFirstName());
+        userEntity.setLastName(userUpdateRequest.getLastName());
+        userEntity.setPhone(userUpdateRequest.getPhone());
 
-        return user;
+        return userEntity;
     }
 
-    public User toUser(MeUserUpdateRequest meUserUpdateRequest) {
+    public UserEntity toUser(MeUserUpdateRequest meUserUpdateRequest) {
 
-        User user = new User();
-        user.setEmail(meUserUpdateRequest.getEmail());
-        user.setFirstName(meUserUpdateRequest.getFirstName());
-        user.setLastName(meUserUpdateRequest.getLastName());
-        user.setPhone(meUserUpdateRequest.getPhone());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(meUserUpdateRequest.getEmail());
+        userEntity.setFirstName(meUserUpdateRequest.getFirstName());
+        userEntity.setLastName(meUserUpdateRequest.getLastName());
+        userEntity.setPhone(meUserUpdateRequest.getPhone());
 
-        return user;
+        return userEntity;
     }
 
 
-    public UserResponse toUserResponse(User user) {
+    public UserResponse toUserResponse(UserEntity userEntity) {
         UserResponse userResponse = new UserResponse();
 
-        userResponse.setId(user.getId());
-        userResponse.setFirstName(user.getFirstName());
-        userResponse.setLastName(user.getLastName());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setPhone(user.getPhone());
+        userResponse.setId(userEntity.getId());
+        userResponse.setFirstName(userEntity.getFirstName());
+        userResponse.setLastName(userEntity.getLastName());
+        userResponse.setEmail(userEntity.getEmail());
+        userResponse.setPhone(userEntity.getPhone());
 
-        userResponse.setCars(user.getCars().stream()
+        userResponse.setCars(userEntity.getCarEntities().stream()
                 .map(x -> carMapper.toCarResponse(x))
                 .collect(Collectors.toSet()));
 
         return userResponse;
     }
 
-    public List<UserResponse> toUserResponses(List<User> users) {
+    public List<UserResponse> toUserResponses(List<UserEntity> userEntities) {
 
         List<UserResponse> userResponses = new ArrayList<>();
-        for (User user : users) {
-            userResponses.add(toUserResponse(user));
+        for (UserEntity userEntity : userEntities) {
+            userResponses.add(toUserResponse(userEntity));
         }
         return userResponses;
     }

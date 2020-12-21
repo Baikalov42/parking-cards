@@ -3,7 +3,6 @@ package com.epam.parkingcards.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,24 +16,28 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Where(clause = "deleted = false")
-@Table(name = "models")
-public class CarModel {
+@Table(name = "cars")
+public class CarEntity {
 
     @Id
-    @Column(name = "model_id")
+    @Column(name = "car_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "model_name")
-    private String name;
+    @Column(name = "license_plate")
+    private String licensePlate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "brand_id", referencedColumnName = "brand_id")
+    @JoinColumn(name = "model_id", referencedColumnName = "model_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private CarBrand carBrand;
+    private ModelEntity modelEntity;
 
-    @Column(name = "deleted")
-    private boolean isDeleted;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private UserEntity userEntity;
+
+
 }

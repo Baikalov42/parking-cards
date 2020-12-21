@@ -3,9 +3,9 @@ package com.epam.parkingcards.web.response;
 import lombok.Data;
 
 @Data
-public class CarModelResponse {
+public class ModelResponse {
 
     private long id;
     private String name;
-    private CarBrandResponse brand;
+    private BrandResponse brand;
 }

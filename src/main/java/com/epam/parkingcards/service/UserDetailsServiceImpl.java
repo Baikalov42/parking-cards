@@ -1,8 +1,8 @@
 package com.epam.parkingcards.service;
 
 import com.epam.parkingcards.dao.UserDao;
-import com.epam.parkingcards.model.User;
-import com.epam.parkingcards.model.Role;
+import com.epam.parkingcards.model.UserEntity;
+import com.epam.parkingcards.model.RoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,16 +24,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User currentUser = userDao.findByEmail(email)
+        UserEntity currentUserEntity = userDao.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Email %s not found", email)));
 
         return new org.springframework.security.core.userdetails
-                .User(currentUser.getEmail(), currentUser.getPassword(), mapRolesToAuthorities(currentUser.getRoles()));
+                .User(currentUserEntity.getEmail(), currentUserEntity.getPassword(), mapRolesToAuthorities(currentUserEntity.getRoleEntities()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<RoleEntity> roleEntities) {
 
-        return roles.stream()
+        return roleEntities.stream()
                 .map(r -> new SimpleGrantedAuthority(r.getName()))
                 .collect(Collectors.toList());
     }

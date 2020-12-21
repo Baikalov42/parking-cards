@@ -4,7 +4,7 @@ import com.epam.parkingcards.dao.CarDao;
 import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
-import com.epam.parkingcards.model.Car;
+import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -26,29 +26,29 @@ public class CarService {
     @Autowired
     private UserService userService;
     @Autowired
-    private CarModelService carModelService;
+    private ModelService modelService;
     @Autowired
     private IdValidator idValidator;
 
-    public long create(Car car) {
+    public long create(CarEntity carEntity) {
 
         try {
-            return carDao.saveAndFlush(car).getId();
+            return carDao.saveAndFlush(carEntity).getId();
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Creation error, Car: %s ", car), e);
+            throw new DaoException(String.format("Creation error, Car: %s ", carEntity), e);
         }
     }
 
-    public Car findById(long id) {
+    public CarEntity findById(long id) {
         idValidator.validate(id);
 
         return carDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
     }
 
-    public List<Car> findAll(int pageNumber) {
+    public List<CarEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<Car> result = carDao.findAll(pageable).getContent();
+        List<CarEntity> result = carDao.findAll(pageable).getContent();
 
         if (result.isEmpty()) {
             throw new NotFoundException(
@@ -57,21 +57,21 @@ public class CarService {
         return result;
     }
 
-    public Car update(Car car) {
-        idValidator.validate(car.getId());
+    public CarEntity update(CarEntity carEntity) {
+        idValidator.validate(carEntity.getId());
 
-        this.validateForExistence(car.getId());
-        userService.validateForExistence(car
-                .getUser()
+        this.validateForExistence(carEntity.getId());
+        userService.validateForExistence(carEntity
+                .getUserEntity()
                 .getId());
-        carModelService.validateForExistence(car
-                .getCarModel()
+        modelService.validateForExistence(carEntity
+                .getModelEntity()
                 .getId());
 
         try {
-            return carDao.updateCarWithoutUserId(car);
+            return carDao.updateCarWithoutUserId(carEntity);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Updating error, Car: %s", car), e);
+            throw new DaoException(String.format("Updating error, Car: %s", carEntity), e);
         }
     }
 
@@ -83,8 +83,8 @@ public class CarService {
 
         try {
             findById(id)
-                    .getUser()
-                    .getCars()
+                    .getUserEntity()
+                    .getCarEntities()
                     .removeIf(x -> x.getId() == id);
 
             carDao.deleteById(id);

@@ -1,6 +1,6 @@
 package com.epam.parkingcards.dao;
 
-import com.epam.parkingcards.model.CarModel;
+import com.epam.parkingcards.model.ModelEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,18 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class CarModelDaoTest {
+public class ModelEntityDaoTest {
 
     @Autowired
-    private CarModelDao carModelDao;
+    private ModelDao modelDao;
 
     @Test
     public void given_carModelDao_when_loadingDeleted_then_sizeIsCorrect() {
-        assertThat(carModelDao.findAll().size()).isEqualTo(11);
-        CarModel deletedModel = carModelDao.getOne(1L);
+        assertThat(modelDao.findByIsDeletedFalse().size()).isEqualTo(11);
+        ModelEntity deletedModel = modelDao.getOne(1L);
         deletedModel.setDeleted(true);
-        carModelDao.saveAndFlush(deletedModel);
-        assertThat(carModelDao.findAll().size()).isEqualTo(10);
+        modelDao.saveAndFlush(deletedModel);
+        assertThat(modelDao.findByIsDeletedFalse().size()).isEqualTo(10);
     }
 
 }

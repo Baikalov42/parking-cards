@@ -1,7 +1,7 @@
 package com.epam.parkingcards.dao.impl;
 
 import com.epam.parkingcards.dao.CustomUserRepository;
-import com.epam.parkingcards.model.User;
+import com.epam.parkingcards.model.UserEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -14,16 +14,16 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @Override
     @Transactional
-    public User updateWithoutPasswordAndCars(User user) {
-        User entityUser = entityManager.find(User.class, user.getId());
+    public UserEntity updateWithoutPasswordAndCars(UserEntity userEntity) {
+        UserEntity entityUserEntity = entityManager.find(UserEntity.class, userEntity.getId());
 
-        entityUser.setPhone(user.getPhone());
-        entityUser.setFirstName(user.getFirstName());
-        entityUser.setLastName(user.getLastName());
-        entityUser.setEmail(user.getEmail());
+        entityUserEntity.setPhone(userEntity.getPhone());
+        entityUserEntity.setFirstName(userEntity.getFirstName());
+        entityUserEntity.setLastName(userEntity.getLastName());
+        entityUserEntity.setEmail(userEntity.getEmail());
 
-        entityManager.merge(entityUser);
+        entityManager.merge(entityUserEntity);
         entityManager.flush();
-        return entityUser;
+        return entityUserEntity;
     }
 }
