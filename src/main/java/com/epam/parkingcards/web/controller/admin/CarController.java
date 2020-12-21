@@ -27,7 +27,7 @@ public class CarController {
     @PostMapping
     public String create(@RequestBody @Valid CarCreateRequest carCreateRequest) {
         long id = carService.create(carMapper.toCar(carCreateRequest));
-        return "Car is registered, id = " + id;
+        return "Success, car id = " + id;
     }
 
     /**
