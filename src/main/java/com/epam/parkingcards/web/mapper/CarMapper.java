@@ -1,5 +1,8 @@
 package com.epam.parkingcards.web.mapper;
 
+import com.epam.parkingcards.dao.CarBrandDao;
+import com.epam.parkingcards.dao.CarModelDao;
+import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.web.request.admin.CarCreateRequest;
 import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeCarCreateRequest;
@@ -16,6 +19,15 @@ import java.util.List;
 
 @Component
 public class CarMapper {
+
+    @Autowired
+    private CarModelDao carModelDao;
+
+    @Autowired
+    private CarBrandDao carBrandDao;
+
+    @Autowired
+    UserDao userDao;
 
     @Autowired
     private CarModelMapper carModelMapper;
@@ -47,8 +59,8 @@ public class CarMapper {
         Car car = new Car();
         car.setId(carUpdateRequest.getId());
         car.setLicensePlate(carUpdateRequest.getLicensePlate());
-        car.setUser(user);
-        car.setCarModel(carModel);
+        car.setUser(userDao.getOne(carUpdateRequest.getUserId()));
+        car.setCarModel(carModelDao.getOne(carUpdateRequest.getModelId()));
 
         return car;
     }
