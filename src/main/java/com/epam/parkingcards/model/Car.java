@@ -1,5 +1,6 @@
 package com.epam.parkingcards.model;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Getter
-@Setter
+//@Getter
+//@Setter
+@Data
 @Entity
 @Table(name = "cars")
 public class Car {

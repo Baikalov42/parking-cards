@@ -14,8 +14,8 @@ public class CustomCarRepositoryImpl implements CustomCarRepository {
     @Override
     @Transactional
     public Car updateCarWithoutUserId(Car car) {
+
         Car entityCar = entityManager.find(Car.class, car.getId());
-        System.err.println(entityCar);
         entityCar.setCarModel(car.getCarModel());
         entityCar.setLicensePlate(car.getLicensePlate());
         entityCar.setUser(car.getUser());
