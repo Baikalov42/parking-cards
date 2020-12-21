@@ -1,6 +1,7 @@
 package com.epam.parkingcards.web.controller.admin;
 
 import com.epam.parkingcards.web.mapper.CarBrandMapper;
+import com.epam.parkingcards.web.request.admin.BrandCreateRequest;
 import com.epam.parkingcards.web.request.admin.BrandUpdateRequest;
 import com.epam.parkingcards.web.response.CarBrandResponse;
 import com.epam.parkingcards.model.CarBrand;
@@ -41,8 +42,8 @@ public class BrandController {
      * Create brand
      */
     @PostMapping()
-    public String register(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
-        long id = carBrandService.create(carBrandMapper.toCarBrand(brandUpdateRequest));
+    public String register(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
+        long id = carBrandService.create(carBrandMapper.toCarBrand(brandCreateRequest));
         return String.valueOf(id);
     }
 

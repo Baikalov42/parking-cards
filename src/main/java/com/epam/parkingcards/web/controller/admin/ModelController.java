@@ -1,6 +1,7 @@
 package com.epam.parkingcards.web.controller.admin;
 
 import com.epam.parkingcards.web.mapper.CarModelMapper;
+import com.epam.parkingcards.web.request.admin.ModelCreateRequest;
 import com.epam.parkingcards.web.request.admin.ModelUpdateRequest;
 import com.epam.parkingcards.web.response.CarModelResponse;
 import com.epam.parkingcards.model.CarModel;
@@ -40,7 +41,7 @@ public class ModelController {
     /**
      * Get model by brand id
      */
-    @GetMapping("/{brandId}")
+    @GetMapping("/get-by-brand/{brandId}")
     public List<CarModelResponse> getModelByBrandId(@PathVariable long brandId) {
         List<CarModel> carModel = carModelService.findAllByBrand(brandId);
         return carModelMapper.toCarModelResponses(carModel);
@@ -49,9 +50,10 @@ public class ModelController {
     /**
      * Create model
      */
+    //todo модель создается, но в общем списке getAllModels не отображается
     @PostMapping()
-    public String register(@RequestBody @Valid ModelUpdateRequest modelUpdateRequest) {
-        long id = carModelService.create(carModelMapper.toCarModel(modelUpdateRequest));
+    public String register(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
+        long id = carModelService.create(carModelMapper.toCarModel(modelCreateRequest));
         return String.valueOf(id);
     }
 

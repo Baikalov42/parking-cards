@@ -1,6 +1,8 @@
 package com.epam.parkingcards.web.controller.admin;
 
 import com.epam.parkingcards.web.mapper.CarMapper;
+import com.epam.parkingcards.web.request.admin.CarCreateRequest;
+import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeCarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;
 import com.epam.parkingcards.model.Car;
@@ -40,16 +42,19 @@ public class CarController {
     /**
      * Create car and add to user
      */
-
-    //todo requests problem
-
+    @PostMapping
+    public String createCarAndAddToUser(@RequestBody @Valid CarCreateRequest carCreateRequest) {
+        long id = carService.create(carMapper.toCar(carCreateRequest));
+        return "Car is registered, id = " + id;
+    }
 
     /**
      * Update car
      */
-    @PutMapping()
-    public CarResponse update(@RequestBody @Valid MeCarUpdateRequest meCarUpdateRequest) {
-        Car updated = carService.update(carMapper.toCar(meCarUpdateRequest));
+    //todo Машина обновляется, но маппер не срабатывает, возвращет нулл-поинтер
+    @PutMapping
+    public CarResponse update(@RequestBody @Valid CarUpdateRequest carUpdateRequest) {
+        Car updated = carService.update(carMapper.toCar(carUpdateRequest));
         return carMapper.toCarResponse(updated);
     }
 

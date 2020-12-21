@@ -1,6 +1,7 @@
 package com.epam.parkingcards.web.controller.admin;
 
 import com.epam.parkingcards.web.mapper.UserMapper;
+import com.epam.parkingcards.web.request.admin.UserUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeUserUpdateRequest;
 import com.epam.parkingcards.web.response.UserResponse;
 import com.epam.parkingcards.model.User;
@@ -51,8 +52,8 @@ public class UserController {
      * Update user
      */
     @PutMapping()
-    public UserResponse update(@RequestBody @Valid MeUserUpdateRequest meUserUpdateRequest) {
-        User updated = userService.update(userMapper.toUser(meUserUpdateRequest));
+    public UserResponse update(@RequestBody @Valid UserUpdateRequest userUpdateRequest) {
+        User updated = userService.update(userMapper.toUser(userUpdateRequest));
         return userMapper.toUserResponse(updated);
     }
 
