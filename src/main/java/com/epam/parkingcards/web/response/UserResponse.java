@@ -12,6 +12,6 @@ public class UserResponse {
     private String lastName;
     private String phone;
     private String email;
-    private Set<CarResponse> cars;
+    private int carsCount;
 
 }

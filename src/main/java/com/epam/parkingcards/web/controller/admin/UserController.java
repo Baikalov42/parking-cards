@@ -22,18 +22,10 @@ public class UserController {
     private UserMapper userMapper;
 
     /**
-     * Get all users
-     */
-    @GetMapping("/page/{pageNumber}")
-    public List<UserResponse> getAllUsers(@PathVariable int pageNumber) {
-        return userMapper.toUserResponses(userService.findAll(pageNumber));
-    }
-
-    /**
      * Get user by id
      */
     @GetMapping("/{userId}")
-    public UserResponse getUserById(@PathVariable long userId) {
+    public UserResponse getById(@PathVariable long userId) {
         UserEntity userEntity = userService.findById(userId);
         return userMapper.toUserResponse(userEntity);
     }
@@ -45,6 +37,14 @@ public class UserController {
     public UserResponse getByLicensePlate(@PathVariable String plate) {
         UserEntity userEntity = userService.findByLicensePlate(plate);
         return userMapper.toUserResponse(userEntity);
+    }
+
+    /**
+     * Get all users
+     */
+    @GetMapping("/page/{pageNumber}")
+    public List<UserResponse> getAll(@PathVariable int pageNumber) {
+        return userMapper.toUserResponses(userService.findAll(pageNumber));
     }
 
     /**
@@ -60,7 +60,7 @@ public class UserController {
      * Delete user by ID
      */
     @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable long userId) {
+    public void deleteById(@PathVariable long userId) {
         userService.deleteById(userId);
     }
 }

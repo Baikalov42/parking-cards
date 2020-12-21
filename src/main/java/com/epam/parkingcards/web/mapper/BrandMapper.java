@@ -34,16 +34,17 @@ public class BrandMapper {
 
         brandResponse.setId(brandEntity.getId());
         brandResponse.setName(brandEntity.getName());
+        brandResponse.setDeleted(brandEntity.isDeleted());
 
         return brandResponse;
     }
 
     public List<BrandResponse> toCarBrandResponses(List<BrandEntity> brandEntities) {
 
-        List<BrandResponse> brandRespons = new ArrayList<>();
+        List<BrandResponse> brandResponses = new ArrayList<>();
         for (BrandEntity brandEntity : brandEntities) {
-            brandRespons.add(toCarBrandResponse(brandEntity));
+            brandResponses.add(toCarBrandResponse(brandEntity));
         }
-        return brandRespons;
+        return brandResponses;
     }
 }

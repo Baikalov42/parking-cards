@@ -22,42 +22,53 @@ public class ModelController {
     private ModelMapper modelMapper;
 
     /**
-     * Get all models
+     * Create model
      */
-    @GetMapping("/page/{pageNumber}")
-    public List<ModelResponse> getAllModels(@PathVariable int pageNumber) {
-        return modelMapper.toCarModelResponses(modelService.findAll(pageNumber));
+    @PostMapping()
+    public String create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
+        long id = modelService.create(modelMapper.toCarModel(modelCreateRequest));
+        return "Success, model id = " + id;
     }
 
     /**
      * Get model by id
      */
     @GetMapping("/{modelId}")
-    public ModelResponse getModelById(@PathVariable long modelId) {
+    public ModelResponse getById(@PathVariable long modelId) {
         ModelEntity modelEntity = modelService.findById(modelId);
         return modelMapper.toCarModelResponse(modelEntity);
     }
 
     /**
-     * Get model by brand id
+     * Get all models
      */
-    @GetMapping("/get-by-brand/{brandId}")
-    public List<ModelResponse> getModelByBrandId(@PathVariable long brandId) {
-        List<ModelEntity> modelEntity = modelService.findAllByBrand(brandId);
+    @GetMapping("/page/{pageNumber}")
+    public List<ModelResponse> getAll(@PathVariable int pageNumber) {
+        return modelMapper.toCarModelResponses(modelService.findAll(pageNumber));
+    }
+
+    /**
+     * Get models by brand id
+     */
+    @GetMapping("/get-by-brand/{brandId}/page/{pageNumber}")
+    public List<ModelResponse> getByBrand(@PathVariable long brandId, @PathVariable int pageNumber) {
+
+        List<ModelEntity> modelEntity = modelService.findAllByBrand(brandId, pageNumber);
         return modelMapper.toCarModelResponses(modelEntity);
     }
 
     /**
-     * Create model
+     * Get all deleted models
      */
-    @PostMapping()
-    public String register(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
-        long id = modelService.create(modelMapper.toCarModel(modelCreateRequest));
-        return String.valueOf(id);
+    @GetMapping("/deleted/page/{pageNumber}")
+    public List<ModelResponse> getAllDeleted(@PathVariable int pageNumber) {
+
+        List<ModelEntity> modelEntity = modelService.findAllDeleted(pageNumber);
+        return modelMapper.toCarModelResponses(modelEntity);
     }
 
     /**
-     * Update car model
+     * Update model
      */
     @PutMapping()
     public ModelResponse update(@RequestBody @Valid ModelUpdateRequest modelUpdateRequest) {
@@ -66,10 +77,10 @@ public class ModelController {
     }
 
     /**
-     * Delete car model
+     * Delete model
      */
     @DeleteMapping("/{modelId}")
-    public void deleteCarModel(@PathVariable long modelId) {
+    public void delete(@PathVariable long modelId) {
         modelService.deleteSoftById(modelId);
     }
 }

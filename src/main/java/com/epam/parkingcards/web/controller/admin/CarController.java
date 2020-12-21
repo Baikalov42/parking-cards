@@ -22,29 +22,29 @@ public class CarController {
     private CarMapper carMapper;
 
     /**
-     * Get all cars
+     * Create car and add to user
      */
-    @GetMapping("/page/{pageNumber}")
-    public List<CarResponse> getAllCars(@Valid @PathVariable int pageNumber) {
-        return carMapper.toCarResponses(carService.findAll(pageNumber));
+    @PostMapping
+    public String create(@RequestBody @Valid CarCreateRequest carCreateRequest) {
+        long id = carService.create(carMapper.toCar(carCreateRequest));
+        return "Car is registered, id = " + id;
     }
 
     /**
      * Get car by id
      */
     @GetMapping("/{carId}")
-    public CarResponse getUserById(@Valid @PathVariable long carId) {
+    public CarResponse getById(@Valid @PathVariable long carId) {
         CarEntity carEntity = carService.findById(carId);
         return carMapper.toCarResponse(carEntity);
     }
 
     /**
-     * Create car and add to user
+     * Get all cars
      */
-    @PostMapping
-    public String createCarAndAddToUser(@RequestBody @Valid CarCreateRequest carCreateRequest) {
-        long id = carService.create(carMapper.toCar(carCreateRequest));
-        return "Car is registered, id = " + id;
+    @GetMapping("/page/{pageNumber}")
+    public List<CarResponse> getAll(@Valid @PathVariable int pageNumber) {
+        return carMapper.toCarResponses(carService.findAll(pageNumber));
     }
 
     /**
@@ -60,7 +60,7 @@ public class CarController {
      * Delete car, and remove from user
      */
     @DeleteMapping("/{carId}")
-    public void deleteCarFromUser(@PathVariable long carId) {
+    public void delete(@PathVariable long carId) {
         carService.deleteById(carId);
     }
 }
