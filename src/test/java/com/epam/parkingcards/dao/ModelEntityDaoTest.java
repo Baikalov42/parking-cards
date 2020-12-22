@@ -5,8 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -19,11 +24,10 @@ public class ModelEntityDaoTest {
 
     @Test
     public void given_carModelDao_when_loadingDeleted_then_sizeIsCorrect() {
- /*       assertThat(modelDao.findByIsDeletedFalse().size()).isEqualTo(11);
-        ModelEntity deletedModel = modelDao.getOne(1L);
-        deletedModel.setDeleted(true);
-        modelDao.saveAndFlush(deletedModel);
-        assertThat(modelDao.findByIsDeletedFalse().size()).isEqualTo(10);*/
+        modelDao.markAsDeleted(1);
+        PageRequest id = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
+        List<ModelEntity> deletedByBrandId = modelDao.findAllDeleted(id).toList();
+        assertThat(deletedByBrandId.size()).isEqualTo(1);
     }
 
 }
