@@ -85,6 +85,15 @@ public class MeRestController {
         return carMapper.toCarResponses(carEntities);
     }
 
+    @GetMapping("/cars/{carId}")
+    public CarResponse getCarById(@PathVariable long carId, Authentication authentication) {
+
+        if (!userSecurity.hasCar(authentication, carId)) {
+            throw new ValidationException("user dont have car, with id " + carId);
+        }
+        return carMapper.toCarResponse(carService.findById(carId));
+    }
+
     @PostMapping("/cars")
     public long addCar(@Valid @RequestBody MeCarCreateRequest meCarCreateRequest,
                        Authentication authentication) {
