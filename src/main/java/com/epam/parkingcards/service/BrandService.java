@@ -25,9 +25,9 @@ public class BrandService {
     @Autowired
     private IdValidator idValidator;
 
-    //TODO: check if there is soft deleted brand with the same name
-    //TODO: if found, set deleted to false
     public long create(BrandEntity brandEntity) {
+
+        validateForNameAlreadyUsedAndDeleted(brandEntity.getName());
         try {
             return brandDao.saveAndFlush(brandEntity).getId();
         } catch (DataAccessException e) {
@@ -54,11 +54,23 @@ public class BrandService {
         return result;
     }
 
-    //TODO: Think about situation when setting the same name as soft-deleted one
+    public List<BrandEntity> findAllDeleted(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
+        List<BrandEntity> result = brandDao.findAllDeleted(pageable).getContent();
+
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
+        }
+        return result;
+    }
+
     public BrandEntity update(BrandEntity brandEntity) {
 
         idValidator.validate(brandEntity.getId());
-        validateForExistence(brandEntity.getId());
+        validateForExistenceAndNotDeleted(brandEntity.getId());
+        validateForNameAlreadyUsedAndDeleted(brandEntity.getName());
+
         try {
             return brandDao.saveAndFlush(brandEntity);
         } catch (DataAccessException e) {
@@ -68,19 +80,32 @@ public class BrandService {
 
     public void deleteSoftById(long id) {
         idValidator.validate(id);
+        validateForExistenceAndNotDeleted(id);
+
         try {
-            BrandEntity brandEntity = brandDao.findById(id)
-                    .orElseThrow(() -> new NotFoundException(String.format("By id %d, CarBrand not found", id)));
-            brandEntity.setDeleted(true);
-            brandDao.saveAndFlush(brandEntity);
+            brandDao.markAsDeleted(id);
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+        }
+    }
+
+    private void validateForNameAlreadyUsedAndDeleted(String brandName) {
+        long l = brandDao.getCountDeletedByName(brandName);
+        if (l > 0) {
+            throw new ValidationException(String.format("Name %s already used, and was deleted", brandName));
         }
     }
 
     public void validateForExistence(long id) {
         if (!brandDao.existsById(id)) {
             throw new ValidationException(String.format("Not exist, id=%d", id));
+        }
+    }
+
+    public void validateForExistenceAndNotDeleted(long id) {
+        BrandEntity brandEntity = findById(id);
+        if (brandEntity.isDeleted()) {
+            throw new ValidationException(String.format("Brand id=%d marked as deleted", id));
         }
     }
 }

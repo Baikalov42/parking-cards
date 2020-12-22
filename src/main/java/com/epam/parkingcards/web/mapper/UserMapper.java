@@ -63,9 +63,7 @@ public class UserMapper {
         userResponse.setEmail(userEntity.getEmail());
         userResponse.setPhone(userEntity.getPhone());
 
-        userResponse.setCars(userEntity.getCarEntities().stream()
-                .map(x -> carMapper.toCarResponse(x))
-                .collect(Collectors.toSet()));
+        userResponse.setCarsCount(userEntity.getCarEntities().size());
 
         return userResponse;
     }

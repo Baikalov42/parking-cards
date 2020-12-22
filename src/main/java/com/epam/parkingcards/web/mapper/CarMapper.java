@@ -101,7 +101,7 @@ public class CarMapper {
         CarResponse carResponse = new CarResponse();
         carResponse.setId(carEntity.getId());
         carResponse.setLicensePlate(carEntity.getLicensePlate());
-        carResponse.setModel(modelMapper.toCarModelResponse(carEntity.getModelEntity()));
+        carResponse.setModelId(carEntity.getModelEntity().getId());
 
         return carResponse;
     }

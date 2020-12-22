@@ -32,6 +32,14 @@ public class CarService {
 
     public long create(CarEntity carEntity) {
 
+        modelService.validateForExistenceAndNotDeleted(carEntity
+                .getModelEntity()
+                .getId());
+
+        userService.validateForExistence(carEntity
+                .getUserEntity()
+                .getId());
+
         try {
             return carDao.saveAndFlush(carEntity).getId();
         } catch (DataAccessException e) {
@@ -64,7 +72,8 @@ public class CarService {
         userService.validateForExistence(carEntity
                 .getUserEntity()
                 .getId());
-        modelService.validateForExistence(carEntity
+
+        modelService.validateForExistenceAndNotDeleted(carEntity
                 .getModelEntity()
                 .getId());
 

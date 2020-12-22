@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,9 +27,14 @@ public class ModelService {
     @Autowired
     private IdValidator idValidator;
 
-    //TODO: check if there is soft deleted model with the same name
-    //TODO: if found, set deleted to false
     public long create(ModelEntity modelEntity) {
+
+        validateForNameAlreadyUsedAndDeleted(modelEntity.getName());
+
+        brandService.validateForExistenceAndNotDeleted(modelEntity
+                .getBrandEntity()
+                .getId());
+
         try {
             return modelDao.saveAndFlush(modelEntity).getId();
         } catch (DataAccessException e) {
@@ -56,20 +60,39 @@ public class ModelService {
         return result;
     }
 
-    //TODO: check changed logic - whe retrieve models from CarModelDao, this way we will get only not deleted items
-    public List<ModelEntity> findAllByBrand(long brandId) {
-        return new ArrayList<>(modelDao.findByBrandEntity(brandService.findById(brandId)));
+    public List<ModelEntity> findAllByBrand(long brandId, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
+        List<ModelEntity> result = modelDao.findByBrandId(brandId, pageable).getContent();
+
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By Brand id=%d, result is empty. Page number = %d, page size = %d",
+                            brandId, pageNumber, PAGE_SIZE));
+        }
+        return result;
     }
 
-    //TODO: Think about situation when setting the same name as soft-deleted one
+    public List<ModelEntity> findAllDeleted(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
+        List<ModelEntity> result = modelDao.findAllDeleted(pageable).getContent();
+
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
+        }
+        return result;
+    }
+
     public ModelEntity update(ModelEntity modelEntity) {
 
         idValidator.validate(modelEntity.getId());
+        this.validateForExistenceAndNotDeleted(modelEntity.getId());
 
-        validateForExistence(modelEntity.getId());
-        brandService.validateForExistence(modelEntity
+        brandService.validateForExistenceAndNotDeleted(modelEntity
                 .getBrandEntity()
                 .getId());
+
+        this.validateForNameAlreadyUsedAndDeleted(modelEntity.getName());
 
         try {
             return modelDao.saveAndFlush(modelEntity);
@@ -80,20 +103,34 @@ public class ModelService {
 
     public void deleteSoftById(long id) {
         idValidator.validate(id);
-        try {
-            ModelEntity modelEntity = modelDao.findById(id)
-                    .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
+        validateForExistenceAndNotDeleted(id);
 
-            modelEntity.setDeleted(true);
-            modelDao.saveAndFlush(modelEntity);
+        try {
+            modelDao.markAsDeleted(id);
+
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+        }
+    }
+
+    private void validateForNameAlreadyUsedAndDeleted(String modelName) {
+        long l = modelDao.getCountDeletedByName(modelName);
+        if (l > 0) {
+            throw new ValidationException(String.format("Name %s already used, and was deleted", modelName));
         }
     }
 
     public void validateForExistence(long id) {
         if (!modelDao.existsById(id)) {
             throw new ValidationException(String.format("Not exist, id=%d", id));
+        }
+    }
+
+    public void validateForExistenceAndNotDeleted(long id) {
+        ModelEntity modelEntity = findById(id);
+
+        if (modelEntity.isDeleted()) {
+            throw new ValidationException(String.format("Model id=%d marked as deleted", id));
         }
     }
 }

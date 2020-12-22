@@ -7,5 +7,7 @@ public class ModelResponse {
 
     private long id;
     private String name;
-    private BrandResponse brand;
+    private long brandId;
+    private boolean isDeleted;
+
 }

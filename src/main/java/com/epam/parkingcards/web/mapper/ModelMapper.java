@@ -47,17 +47,18 @@ public class ModelMapper {
 
         modelResponse.setId(modelEntity.getId());
         modelResponse.setName(modelEntity.getName());
-        modelResponse.setBrand(brandMapper.toCarBrandResponse(modelEntity.getBrandEntity()));
+        modelResponse.setBrandId(modelEntity.getBrandEntity().getId());
+        modelResponse.setDeleted(modelEntity.isDeleted());
 
         return modelResponse;
     }
 
     public List<ModelResponse> toCarModelResponses(List<ModelEntity> modelEntities) {
 
-        List<ModelResponse> modelRespons = new ArrayList<>();
+        List<ModelResponse> modelResponses = new ArrayList<>();
         for (ModelEntity model : modelEntities) {
-            modelRespons.add(toCarModelResponse(model));
+            modelResponses.add(toCarModelResponse(model));
         }
-        return modelRespons;
+        return modelResponses;
     }
 }

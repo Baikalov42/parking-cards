@@ -7,5 +7,5 @@ public class CarResponse {
 
     private long id;
     private String licensePlate;
-    private ModelResponse model;
+    private long modelId;
 }

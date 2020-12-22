@@ -22,33 +22,41 @@ public class BrandController {
     private BrandMapper brandMapper;
 
     /**
-     * Get all brands
+     * Create brand
      */
-    @GetMapping("/page/{pageNumber}")
-    public List<BrandResponse> getAllBrands(@PathVariable int pageNumber) {
-        return brandMapper.toCarBrandResponses(brandService.findAll(pageNumber));
+    @PostMapping()
+    public String create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
+        long id = brandService.create(brandMapper.toCarBrand(brandCreateRequest));
+        return "Success, brand id = " + id;
     }
 
     /**
      * Get brand by id
      */
     @GetMapping("/{brandId}")
-    public BrandResponse getBrandById(@PathVariable long brandId) {
+    public BrandResponse getById(@PathVariable long brandId) {
         BrandEntity brandEntity = brandService.findById(brandId);
         return brandMapper.toCarBrandResponse(brandEntity);
     }
 
     /**
-     * Create brand
+     * Get all brands
      */
-    @PostMapping()
-    public String register(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
-        long id = brandService.create(brandMapper.toCarBrand(brandCreateRequest));
-        return String.valueOf(id);
+    @GetMapping("/page/{pageNumber}")
+    public List<BrandResponse> getAll(@PathVariable int pageNumber) {
+        return brandMapper.toCarBrandResponses(brandService.findAll(pageNumber));
     }
 
     /**
-     * Update car brand
+     * Get all deleted brands
+     */
+    @GetMapping("/deleted/page/{pageNumber}")
+    public List<BrandResponse> getAllDeleted(@PathVariable int pageNumber) {
+        return brandMapper.toCarBrandResponses(brandService.findAllDeleted(pageNumber));
+    }
+
+    /**
+     * Update brand
      */
     @PutMapping()
     public BrandResponse update(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
@@ -57,10 +65,10 @@ public class BrandController {
     }
 
     /**
-     * Delete car model
+     * Delete brand
      */
     @DeleteMapping("/{brandId}")
-    public void deleteCarBrand(@PathVariable long brandId) {
+    public void delete(@PathVariable long brandId) {
         brandService.deleteSoftById(brandId);
     }
 }
