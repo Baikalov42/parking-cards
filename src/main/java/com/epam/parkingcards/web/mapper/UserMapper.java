@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
@@ -21,6 +20,7 @@ public class UserMapper {
     public UserEntity toUser(UserRegistrationRequest userRegistrationRequest) {
 
         UserEntity userEntity = new UserEntity();
+
         userEntity.setEmail(userRegistrationRequest.getEmail());
         userEntity.setFirstName(userRegistrationRequest.getFirstName());
         userEntity.setLastName(userRegistrationRequest.getLastName());
@@ -33,6 +33,7 @@ public class UserMapper {
     public UserEntity toUser(UserUpdateRequest userUpdateRequest) {
 
         UserEntity userEntity = new UserEntity();
+
         userEntity.setId(userUpdateRequest.getId());
         userEntity.setEmail(userUpdateRequest.getEmail());
         userEntity.setFirstName(userUpdateRequest.getFirstName());

@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class BrandMapper {
 
-    public BrandEntity toCarBrand(BrandUpdateRequest brandUpdateRequest) {
+    public BrandEntity toBrand(BrandUpdateRequest brandUpdateRequest) {
 
         BrandEntity brandEntity = new BrandEntity();
         brandEntity.setId(brandUpdateRequest.getId());
@@ -21,7 +21,7 @@ public class BrandMapper {
         return brandEntity;
     }
 
-    public BrandEntity toCarBrand(BrandCreateRequest brandCreateRequest) {
+    public BrandEntity toBrand(BrandCreateRequest brandCreateRequest) {
 
         BrandEntity brandEntity = new BrandEntity();
         brandEntity.setName(brandCreateRequest.getName());
@@ -29,7 +29,7 @@ public class BrandMapper {
         return brandEntity;
     }
 
-    public BrandResponse toCarBrandResponse(BrandEntity brandEntity) {
+    public BrandResponse toBrandResponse(BrandEntity brandEntity) {
         BrandResponse brandResponse = new BrandResponse();
 
         brandResponse.setId(brandEntity.getId());
@@ -39,11 +39,11 @@ public class BrandMapper {
         return brandResponse;
     }
 
-    public List<BrandResponse> toCarBrandResponses(List<BrandEntity> brandEntities) {
+    public List<BrandResponse> toBrandResponses(List<BrandEntity> brandEntities) {
 
         List<BrandResponse> brandResponses = new ArrayList<>();
         for (BrandEntity brandEntity : brandEntities) {
-            brandResponses.add(toCarBrandResponse(brandEntity));
+            brandResponses.add(toBrandResponse(brandEntity));
         }
         return brandResponses;
     }

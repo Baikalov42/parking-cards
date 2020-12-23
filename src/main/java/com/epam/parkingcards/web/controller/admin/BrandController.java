@@ -26,7 +26,7 @@ public class BrandController {
      */
     @PostMapping()
     public String create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
-        long id = brandService.create(brandMapper.toCarBrand(brandCreateRequest));
+        long id = brandService.create(brandMapper.toBrand(brandCreateRequest));
         return "Success, brand id = " + id;
     }
 
@@ -36,7 +36,7 @@ public class BrandController {
     @GetMapping("/{brandId}")
     public BrandResponse getById(@PathVariable long brandId) {
         BrandEntity brandEntity = brandService.findById(brandId);
-        return brandMapper.toCarBrandResponse(brandEntity);
+        return brandMapper.toBrandResponse(brandEntity);
     }
 
     /**
@@ -44,7 +44,7 @@ public class BrandController {
      */
     @GetMapping("/page/{pageNumber}")
     public List<BrandResponse> getAll(@PathVariable int pageNumber) {
-        return brandMapper.toCarBrandResponses(brandService.findAll(pageNumber));
+        return brandMapper.toBrandResponses(brandService.findAll(pageNumber));
     }
 
     /**
@@ -52,7 +52,7 @@ public class BrandController {
      */
     @GetMapping("/deleted/page/{pageNumber}")
     public List<BrandResponse> getAllDeleted(@PathVariable int pageNumber) {
-        return brandMapper.toCarBrandResponses(brandService.findAllDeleted(pageNumber));
+        return brandMapper.toBrandResponses(brandService.findAllDeleted(pageNumber));
     }
 
     /**
@@ -60,8 +60,8 @@ public class BrandController {
      */
     @PutMapping()
     public BrandResponse update(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
-        BrandEntity updated = brandService.update(brandMapper.toCarBrand(brandUpdateRequest));
-        return brandMapper.toCarBrandResponse(updated);
+        BrandEntity updated = brandService.update(brandMapper.toBrand(brandUpdateRequest));
+        return brandMapper.toBrandResponse(updated);
     }
 
     /**

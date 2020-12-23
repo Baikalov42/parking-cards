@@ -1,17 +1,13 @@
 package com.epam.parkingcards.web.mapper;
 
-import com.epam.parkingcards.dao.BrandDao;
-import com.epam.parkingcards.dao.ModelDao;
-import com.epam.parkingcards.dao.UserDao;
+import com.epam.parkingcards.model.CarEntity;
+import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.web.request.admin.CarCreateRequest;
 import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
 import com.epam.parkingcards.web.request.me.MeCarCreateRequest;
 import com.epam.parkingcards.web.request.me.MeCarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;
-import com.epam.parkingcards.model.CarEntity;
-import com.epam.parkingcards.model.ModelEntity;
-import com.epam.parkingcards.model.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,17 +16,6 @@ import java.util.List;
 @Component
 public class CarMapper {
 
-    @Autowired
-    private ModelDao modelDao;
-
-    @Autowired
-    private BrandDao brandDao;
-
-    @Autowired
-    UserDao userDao;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     public CarEntity toCar(CarCreateRequest carCreateRequest) {
 
@@ -57,10 +42,11 @@ public class CarMapper {
         modelEntity.setId(carUpdateRequest.getModelId());
 
         CarEntity carEntity = new CarEntity();
+
         carEntity.setId(carUpdateRequest.getId());
         carEntity.setLicensePlate(carUpdateRequest.getLicensePlate());
-        carEntity.setUserEntity(userDao.getOne(carUpdateRequest.getUserId()));
-        carEntity.setModelEntity(modelDao.getOne(carUpdateRequest.getModelId()));
+        carEntity.setUserEntity(userEntity);
+        carEntity.setModelEntity(modelEntity);
 
         return carEntity;
     }
