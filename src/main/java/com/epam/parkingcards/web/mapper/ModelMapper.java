@@ -17,7 +17,7 @@ public class ModelMapper {
     @Autowired
     private BrandMapper brandMapper;
 
-    public ModelEntity toCarModel(ModelUpdateRequest modelUpdateRequest) {
+    public ModelEntity toModel(ModelUpdateRequest modelUpdateRequest) {
         BrandEntity brandEntity = new BrandEntity();
         brandEntity.setId(modelUpdateRequest.getBrandId());
 
@@ -29,7 +29,7 @@ public class ModelMapper {
         return modelEntity;
     }
 
-    public ModelEntity toCarModel(ModelCreateRequest modelCreateRequest) {
+    public ModelEntity toModel(ModelCreateRequest modelCreateRequest) {
 
         BrandEntity brandEntity = new BrandEntity();
         brandEntity.setId(modelCreateRequest.getBrandId());
@@ -42,7 +42,7 @@ public class ModelMapper {
         return modelEntity;
     }
 
-    public ModelResponse toCarModelResponse(ModelEntity modelEntity) {
+    public ModelResponse toModelResponse(ModelEntity modelEntity) {
         ModelResponse modelResponse = new ModelResponse();
 
         modelResponse.setId(modelEntity.getId());
@@ -53,11 +53,11 @@ public class ModelMapper {
         return modelResponse;
     }
 
-    public List<ModelResponse> toCarModelResponses(List<ModelEntity> modelEntities) {
+    public List<ModelResponse> toModelResponses(List<ModelEntity> modelEntities) {
 
         List<ModelResponse> modelResponses = new ArrayList<>();
         for (ModelEntity model : modelEntities) {
-            modelResponses.add(toCarModelResponse(model));
+            modelResponses.add(toModelResponse(model));
         }
         return modelResponses;
     }

@@ -133,11 +133,11 @@ public class MeRestController {
 
     @GetMapping("/models/page/{pageNumber}")
     public List<ModelResponse> getAllModels(@PathVariable int pageNumber) {
-        return modelMapper.toCarModelResponses(modelService.findAll(pageNumber));
+        return modelMapper.toModelResponses(modelService.findAll(pageNumber));
     }
 
     @GetMapping("/brands/page/{pageNumber}")
     public List<BrandResponse> getAllBrands(@PathVariable int pageNumber) {
-        return brandMapper.toCarBrandResponses(brandService.findAll(pageNumber));
+        return brandMapper.toBrandResponses(brandService.findAll(pageNumber));
     }
 }

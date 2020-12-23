@@ -26,7 +26,7 @@ public class ModelController {
      */
     @PostMapping()
     public String create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
-        long id = modelService.create(modelMapper.toCarModel(modelCreateRequest));
+        long id = modelService.create(modelMapper.toModel(modelCreateRequest));
         return "Success, model id = " + id;
     }
 
@@ -36,7 +36,7 @@ public class ModelController {
     @GetMapping("/{modelId}")
     public ModelResponse getById(@PathVariable long modelId) {
         ModelEntity modelEntity = modelService.findById(modelId);
-        return modelMapper.toCarModelResponse(modelEntity);
+        return modelMapper.toModelResponse(modelEntity);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ModelController {
      */
     @GetMapping("/page/{pageNumber}")
     public List<ModelResponse> getAll(@PathVariable int pageNumber) {
-        return modelMapper.toCarModelResponses(modelService.findAll(pageNumber));
+        return modelMapper.toModelResponses(modelService.findAll(pageNumber));
     }
 
     /**
@@ -54,7 +54,7 @@ public class ModelController {
     public List<ModelResponse> getByBrand(@PathVariable long brandId, @PathVariable int pageNumber) {
 
         List<ModelEntity> modelEntity = modelService.findAllByBrand(brandId, pageNumber);
-        return modelMapper.toCarModelResponses(modelEntity);
+        return modelMapper.toModelResponses(modelEntity);
     }
 
     /**
@@ -64,7 +64,7 @@ public class ModelController {
     public List<ModelResponse> getAllDeleted(@PathVariable int pageNumber) {
 
         List<ModelEntity> modelEntity = modelService.findAllDeleted(pageNumber);
-        return modelMapper.toCarModelResponses(modelEntity);
+        return modelMapper.toModelResponses(modelEntity);
     }
 
     /**
@@ -72,8 +72,8 @@ public class ModelController {
      */
     @PutMapping()
     public ModelResponse update(@RequestBody @Valid ModelUpdateRequest modelUpdateRequest) {
-        ModelEntity updated = modelService.update(modelMapper.toCarModel(modelUpdateRequest));
-        return modelMapper.toCarModelResponse(updated);
+        ModelEntity updated = modelService.update(modelMapper.toModel(modelUpdateRequest));
+        return modelMapper.toModelResponse(updated);
     }
 
     /**
