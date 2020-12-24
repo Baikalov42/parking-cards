@@ -80,6 +80,7 @@ public class UserService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('ROLE_admin') or #userEntity.id == this.getIdByEmail(authentication.principal.username)")
     public UserEntity update(UserEntity userEntity) {
 
         idValidator.validate(userEntity.getId());
@@ -121,6 +122,28 @@ public class UserService {
                     String.format("By keyword %s, Users not found", keyword));
         }
         return result;
+    }
+
+    public void addRole(long userId, long roleId) {
+        UserEntity userEntity = userDao.getOne(userId);
+        userEntity.getRoleEntities().add(roleDao.getOne(roleId));
+        try {
+            userDao.saveAndFlush(userEntity);
+        } catch (DataAccessException e) {
+            throw new DaoException(String
+                    .format("Adding role with id %d to user with id %d failed", roleId, userId), e);
+        }
+    }
+
+    public void removeRole(long userId, long roleId) {
+        UserEntity userEntity = userDao.getOne(userId);
+        userEntity.getRoleEntities().remove(roleDao.getOne(roleId));
+        try {
+            userDao.saveAndFlush(userEntity);
+        } catch (DataAccessException e) {
+            throw new DaoException(String
+                    .format("Deleting role with id %d to user with id %d failed", roleId, userId), e);
+        }
     }
 
     public void validateForExistence(long id) {
