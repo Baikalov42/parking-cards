@@ -51,8 +51,7 @@ public class ModelService {
 
     public List<ModelEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<ModelEntity> result = modelDao.findAll(pageable).getContent();
-
+        List<ModelEntity> result = modelDao.findByIsDeletedFalse(pageable).getContent();
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));

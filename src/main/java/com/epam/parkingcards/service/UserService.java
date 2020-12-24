@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,7 @@ public class UserService {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_admin') or #id == this.getIdByEmail(authentication.principal.username)")
     public UserEntity findById(long id) {
         idValidator.validate(id);
         return userDao.findById(id)

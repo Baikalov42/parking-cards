@@ -24,4 +24,6 @@ public interface BrandDao extends JpaRepository<BrandEntity, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE BrandEntity b SET b.isDeleted = false WHERE b.id = :brandId")
     void restore(long brandId);
+
+    Page<BrandEntity> findByIsDeletedFalse(Pageable pageable);
 }

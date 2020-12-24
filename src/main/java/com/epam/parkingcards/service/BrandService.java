@@ -45,7 +45,7 @@ public class BrandService {
     public List<BrandEntity> findAll(int pageNumber) {
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<BrandEntity> result = brandDao.findAll(pageable).getContent();
+        List<BrandEntity> result = brandDao.findByIsDeletedFalse(pageable).getContent();
 
         if (result.isEmpty()) {
             throw new NotFoundException(

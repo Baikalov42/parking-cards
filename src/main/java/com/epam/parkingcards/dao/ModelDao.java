@@ -27,4 +27,6 @@ public interface ModelDao extends JpaRepository<ModelEntity, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE ModelEntity m SET m.isDeleted = false WHERE m.id = :modelId")
     void restore(long modelId);
+
+    Page<ModelEntity> findByIsDeletedFalse(Pageable pageable);
 }
