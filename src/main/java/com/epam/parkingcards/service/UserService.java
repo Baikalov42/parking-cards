@@ -79,6 +79,15 @@ public class UserService {
         return result;
     }
 
+    public List<UserEntity> findByKeyword(String keyword) {
+        List<UserEntity> result = userDao.findByKeyword(keyword.toLowerCase());
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By keyword %s, Users not found", keyword));
+        }
+        return result;
+    }
+
     @Transactional
     @PreAuthorize("hasAuthority('ROLE_admin') or #userEntity.id == this.getIdByEmail(authentication.principal.username)")
     public UserEntity update(UserEntity userEntity) {
@@ -114,15 +123,6 @@ public class UserService {
         return roleEntities;
     }
 
-    public List<UserEntity> findByKeyword(String keyword) {
-
-        List<UserEntity> result = userDao.findByKeyword(keyword.toLowerCase());
-        if (result.isEmpty()) {
-            throw new NotFoundException(
-                    String.format("By keyword %s, Users not found", keyword));
-        }
-        return result;
-    }
 
     public void addRole(long userId, long roleId) {
         UserEntity userEntity = userDao.getOne(userId);

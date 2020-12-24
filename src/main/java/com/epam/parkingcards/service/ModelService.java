@@ -5,6 +5,7 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -78,6 +79,15 @@ public class ModelService {
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
+        }
+        return result;
+    }
+
+    public List<ModelEntity> findByKeyword(String keyword) {
+        List<ModelEntity> result = modelDao.findByKeyword(keyword.toLowerCase());
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By keyword %s, Users not found", keyword));
         }
         return result;
     }

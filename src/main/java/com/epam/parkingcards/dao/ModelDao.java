@@ -1,12 +1,15 @@
 package com.epam.parkingcards.dao;
 
 import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.model.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface ModelDao extends JpaRepository<ModelEntity, Long> {
     @Query("SELECT m FROM ModelEntity m WHERE m.isDeleted = true")
@@ -29,4 +32,7 @@ public interface ModelDao extends JpaRepository<ModelEntity, Long> {
     void restore(long modelId);
 
     Page<ModelEntity> findByIsDeletedFalse(Pageable pageable);
+
+    @Query("SELECT m FROM ModelEntity m WHERE LOWER(m.name) LIKE %:keyword%")
+    List<ModelEntity> findByKeyword(String keyword);
 }

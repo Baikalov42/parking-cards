@@ -55,6 +55,15 @@ public class UserController {
     }
 
     /**
+     * Search by keyword in first name or last name
+     */
+    @Secured("ROLE_admin")
+    @PostMapping("/search")
+    public List<UserResponse> searchByPart(@RequestParam("keyword") String keyword) {
+        return userMapper.toUserResponses(userService.findByKeyword(keyword));
+    }
+
+    /**
      * Update user
      */
     @PutMapping()
@@ -92,13 +101,5 @@ public class UserController {
     public void deleteById(@PathVariable long userId) {
         userService.deleteById(userId);
 
-    }
-    /**
-     * Search by keyword in first name or last name
-     */
-    @Secured("ROLE_admin")
-    @PostMapping("/search")
-    public List<UserResponse> searchByPart(@RequestParam("keyword") String keyword) {
-        return userMapper.toUserResponses(userService.findByKeyword(keyword));
     }
 }
