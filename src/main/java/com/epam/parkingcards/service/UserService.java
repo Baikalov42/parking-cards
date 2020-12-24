@@ -111,6 +111,16 @@ public class UserService {
         return roleEntities;
     }
 
+    public List<UserEntity> findByKeyword(String keyword) {
+
+        List<UserEntity> result = userDao.findByKeyword(keyword);
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By keyword %s, Users not found", keyword));
+        }
+        return result;
+    }
+
     public void validateForExistence(long id) {
         if (!userDao.existsById(id)) {
             throw new ValidationException(String.format("Not exist, id=%d", id));

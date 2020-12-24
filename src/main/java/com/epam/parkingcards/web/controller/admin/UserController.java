@@ -62,5 +62,13 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public void deleteById(@PathVariable long userId) {
         userService.deleteById(userId);
+
+    }
+    /**
+     * Search by keyword in first name or last name
+     */
+    @GetMapping("/searchByKeyword/{keyword}")
+    public List<UserResponse> searchByPart(@PathVariable String keyword) {
+        return userMapper.toUserResponses(userService.findByKeyword(keyword));
     }
 }
