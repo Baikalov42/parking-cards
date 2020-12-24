@@ -12,7 +12,7 @@ public interface ModelDao extends JpaRepository<ModelEntity, Long> {
     @Query("SELECT m FROM ModelEntity m WHERE m.isDeleted = true")
     Page<ModelEntity> findAllDeleted(Pageable pageable);
 
-    @Query("SELECT m FROM ModelEntity m WHERE m.brandEntity.id = :brandId")
+    @Query("SELECT m FROM ModelEntity m WHERE m.brandEntity.id = :brandId AND m.isDeleted = false")
     Page<ModelEntity> findByBrandId(long brandId, Pageable pageable);
 
     @Query("SELECT COUNT (m) FROM ModelEntity m WHERE m.name = :modelName AND m.isDeleted = true")

@@ -17,6 +17,6 @@ public interface UserDao extends JpaRepository<UserEntity, Long>, CustomUserRepo
             "WHERE c.licensePlate = :licensePlate")
     Optional<UserEntity> findByLicensePlate(String licensePlate);
 
-    @Query("select u from UserEntity u where lower(u.firstName) like %:keyword% or lower(u.lastName) like %:keyword%")
+    @Query("SELECT u FROM UserEntity u WHERE LOWER(u.firstName) LIKE %:keyword% OR LOWER(u.lastName) LIKE %:keyword%")
     List<UserEntity> findByKeyword(String keyword);
 }

@@ -91,4 +91,13 @@ public class ModelController {
     public void delete(@PathVariable long modelId) {
         modelService.deleteSoftById(modelId);
     }
+
+    /**
+     * Restore model from deleted
+     */
+    @Secured("ROLE_admin")
+    @PutMapping("/restore")
+    public void restore(long id){
+        modelService.restore(id);
+    }
 }

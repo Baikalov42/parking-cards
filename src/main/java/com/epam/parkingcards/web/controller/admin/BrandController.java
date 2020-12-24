@@ -25,6 +25,7 @@ public class BrandController {
     /**
      * Create brand
      */
+    @Secured("ROLE_admin")
     @PostMapping()
     public String create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
         long id = brandService.create(brandMapper.toBrand(brandCreateRequest));
@@ -67,6 +68,15 @@ public class BrandController {
     public BrandResponse update(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
         BrandEntity updated = brandService.update(brandMapper.toBrand(brandUpdateRequest));
         return brandMapper.toBrandResponse(updated);
+    }
+
+    /**
+     * Restore brand from deleted
+     */
+    @Secured("ROLE_admin")
+    @PutMapping("/restore")
+    public void restore(long id){
+        brandService.restore(id);
     }
 
     /**

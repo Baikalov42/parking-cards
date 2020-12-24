@@ -115,7 +115,7 @@ public class UserService {
 
     public List<UserEntity> findByKeyword(String keyword) {
 
-        List<UserEntity> result = userDao.findByKeyword(keyword);
+        List<UserEntity> result = userDao.findByKeyword(keyword.toLowerCase());
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("By keyword %s, Users not found", keyword));

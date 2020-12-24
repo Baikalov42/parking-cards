@@ -112,6 +112,16 @@ public class ModelService {
         }
     }
 
+    public void restore(long id) {
+        idValidator.validate(id);
+        validateForExistence(id);
+        try {
+            modelDao.restore(id);
+        } catch (DataAccessException e) {
+            throw new DaoException(String.format("Restoring error: id:%d", id), e);
+        }
+    }
+
     private void validateForNameAlreadyUsedAndDeleted(String modelName) {
         long l = modelDao.getCountDeletedByName(modelName);
         if (l > 0) {

@@ -89,6 +89,16 @@ public class BrandService {
         }
     }
 
+    public void restore(long id) {
+        idValidator.validate(id);
+        validateForExistence(id);
+        try {
+            brandDao.restore(id);
+        } catch (DataAccessException e) {
+            throw new DaoException(String.format("Restoring error: id:%d", id), e);
+        }
+    }
+
     private void validateForNameAlreadyUsedAndDeleted(String brandName) {
         long l = brandDao.getCountDeletedByName(brandName);
         if (l > 0) {
