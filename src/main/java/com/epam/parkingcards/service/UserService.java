@@ -47,7 +47,6 @@ public class UserService {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or #id == this.getIdByEmail(authentication.principal.username)")
     public UserEntity findById(long id) {
         idValidator.validate(id);
         return userDao.findById(id)
