@@ -67,8 +67,8 @@ public class UserController {
     /**
      * Search by keyword in first name or last name
      */
-    @GetMapping("/searchByKeyword/{keyword}")
-    public List<UserResponse> searchByPart(@PathVariable String keyword) {
+    @PostMapping("/searchByKeyword")
+    public List<UserResponse> searchByPart(@RequestParam("keyword") String keyword) {
         return userMapper.toUserResponses(userService.findByKeyword(keyword));
     }
 }
