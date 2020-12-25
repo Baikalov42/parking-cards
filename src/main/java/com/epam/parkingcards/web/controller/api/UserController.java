@@ -1,5 +1,6 @@
-package com.epam.parkingcards.web.controller.admin;
+package com.epam.parkingcards.web.controller.api;
 
+import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.UserMapper;
 import com.epam.parkingcards.web.request.admin.UserUpdateRequest;
 import com.epam.parkingcards.web.response.UserResponse;
@@ -27,18 +28,16 @@ public class UserController {
     /**
      * Get user by id
      */
-    @Secured({"ROLE_admin", "ROLE_user"})
     @GetMapping("/{userId}")
     public UserResponse getById(@PathVariable long userId) {
         UserEntity userEntity = userService.findById(userId);
         return userMapper.toUserResponse(userEntity);
     }
 
-    //TODO: filter
     /**
      * Get user by plate
      */
-    @Secured("ROLE_admin")
+    @SecuredForAdmin
     @GetMapping("/by-plate/{plate}")
     public UserResponse getByLicensePlate(@PathVariable String plate) {
         UserEntity userEntity = userService.findByLicensePlate(plate);
@@ -48,7 +47,7 @@ public class UserController {
     /**
      * Get all users
      */
-    @Secured("ROLE_admin")
+    @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public List<UserResponse> getAll(@PathVariable int pageNumber) {
         return userMapper.toUserResponses(userService.findAll(pageNumber));
@@ -57,7 +56,7 @@ public class UserController {
     /**
      * Search by keyword in first name or last name
      */
-    @Secured("ROLE_admin")
+    @SecuredForAdmin
     @PostMapping("/search")
     public List<UserResponse> searchByPart(@RequestParam("keyword") String keyword) {
         return userMapper.toUserResponses(userService.findByKeyword(keyword));
@@ -75,7 +74,7 @@ public class UserController {
     /**
      * Set user role.
      */
-    @Secured("ROLE_admin")
+    @SecuredForAdmin
     @PutMapping("/add-role/user/{userId}/role/{roleId}")
     ResponseEntity<String> addRole(@PathVariable long userId, @PathVariable long roleId) {
         userService.addRole(userId, roleId);
@@ -85,7 +84,7 @@ public class UserController {
     /**
      * Remove user role.
      */
-    @Secured("ROLE_admin")
+    @SecuredForAdmin
     @PutMapping("/remove-role/user/{userId}/role/{roleId}")
     ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {
         userService.removeRole(userId, roleId);
@@ -96,7 +95,7 @@ public class UserController {
     /**
      * Delete user by ID
      */
-    @Secured("ROLE_admin")
+    @SecuredForAdmin
     @DeleteMapping("/{userId}")
     public void deleteById(@PathVariable long userId) {
         userService.deleteById(userId);

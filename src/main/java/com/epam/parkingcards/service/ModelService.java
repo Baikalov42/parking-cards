@@ -50,7 +50,7 @@ public class ModelService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
     }
 
-    public List<ModelEntity> findAll(int pageNumber) {
+    public List<ModelEntity> findAllActive(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<ModelEntity> result = modelDao.findByIsDeletedFalse(pageable).getContent();
         if (result.isEmpty()) {

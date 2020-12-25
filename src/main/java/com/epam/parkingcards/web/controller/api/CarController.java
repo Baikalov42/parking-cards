@@ -1,5 +1,6 @@
-package com.epam.parkingcards.web.controller.admin;
+package com.epam.parkingcards.web.controller.api;
 
+import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.CarMapper;
 import com.epam.parkingcards.web.request.admin.CarCreateRequest;
 import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
@@ -7,13 +8,14 @@ import com.epam.parkingcards.web.response.CarResponse;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/cars")
+@RequestMapping("/api/cars")
 public class CarController {
 
     @Autowired
@@ -42,9 +44,18 @@ public class CarController {
     /**
      * Get all cars
      */
+    @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public List<CarResponse> getAll(@Valid @PathVariable int pageNumber) {
         return carMapper.toCarResponses(carService.findAll(pageNumber));
+    }
+
+    /**
+     * Get users cars
+     */
+    @GetMapping("/by-user-id/{userId}")
+    public List<CarResponse> getByUserId(@PathVariable long userId){
+        return carMapper.toCarResponses(carService.findByUserId(userId));
     }
 
     /**

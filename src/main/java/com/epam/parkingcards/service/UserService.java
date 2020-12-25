@@ -35,6 +35,8 @@ public class UserService {
     private IdValidator idValidator;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleService roleService;
 
     public long register(UserEntity userEntity) {
         try {
@@ -47,7 +49,7 @@ public class UserService {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or #id == this.getIdByEmail(authentication.principal.username)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #id)")
     public UserEntity findById(long id) {
         idValidator.validate(id);
         return userDao.findById(id)
@@ -89,7 +91,7 @@ public class UserService {
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('ROLE_admin') or #userEntity.id == this.getIdByEmail(authentication.principal.username)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userEntity.id)")
     public UserEntity update(UserEntity userEntity) {
 
         idValidator.validate(userEntity.getId());
@@ -125,7 +127,10 @@ public class UserService {
 
 
     public void addRole(long userId, long roleId) {
-        UserEntity userEntity = userDao.getOne(userId);
+        this.validateForExistence(userId);
+        roleService.validateForExistence(roleId);
+
+        UserEntity userEntity = this.findById(userId);
         userEntity.getRoleEntities().add(roleDao.getOne(roleId));
         try {
             userDao.saveAndFlush(userEntity);
@@ -136,6 +141,9 @@ public class UserService {
     }
 
     public void removeRole(long userId, long roleId) {
+        this.validateForExistence(userId);
+        roleService.validateForExistence(roleId);
+
         UserEntity userEntity = userDao.getOne(userId);
         userEntity.getRoleEntities().remove(roleDao.getOne(roleId));
         try {

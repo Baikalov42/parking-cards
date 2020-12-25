@@ -1,6 +1,6 @@
 package com.epam.parkingcards.web.controller.me;
 
-import com.epam.parkingcards.config.UserSecurity;
+import com.epam.parkingcards.config.security.UserSecurity;
 import com.epam.parkingcards.web.mapper.BrandMapper;
 import com.epam.parkingcards.web.mapper.CarMapper;
 import com.epam.parkingcards.web.mapper.ModelMapper;
@@ -133,11 +133,11 @@ public class MeRestController {
 
     @GetMapping("/models/page/{pageNumber}")
     public List<ModelResponse> getAllModels(@PathVariable int pageNumber) {
-        return modelMapper.toModelResponses(modelService.findAll(pageNumber));
+        return modelMapper.toModelResponses(modelService.findAllActive(pageNumber));
     }
 
     @GetMapping("/brands/page/{pageNumber}")
     public List<BrandResponse> getAllBrands(@PathVariable int pageNumber) {
-        return brandMapper.toBrandResponses(brandService.findAll(pageNumber));
+        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber));
     }
 }

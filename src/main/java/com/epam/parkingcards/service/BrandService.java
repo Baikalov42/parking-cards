@@ -43,7 +43,7 @@ public class BrandService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
     }
 
-    public List<BrandEntity> findAll(int pageNumber) {
+    public List<BrandEntity> findAllActive(int pageNumber) {
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<BrandEntity> result = brandDao.findByIsDeletedFalse(pageable).getContent();
