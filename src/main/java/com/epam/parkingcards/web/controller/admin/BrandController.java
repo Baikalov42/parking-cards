@@ -6,6 +6,7 @@ import com.epam.parkingcards.web.request.admin.BrandUpdateRequest;
 import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
+import com.epam.parkingcards.web.response.ModelResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +59,15 @@ public class BrandController {
     @GetMapping("/deleted/page/{pageNumber}")
     public List<BrandResponse> getAllDeleted(@PathVariable int pageNumber) {
         return brandMapper.toBrandResponses(brandService.findAllDeleted(pageNumber));
+    }
+
+    /**
+     * Search by keyword in brand name
+     */
+    @Secured("ROLE_admin")
+    @PostMapping("/search")
+    public List<BrandResponse> searchByPart(@RequestParam("keyword") String keyword) {
+        return brandMapper.toBrandResponses(brandService.findByKeyword(keyword));
     }
 
     /**

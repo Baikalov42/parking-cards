@@ -6,6 +6,7 @@ import com.epam.parkingcards.web.request.admin.ModelUpdateRequest;
 import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;
+import com.epam.parkingcards.web.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +72,15 @@ public class ModelController {
 
         List<ModelEntity> modelEntity = modelService.findAllDeleted(pageNumber);
         return modelMapper.toModelResponses(modelEntity);
+    }
+
+    /**
+     * Search by keyword in model name
+     */
+    @Secured("ROLE_admin")
+    @PostMapping("/search")
+    public List<ModelResponse> searchByPart(@RequestParam("keyword") String keyword) {
+        return modelMapper.toModelResponses(modelService.findByKeyword(keyword));
     }
 
     /**
