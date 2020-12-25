@@ -2,6 +2,7 @@ package com.epam.parkingcards.service;
 
 import com.epam.parkingcards.dao.RoleDao;
 import com.epam.parkingcards.exception.NotFoundException;
+import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.RoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -29,4 +30,12 @@ public class RoleService {
         }
         return result;
     }
+
+    public void validateForExistence(long id) {
+        if (!roleDao.existsById(id)) {
+            throw new ValidationException(String.format("Not exist, id=%d", id));
+        }
+    }
+
+
 }

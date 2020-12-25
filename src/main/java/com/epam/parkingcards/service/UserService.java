@@ -35,6 +35,8 @@ public class UserService {
     private IdValidator idValidator;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleService roleService;
 
     public long register(UserEntity userEntity) {
         try {
@@ -125,8 +127,10 @@ public class UserService {
 
 
     public void addRole(long userId, long roleId) {
-        //TODO SECURITY: что происходит когда юсера не существет в базе? а роли? Тут вылетит наверх SQL Exception
-        UserEntity userEntity = userDao.getOne(userId);
+        this.validateForExistence(userId);
+        roleService.validateForExistence(roleId);
+
+        UserEntity userEntity = this.findById(userId);
         userEntity.getRoleEntities().add(roleDao.getOne(roleId));
         try {
             userDao.saveAndFlush(userEntity);
@@ -137,7 +141,9 @@ public class UserService {
     }
 
     public void removeRole(long userId, long roleId) {
-        //TODO SECURITY: тоже самое, как сверху
+        this.validateForExistence(userId);
+        roleService.validateForExistence(roleId);
+
         UserEntity userEntity = userDao.getOne(userId);
         userEntity.getRoleEntities().remove(roleDao.getOne(roleId));
         try {

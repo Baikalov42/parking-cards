@@ -70,12 +70,11 @@ public class CarService {
         return result;
     }
 
-    //TODO: exception when there is no user with this id
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userId)")
     public List<CarEntity> findByUserId(long userId) {
         idValidator.validate(userId);
-        return carDao.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("User with id %d doesn't have cars", userId)));
+        userService.validateForExistence(userId);
+        return carDao.findByUserId(userId);
     }
 
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
@@ -98,12 +97,8 @@ public class CarService {
         }
     }
 
-    //TODO SECURITY:  "hasAuthority('ROLE_admin') можно заменмть на
-    //TODO SECURITY: ("hasRole('admin') or @userSecurity.hasCar(authentication, #id)")
     @Transactional
-
-    @PreAuthorize("hasAuthority('ROLE_admin') or this.findById(#id).getUserEntity.getEmail" +
-            " == authentication.principal.username")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasCar(authentication, #id)")
     public void deleteById(long id) {
 
         idValidator.validate(id);

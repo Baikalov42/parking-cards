@@ -8,7 +8,6 @@ import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,8 +46,8 @@ public class BrandController {
      * Get all brands
      */
     @GetMapping("/page/{pageNumber}")
-    public List<BrandResponse> getAll(@PathVariable int pageNumber) {
-        return brandMapper.toBrandResponses(brandService.findAll(pageNumber));
+    public List<BrandResponse> getAllActive(@PathVariable int pageNumber) {
+        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber));
     }
 
     /**

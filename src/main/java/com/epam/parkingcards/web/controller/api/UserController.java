@@ -28,8 +28,6 @@ public class UserController {
     /**
      * Get user by id
      */
-    //TODO SECURITY: Я думал ты сделаешь две аннотации: для user и для admin и вообще откажешься от литералов
-    @Secured({"ROLE_admin", "ROLE_user"})
     @GetMapping("/{userId}")
     public UserResponse getById(@PathVariable long userId) {
         UserEntity userEntity = userService.findById(userId);
@@ -76,7 +74,6 @@ public class UserController {
     /**
      * Set user role.
      */
-    //TODO SECURITY: Когда успел появиться этот контроллер)? МЫ же отказались о него, не ?)
     @SecuredForAdmin
     @PutMapping("/add-role/user/{userId}/role/{roleId}")
     ResponseEntity<String> addRole(@PathVariable long userId, @PathVariable long roleId) {
@@ -87,7 +84,6 @@ public class UserController {
     /**
      * Remove user role.
      */
-    //TODO SECURITY: Когда успел появиться этот контроллер)? МЫ же отказались о него, не ?)
     @SecuredForAdmin
     @PutMapping("/remove-role/user/{userId}/role/{roleId}")
     ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {

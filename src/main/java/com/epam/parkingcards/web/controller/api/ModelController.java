@@ -8,7 +8,6 @@ import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,8 +45,8 @@ public class ModelController {
      * Get all models
      */
     @GetMapping("/page/{pageNumber}")
-    public List<ModelResponse> getAll(@PathVariable int pageNumber) {
-        return modelMapper.toModelResponses(modelService.findAll(pageNumber));
+    public List<ModelResponse> getAllActive(@PathVariable int pageNumber) {
+        return modelMapper.toModelResponses(modelService.findAllActive(pageNumber));
     }
 
     /**
