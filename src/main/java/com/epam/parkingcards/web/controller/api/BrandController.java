@@ -1,4 +1,4 @@
-package com.epam.parkingcards.web.controller.admin;
+package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.web.mapper.BrandMapper;
 import com.epam.parkingcards.web.request.admin.BrandCreateRequest;
@@ -6,7 +6,6 @@ import com.epam.parkingcards.web.request.admin.BrandUpdateRequest;
 import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
-import com.epam.parkingcards.web.response.ModelResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;

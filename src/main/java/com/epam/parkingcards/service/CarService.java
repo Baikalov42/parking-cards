@@ -11,6 +11,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,8 @@ public class CarService {
     @Autowired
     private IdValidator idValidator;
 
+    @PreAuthorize("hasAuthority('ROLE_admin') or #carEntity.getUserEntity.getEmail" +
+            " == authentication.principal.username")
     public long create(CarEntity carEntity) {
 
         modelService.validateForExistenceAndNotDeleted(carEntity
@@ -46,7 +51,9 @@ public class CarService {
             throw new DaoException(String.format("Creation error, Car: %s ", carEntity), e);
         }
     }
-
+    //TODO: check for not found id
+    @PreAuthorize("hasAuthority('ROLE_admin') or this.findById(#id).getUserEntity.getEmail" +
+            " == authentication.principal.username")
     public CarEntity findById(long id) {
         idValidator.validate(id);
 
@@ -65,6 +72,8 @@ public class CarService {
         return result;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_admin') or #carEntity.getUserEntity.getEmail" +
+            " == authentication.principal.username")
     public CarEntity update(CarEntity carEntity) {
         idValidator.validate(carEntity.getId());
 
@@ -85,6 +94,8 @@ public class CarService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('ROLE_admin') or this.findById(#id).getUserEntity.getEmail" +
+            " == authentication.principal.username")
     public void deleteById(long id) {
 
         idValidator.validate(id);

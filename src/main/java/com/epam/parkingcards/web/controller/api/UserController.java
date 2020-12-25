@@ -1,4 +1,4 @@
-package com.epam.parkingcards.web.controller.admin;
+package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.web.mapper.UserMapper;
 import com.epam.parkingcards.web.request.admin.UserUpdateRequest;
