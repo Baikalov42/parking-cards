@@ -125,6 +125,7 @@ public class UserService {
 
 
     public void addRole(long userId, long roleId) {
+        //TODO SECURITY: что происходит когда юсера не существет в базе? а роли? Тут вылетит наверх SQL Exception
         UserEntity userEntity = userDao.getOne(userId);
         userEntity.getRoleEntities().add(roleDao.getOne(roleId));
         try {
@@ -136,6 +137,7 @@ public class UserService {
     }
 
     public void removeRole(long userId, long roleId) {
+        //TODO SECURITY: тоже самое, как сверху
         UserEntity userEntity = userDao.getOne(userId);
         userEntity.getRoleEntities().remove(roleDao.getOne(roleId));
         try {

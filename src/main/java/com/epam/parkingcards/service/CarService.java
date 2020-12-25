@@ -98,7 +98,10 @@ public class CarService {
         }
     }
 
+    //TODO SECURITY:  "hasAuthority('ROLE_admin') можно заменмть на
+    //TODO SECURITY: ("hasRole('admin') or @userSecurity.hasCar(authentication, #id)")
     @Transactional
+
     @PreAuthorize("hasAuthority('ROLE_admin') or this.findById(#id).getUserEntity.getEmail" +
             " == authentication.principal.username")
     public void deleteById(long id) {
