@@ -1,4 +1,4 @@
-package com.epam.parkingcards.config;
+package com.epam.parkingcards.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,12 +38,12 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/**")
-                .permitAll()
+                .authenticated()
 //                .antMatchers("/me/**").hasAnyRole("user", "admin")
 //                .antMatchers("/my-page/{id}/**").access("@userSecurity.hasUserId(authentication, #id)")
 //                .antMatchers("/admin/**").hasRole("admin")
-//                .antMatchers("/index/**").anonymous()
-//                .antMatchers("/register/**").anonymous()
+                .antMatchers("/index/**").permitAll()
+                .antMatchers("/register/**").permitAll()
                 .and()
                 .httpBasic()
                 .and()

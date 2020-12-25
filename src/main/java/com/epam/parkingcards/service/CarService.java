@@ -33,8 +33,7 @@ public class CarService {
     @Autowired
     private IdValidator idValidator;
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or #carEntity.getUserEntity.getEmail" +
-            " == authentication.principal.username")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
     public long create(CarEntity carEntity) {
 
         modelService.validateForExistenceAndNotDeleted(carEntity
@@ -51,9 +50,8 @@ public class CarService {
             throw new DaoException(String.format("Creation error, Car: %s ", carEntity), e);
         }
     }
-    //TODO: check for not found id
-    @PreAuthorize("hasAuthority('ROLE_admin') or this.findById(#id).getUserEntity.getEmail" +
-            " == authentication.principal.username")
+
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasCar(authentication, #id)")
     public CarEntity findById(long id) {
         idValidator.validate(id);
 
@@ -72,8 +70,15 @@ public class CarService {
         return result;
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or #carEntity.getUserEntity.getEmail" +
-            " == authentication.principal.username")
+    //TODO: exception when there is no user with this id
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userId)")
+    public List<CarEntity> findByUserId(long userId) {
+        idValidator.validate(userId);
+        return carDao.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User with id %d doesn't have cars", userId)));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
     public CarEntity update(CarEntity carEntity) {
         idValidator.validate(carEntity.getId());
 

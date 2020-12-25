@@ -1,6 +1,6 @@
 package com.epam.parkingcards.web.controller.me;
 
-import com.epam.parkingcards.config.UserSecurity;
+import com.epam.parkingcards.config.security.UserSecurity;
 import com.epam.parkingcards.web.mapper.BrandMapper;
 import com.epam.parkingcards.web.mapper.CarMapper;
 import com.epam.parkingcards.web.mapper.ModelMapper;
