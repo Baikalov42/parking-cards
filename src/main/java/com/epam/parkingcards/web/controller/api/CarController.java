@@ -2,13 +2,12 @@ package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.CarMapper;
-import com.epam.parkingcards.web.request.admin.CarCreateRequest;
-import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
+import com.epam.parkingcards.web.request.CarCreateRequest;
+import com.epam.parkingcards.web.request.CarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -2,14 +2,13 @@ package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.UserMapper;
-import com.epam.parkingcards.web.request.admin.UserUpdateRequest;
+import com.epam.parkingcards.web.request.UserUpdateRequest;
 import com.epam.parkingcards.web.response.UserResponse;
 import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

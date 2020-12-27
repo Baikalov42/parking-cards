@@ -1,7 +1,7 @@
 package com.epam.parkingcards.web.mapper;
 
-import com.epam.parkingcards.web.request.admin.ModelCreateRequest;
-import com.epam.parkingcards.web.request.admin.ModelUpdateRequest;
+import com.epam.parkingcards.web.request.ModelCreateRequest;
+import com.epam.parkingcards.web.request.ModelUpdateRequest;
 import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.model.ModelEntity;

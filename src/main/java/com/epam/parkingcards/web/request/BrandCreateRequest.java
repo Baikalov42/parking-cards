@@ -1,4 +1,4 @@
-package com.epam.parkingcards.web.request.admin;
+package com.epam.parkingcards.web.request;
 
 import lombok.Data;
 

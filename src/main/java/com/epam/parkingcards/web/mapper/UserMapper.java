@@ -1,8 +1,7 @@
 package com.epam.parkingcards.web.mapper;
 
 import com.epam.parkingcards.web.request.UserRegistrationRequest;
-import com.epam.parkingcards.web.request.admin.UserUpdateRequest;
-import com.epam.parkingcards.web.request.me.MeUserUpdateRequest;
+import com.epam.parkingcards.web.request.UserUpdateRequest;
 import com.epam.parkingcards.web.response.UserResponse;
 import com.epam.parkingcards.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +41,6 @@ public class UserMapper {
 
         return userEntity;
     }
-
-    public UserEntity toUser(MeUserUpdateRequest meUserUpdateRequest) {
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(meUserUpdateRequest.getEmail());
-        userEntity.setFirstName(meUserUpdateRequest.getFirstName());
-        userEntity.setLastName(meUserUpdateRequest.getLastName());
-        userEntity.setPhone(meUserUpdateRequest.getPhone());
-
-        return userEntity;
-    }
-
 
     public UserResponse toUserResponse(UserEntity userEntity) {
         UserResponse userResponse = new UserResponse();

@@ -2,8 +2,8 @@ package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.ModelMapper;
-import com.epam.parkingcards.web.request.admin.ModelCreateRequest;
-import com.epam.parkingcards.web.request.admin.ModelUpdateRequest;
+import com.epam.parkingcards.web.request.ModelCreateRequest;
+import com.epam.parkingcards.web.request.ModelUpdateRequest;
 import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;

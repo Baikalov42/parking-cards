@@ -2,8 +2,8 @@ package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.BrandMapper;
-import com.epam.parkingcards.web.request.admin.BrandCreateRequest;
-import com.epam.parkingcards.web.request.admin.BrandUpdateRequest;
+import com.epam.parkingcards.web.request.BrandCreateRequest;
+import com.epam.parkingcards.web.request.BrandUpdateRequest;
 import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
