@@ -1,4 +1,4 @@
-package com.epam.parkingcards.config;
+package com.epam.parkingcards.config.security;
 
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.UserEntity;

@@ -3,10 +3,8 @@ package com.epam.parkingcards.web.mapper;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.model.UserEntity;
-import com.epam.parkingcards.web.request.admin.CarCreateRequest;
-import com.epam.parkingcards.web.request.admin.CarUpdateRequest;
-import com.epam.parkingcards.web.request.me.MeCarCreateRequest;
-import com.epam.parkingcards.web.request.me.MeCarUpdateRequest;
+import com.epam.parkingcards.web.request.CarCreateRequest;
+import com.epam.parkingcards.web.request.CarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;
 import org.springframework.stereotype.Component;
 
@@ -45,37 +43,6 @@ public class CarMapper {
 
         carEntity.setId(carUpdateRequest.getId());
         carEntity.setLicensePlate(carUpdateRequest.getLicensePlate());
-        carEntity.setUserEntity(userEntity);
-        carEntity.setModelEntity(modelEntity);
-
-        return carEntity;
-    }
-
-    public CarEntity toCar(MeCarUpdateRequest meCarUpdateRequest) {
-
-        UserEntity userEntity = new UserEntity();
-
-        ModelEntity modelEntity = new ModelEntity();
-        modelEntity.setId(meCarUpdateRequest.getModelId());
-
-        CarEntity carEntity = new CarEntity();
-        carEntity.setId(meCarUpdateRequest.getId());
-        carEntity.setLicensePlate(meCarUpdateRequest.getLicensePlate());
-        carEntity.setUserEntity(userEntity);
-        carEntity.setModelEntity(modelEntity);
-
-        return carEntity;
-    }
-
-    public CarEntity toCar(MeCarCreateRequest meCarCreateRequest) {
-
-        UserEntity userEntity = new UserEntity();
-
-        ModelEntity modelEntity = new ModelEntity();
-        modelEntity.setId(meCarCreateRequest.getModelId());
-
-        CarEntity carEntity = new CarEntity();
-        carEntity.setLicensePlate(meCarCreateRequest.getLicensePlate());
         carEntity.setUserEntity(userEntity);
         carEntity.setModelEntity(modelEntity);
 

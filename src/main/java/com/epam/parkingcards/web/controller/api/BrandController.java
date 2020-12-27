@@ -1,8 +1,9 @@
-package com.epam.parkingcards.web.controller.admin;
+package com.epam.parkingcards.web.controller.api;
 
+import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.web.mapper.BrandMapper;
-import com.epam.parkingcards.web.request.admin.BrandCreateRequest;
-import com.epam.parkingcards.web.request.admin.BrandUpdateRequest;
+import com.epam.parkingcards.web.request.BrandCreateRequest;
+import com.epam.parkingcards.web.request.BrandUpdateRequest;
 import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
@@ -13,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/brands")
+@RequestMapping("/api/brands")
 public class BrandController {
 
     @Autowired
@@ -24,6 +25,7 @@ public class BrandController {
     /**
      * Create brand
      */
+    @SecuredForAdmin
     @PostMapping()
     public String create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
         long id = brandService.create(brandMapper.toBrand(brandCreateRequest));
@@ -33,6 +35,7 @@ public class BrandController {
     /**
      * Get brand by id
      */
+
     @GetMapping("/{brandId}")
     public BrandResponse getById(@PathVariable long brandId) {
         BrandEntity brandEntity = brandService.findById(brandId);
@@ -43,21 +46,31 @@ public class BrandController {
      * Get all brands
      */
     @GetMapping("/page/{pageNumber}")
-    public List<BrandResponse> getAll(@PathVariable int pageNumber) {
-        return brandMapper.toBrandResponses(brandService.findAll(pageNumber));
+    public List<BrandResponse> getAllActive(@PathVariable int pageNumber) {
+        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber));
     }
 
     /**
      * Get all deleted brands
      */
+    @SecuredForAdmin
     @GetMapping("/deleted/page/{pageNumber}")
     public List<BrandResponse> getAllDeleted(@PathVariable int pageNumber) {
         return brandMapper.toBrandResponses(brandService.findAllDeleted(pageNumber));
     }
 
     /**
+     * Search by keyword in brand name
+     */
+    @PostMapping("/search")
+    public List<BrandResponse> searchByPart(@RequestParam("keyword") String keyword) {
+        return brandMapper.toBrandResponses(brandService.findByKeyword(keyword));
+    }
+
+    /**
      * Update brand
      */
+    @SecuredForAdmin
     @PutMapping()
     public BrandResponse update(@RequestBody @Valid BrandUpdateRequest brandUpdateRequest) {
         BrandEntity updated = brandService.update(brandMapper.toBrand(brandUpdateRequest));
@@ -65,8 +78,18 @@ public class BrandController {
     }
 
     /**
+     * Restore brand from deleted
+     */
+    @SecuredForAdmin
+    @PutMapping("/restore")
+    public void restore(long id){
+        brandService.restore(id);
+    }
+
+    /**
      * Delete brand
      */
+    @SecuredForAdmin
     @DeleteMapping("/{brandId}")
     public void delete(@PathVariable long brandId) {
         brandService.deleteSoftById(brandId);

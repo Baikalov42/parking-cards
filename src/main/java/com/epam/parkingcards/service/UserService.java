@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,8 @@ public class UserService {
     private IdValidator idValidator;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleService roleService;
 
     public long register(UserEntity userEntity) {
         try {
@@ -46,6 +49,7 @@ public class UserService {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #id)")
     public UserEntity findById(long id) {
         idValidator.validate(id);
         return userDao.findById(id)
@@ -77,7 +81,17 @@ public class UserService {
         return result;
     }
 
+    public List<UserEntity> findByKeyword(String keyword) {
+        List<UserEntity> result = userDao.findByKeyword(keyword.toLowerCase());
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By keyword %s, Users not found", keyword));
+        }
+        return result;
+    }
+
     @Transactional
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userEntity.id)")
     public UserEntity update(UserEntity userEntity) {
 
         idValidator.validate(userEntity.getId());
@@ -109,6 +123,35 @@ public class UserService {
         roleEntities.add(roleEntityUser);
 
         return roleEntities;
+    }
+
+
+    public void addRole(long userId, long roleId) {
+        this.validateForExistence(userId);
+        roleService.validateForExistence(roleId);
+
+        UserEntity userEntity = this.findById(userId);
+        userEntity.getRoleEntities().add(roleDao.getOne(roleId));
+        try {
+            userDao.saveAndFlush(userEntity);
+        } catch (DataAccessException e) {
+            throw new DaoException(String
+                    .format("Adding role with id %d to user with id %d failed", roleId, userId), e);
+        }
+    }
+
+    public void removeRole(long userId, long roleId) {
+        this.validateForExistence(userId);
+        roleService.validateForExistence(roleId);
+
+        UserEntity userEntity = userDao.getOne(userId);
+        userEntity.getRoleEntities().remove(roleDao.getOne(roleId));
+        try {
+            userDao.saveAndFlush(userEntity);
+        } catch (DataAccessException e) {
+            throw new DaoException(String
+                    .format("Deleting role with id %d to user with id %d failed", roleId, userId), e);
+        }
     }
 
     public void validateForExistence(long id) {

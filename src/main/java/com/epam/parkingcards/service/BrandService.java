@@ -5,6 +5,7 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.BrandEntity;
+import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -42,10 +43,10 @@ public class BrandService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
     }
 
-    public List<BrandEntity> findAll(int pageNumber) {
+    public List<BrandEntity> findAllActive(int pageNumber) {
 
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<BrandEntity> result = brandDao.findAll(pageable).getContent();
+        List<BrandEntity> result = brandDao.findByIsDeletedFalse(pageable).getContent();
 
         if (result.isEmpty()) {
             throw new NotFoundException(
@@ -61,6 +62,15 @@ public class BrandService {
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
+        }
+        return result;
+    }
+
+    public List<BrandEntity> findByKeyword(String keyword) {
+        List<BrandEntity> result = brandDao.findByKeyword(keyword.toLowerCase());
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By keyword %s, Users not found", keyword));
         }
         return result;
     }
@@ -86,6 +96,16 @@ public class BrandService {
             brandDao.markAsDeleted(id);
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+        }
+    }
+
+    public void restore(long id) {
+        idValidator.validate(id);
+        validateForExistence(id);
+        try {
+            brandDao.restore(id);
+        } catch (DataAccessException e) {
+            throw new DaoException(String.format("Restoring error: id:%d", id), e);
         }
     }
 

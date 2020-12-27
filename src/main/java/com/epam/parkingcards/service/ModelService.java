@@ -5,6 +5,7 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -49,10 +50,9 @@ public class ModelService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
     }
 
-    public List<ModelEntity> findAll(int pageNumber) {
+    public List<ModelEntity> findAllActive(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<ModelEntity> result = modelDao.findAll(pageable).getContent();
-
+        List<ModelEntity> result = modelDao.findByIsDeletedFalse(pageable).getContent();
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
@@ -79,6 +79,15 @@ public class ModelService {
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
+        }
+        return result;
+    }
+
+    public List<ModelEntity> findByKeyword(String keyword) {
+        List<ModelEntity> result = modelDao.findByKeyword(keyword.toLowerCase());
+        if (result.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("By keyword %s, Users not found", keyword));
         }
         return result;
     }
@@ -110,6 +119,16 @@ public class ModelService {
 
         } catch (DataAccessException e) {
             throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+        }
+    }
+
+    public void restore(long id) {
+        idValidator.validate(id);
+        validateForExistence(id);
+        try {
+            modelDao.restore(id);
+        } catch (DataAccessException e) {
+            throw new DaoException(String.format("Restoring error: id:%d", id), e);
         }
     }
 
