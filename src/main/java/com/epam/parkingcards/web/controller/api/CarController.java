@@ -8,6 +8,8 @@ import com.epam.parkingcards.web.response.CarResponse;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,9 +28,9 @@ public class CarController {
      * Create car and add to user
      */
     @PostMapping
-    public String create(@RequestBody @Valid CarCreateRequest carCreateRequest) {
+    public ResponseEntity<String> create(@RequestBody @Valid CarCreateRequest carCreateRequest) {
         long id = carService.create(carMapper.toCar(carCreateRequest));
-        return "Success, car id = " + id;
+        return new ResponseEntity<>("Success, new car id = " + id, HttpStatus.OK);
     }
 
     /**
@@ -53,7 +55,7 @@ public class CarController {
      * Get users cars
      */
     @GetMapping("/by-user-id/{userId}")
-    public List<CarResponse> getByUserId(@PathVariable long userId){
+    public List<CarResponse> getByUserId(@PathVariable long userId) {
         return carMapper.toCarResponses(carService.findByUserId(userId));
     }
 

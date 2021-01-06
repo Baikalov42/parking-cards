@@ -75,7 +75,7 @@ public class UserController {
      */
     @SecuredForAdmin
     @PutMapping("/add-role/user/{userId}/role/{roleId}")
-    ResponseEntity<String> addRole(@PathVariable long userId, @PathVariable long roleId) {
+    public ResponseEntity<String> addRole(@PathVariable long userId, @PathVariable long roleId) {
         userService.addRole(userId, roleId);
         return new ResponseEntity<>("Role set", HttpStatus.OK);
     }
@@ -85,7 +85,7 @@ public class UserController {
      */
     @SecuredForAdmin
     @PutMapping("/remove-role/user/{userId}/role/{roleId}")
-    ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {
+    public ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {
         userService.removeRole(userId, roleId);
         return new ResponseEntity<>("Role removed", HttpStatus.OK);
     }

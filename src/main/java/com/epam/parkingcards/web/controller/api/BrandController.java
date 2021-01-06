@@ -8,6 +8,8 @@ import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,9 +29,10 @@ public class BrandController {
      */
     @SecuredForAdmin
     @PostMapping()
-    public String create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
+    public ResponseEntity<String> create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
+
         long id = brandService.create(brandMapper.toBrand(brandCreateRequest));
-        return "Success, brand id = " + id;
+        return new ResponseEntity<>("Success, new brand id = " + id, HttpStatus.OK);
     }
 
     /**

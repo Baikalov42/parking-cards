@@ -32,8 +32,6 @@ public class UserService {
     @Autowired
     private RoleDao roleDao;
     @Autowired
-    private IdValidator idValidator;
-    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleService roleService;
@@ -51,7 +49,7 @@ public class UserService {
 
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #id)")
     public UserEntity findById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         return userDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
     }
@@ -94,7 +92,7 @@ public class UserService {
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userEntity.id)")
     public UserEntity update(UserEntity userEntity) {
 
-        idValidator.validate(userEntity.getId());
+        IdValidator.validate(userEntity.getId());
         validateForExistence(userEntity.getId());
 
         try {
@@ -105,13 +103,13 @@ public class UserService {
     }
 
     public void deleteById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistence(id);
 
         try {
             userDao.deleteById(id);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+            throw new DaoException(String.format("Deleting error: user id=%d ", id), e);
         }
     }
 

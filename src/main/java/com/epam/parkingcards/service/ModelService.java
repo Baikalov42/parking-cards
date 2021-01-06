@@ -5,7 +5,6 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.ModelEntity;
-import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -24,9 +23,7 @@ public class ModelService {
     @Autowired
     private ModelDao modelDao;
     @Autowired
-    private BrandService brandService;
-    @Autowired
-    private IdValidator idValidator;
+    private BrandService brandService;;
 
     public long create(ModelEntity modelEntity) {
 
@@ -44,7 +41,7 @@ public class ModelService {
     }
 
     public ModelEntity findById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
 
         return modelDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
@@ -66,7 +63,7 @@ public class ModelService {
 
         if (result.isEmpty()) {
             throw new NotFoundException(
-                    String.format("By Brand id=%d, result is empty. Page number = %d, page size = %d",
+                    String.format("By Model id=%d, result is empty. Page number = %d, page size = %d",
                             brandId, pageNumber, PAGE_SIZE));
         }
         return result;
@@ -87,14 +84,14 @@ public class ModelService {
         List<ModelEntity> result = modelDao.findByKeyword(keyword.toLowerCase());
         if (result.isEmpty()) {
             throw new NotFoundException(
-                    String.format("By keyword %s, Users not found", keyword));
+                    String.format("By keyword %s, Models not found", keyword));
         }
         return result;
     }
 
     public ModelEntity update(ModelEntity modelEntity) {
 
-        idValidator.validate(modelEntity.getId());
+        IdValidator.validate(modelEntity.getId());
         this.validateForExistenceAndNotDeleted(modelEntity.getId());
 
         brandService.validateForExistenceAndNotDeleted(modelEntity
@@ -111,37 +108,37 @@ public class ModelService {
     }
 
     public void deleteSoftById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistenceAndNotDeleted(id);
 
         try {
             modelDao.markAsDeleted(id);
 
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+            throw new DaoException(String.format("Deleting error: model id=%d ", id), e);
         }
     }
 
     public void restore(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistence(id);
         try {
             modelDao.restore(id);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Restoring error: id:%d", id), e);
+            throw new DaoException(String.format("Restoring error: model id:%d", id), e);
         }
     }
 
     private void validateForNameAlreadyUsedAndDeleted(String modelName) {
         long l = modelDao.getCountDeletedByName(modelName);
         if (l > 0) {
-            throw new ValidationException(String.format("Name %s already used, and was deleted", modelName));
+            throw new ValidationException(String.format("Model name %s already used, and was deleted", modelName));
         }
     }
 
     public void validateForExistence(long id) {
         if (!modelDao.existsById(id)) {
-            throw new ValidationException(String.format("Not exist, id=%d", id));
+            throw new ValidationException(String.format("Model not exist, id=%d", id));
         }
     }
 

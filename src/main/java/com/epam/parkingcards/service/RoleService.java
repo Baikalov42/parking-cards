@@ -33,7 +33,7 @@ public class RoleService {
 
     public void validateForExistence(long id) {
         if (!roleDao.existsById(id)) {
-            throw new ValidationException(String.format("Not exist, id=%d", id));
+            throw new ValidationException(String.format("Role not exist, id=%d", id));
         }
     }
 

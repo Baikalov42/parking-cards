@@ -11,9 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +28,7 @@ public class CarService {
     private UserService userService;
     @Autowired
     private ModelService modelService;
-    @Autowired
-    private IdValidator idValidator;
+
 
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
     public long create(CarEntity carEntity) {
@@ -53,7 +50,7 @@ public class CarService {
 
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasCar(authentication, #id)")
     public CarEntity findById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
 
         return carDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
@@ -72,14 +69,14 @@ public class CarService {
 
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userId)")
     public List<CarEntity> findByUserId(long userId) {
-        idValidator.validate(userId);
+        IdValidator.validate(userId);
         userService.validateForExistence(userId);
         return carDao.findByUserId(userId);
     }
 
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
     public CarEntity update(CarEntity carEntity) {
-        idValidator.validate(carEntity.getId());
+        IdValidator.validate(carEntity.getId());
 
         this.validateForExistence(carEntity.getId());
         userService.validateForExistence(carEntity
@@ -101,7 +98,7 @@ public class CarService {
     @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasCar(authentication, #id)")
     public void deleteById(long id) {
 
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistence(id);
 
         try {
