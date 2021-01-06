@@ -1,12 +1,17 @@
 package com.epam.parkingcards.controller;
 
+import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.dao.BrandDao;
+import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
+import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
 import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.controller.api.BrandController;
 import com.epam.parkingcards.web.request.BrandCreateRequest;
+import com.epam.parkingcards.web.request.BrandUpdateRequest;
+import com.epam.parkingcards.web.response.BrandResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,16 +32,19 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.util.NestedServletException;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -102,7 +111,20 @@ class BrandControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void create_ShouldReturnStatus_400_WhenNameAlreadyExist() throws Exception {
+        BrandCreateRequest brand = new BrandCreateRequest();
+        brand.setName("Testbrand");
+        Mockito.when(brandDao.getCountDeletedByName(brand.getName()))
+                .thenThrow(new ValidationException("Brand already exist"));
+
+        //       Mockito.when(brandDao.saveAndFlush(brand)).thenThrow
+        mockMvc.perform(post("/api/brands")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"Testbrand\"}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -136,19 +158,18 @@ class BrandControllerTest {
     @WithMockUser(roles = "admin")
     void getById_ShouldReturnBrandResponse_WhenInputId_IsValidAndExist() throws Exception {
 
-        BrandEntity testBrand = new BrandEntity();
-        testBrand.setName("Testbrand");
-        testBrand.setId(1L);
-        testBrand.setDeleted(false);
+        BrandEntity brandFromBd = new BrandEntity();
+        brandFromBd.setName("Testbrand");
+        brandFromBd.setId(1L);
+        brandFromBd.setDeleted(false);
 
-        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(testBrand));
+        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(brandFromBd));
 
         mockMvc.perform(get("/api/brands/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Testbrand")))
                 .andExpect(jsonPath("$.deleted", is(false)));
-
     }
 
     @Test
@@ -159,16 +180,19 @@ class BrandControllerTest {
 
         mockMvc.perform(get("/api/brands/66"))
                 .andExpect(status().isNoContent());
-
     }
 
     //TODO какие коды возвращает Spring при ошибках валидации и какие должен?
-    void getById_ShouldReturnStatus_500_WhenInputId_NotValid() throws Exception {
+    @Test
+    @WithMockUser(roles = "admin")
+    void getById_ShouldReturnStatus_400_WhenInputId_NotValid() throws Exception {
+        mockMvc.perform(get("/api/brands/-1"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(roles = "admin")
-    void getAllBrands_ShouldReturnListOfResult_WhenDataExist() throws Exception {
+    void getAllActive_ShouldReturnListOfResult_WhenDataExist() throws Exception {
 
         BrandEntity testBrand2 = new BrandEntity();
         testBrand2.setId(1);
@@ -187,58 +211,175 @@ class BrandControllerTest {
         //      .andExpect(content().json("[{\"name\" : \"Testbrand\" , \"id\" : 1 , \"deleted\" : false}]"));
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void getAllActive_ShouldReturnStatus_204_WhenDataNotExist() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
+        Mockito.when(brandDao.findByIsDeletedFalse(pageable)).thenReturn(new PageImpl<>(Collections.emptyList()));
+        mockMvc.perform(get("/api/brands/page/0"))
+                .andExpect(status().isNoContent());
+
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void getAllDeleted_ShouldReturnListOfResult_WhenDataExist() throws Exception {
+        BrandEntity testBrand = new BrandEntity();
+        testBrand.setId(1);
+        testBrand.setName("Testbrand");
+        testBrand.setDeleted(true);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
+        Mockito.when(brandDao.findAllDeleted(pageable)).thenReturn(new PageImpl<>(Collections.singletonList(testBrand)));
+
+        mockMvc.perform(get("/api/brands/deleted/page/0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Testbrand")))
+                .andExpect(jsonPath("$[0].deleted", is(true)));
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void getAllDeleted_ShouldReturnStatus_204_WhenDataNotExist() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
+        Mockito.when(brandDao.findAllDeleted(pageable)).thenReturn(new PageImpl<>(Collections.emptyList()));
+        mockMvc.perform(get("/api/brands/deleted/page/0"))
+                .andExpect(status().isNoContent());
     }
 
+    @Test
+    @WithMockUser(username = "name", roles = {"admin", "user"})
     void searchByPart_ShouldReturnListOfResult_WhenDataExist() throws Exception {
+        BrandEntity testBrand = new BrandEntity();
+        testBrand.setId(1);
+        testBrand.setName("Testbrand");
+        testBrand.setDeleted(false);
+        Mockito.when(brandDao.findByKeyword("Tes".toLowerCase())).thenReturn(Collections.singletonList(testBrand));
+        mockMvc.perform(post("/api/brands/search?keyword=tes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Testbrand")))
+                .andExpect(jsonPath("$[0].deleted", is(false)));
     }
 
-
+    @Test
+    @WithMockUser(username = "name", roles = {"admin", "user"})
     void searchByPart_ShouldReturnEmptyList_WhenDataNotExist() throws Exception {
+        BrandEntity testBrand = new BrandEntity();
+        testBrand.setId(1);
+        testBrand.setName("Testbrand");
+        testBrand.setDeleted(false);
+        Mockito.when(brandDao.findByKeyword("ZYW".toLowerCase())).thenReturn(Collections.emptyList());
+        mockMvc.perform(post("/api/brands/search?keyword=ZYW"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
     @WithMockUser(username = "name", roles = {"admin"})
     void update_ShouldReturnResponse_WhenDataIsValid() throws Exception {
 
-        BrandEntity testBrand = new BrandEntity();
-        testBrand.setId(1L);
-        testBrand.setName("Testbrand");
-        testBrand.setDeleted(false);
+        BrandUpdateRequest brandUpdateRequest = new BrandUpdateRequest();
+        brandUpdateRequest.setId(1L);
+        brandUpdateRequest.setName("TestTestbrand");
 
-        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(testBrand));
-        Mockito.when(brandDao.getCountDeletedByName("Testbrand")).thenReturn(0L);
-        Mockito.when(brandDao.saveAndFlush(testBrand)).thenReturn(testBrand);
+        BrandEntity brandBd = new BrandEntity();
+        brandBd.setId(1L);
+        brandBd.setName("TestTestbrand");
+        brandBd.setDeleted(false);
+        brandBd.setModelEntities(Collections.EMPTY_SET);
+
+        BrandResponse brandResponse = new BrandResponse();
+        brandResponse.setId(1L);
+        brandResponse.setName("TestTestbrand");
+        brandResponse.setDeleted(false);
+
+        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(brandBd));
+        Mockito.when(brandDao.getCountDeletedByName("TestTestbrand")).thenReturn(0L);
+        Mockito.when(brandDao.saveAndFlush(brandBd)).thenReturn(brandBd);
 
         mockMvc.perform(put("/api/brands")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\" : \"Testbrand\" , \"id\" : 1 , \"deleted\" : false}")
+                .content(mapper.writeValueAsString(brandUpdateRequest))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"name\" : \"Testbrand\" , \"id\" : 1 , \"deleted\" : false}"));
+                .andExpect(content().json(mapper.writeValueAsString(brandResponse)));
     }
 
+    @Test
+    @WithMockUser(username = "name", roles = {"user"})
     void update_ShouldReturnStatus_500_WhenRoleIsUser() throws Exception {
+        mockMvc.perform(put("/api/brands")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"TestTestbrand\" , \"id\" : 1 , \"deleted\" : false}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void update_ShouldReturnStatus_400_WhenNameAlreadyExistAndDeleted() throws Exception {
+        BrandEntity brandBd = new BrandEntity();
+        brandBd.setId(1L);
+        brandBd.setName("TestTestbrand");
+        brandBd.setDeleted(true);
+        brandBd.setModelEntities(Collections.EMPTY_SET);
+        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(brandBd));
+        mockMvc.perform(put("/api/brands")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"TestTestbrand\" , \"id\" : 1 , \"deleted\" : true}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void update_ShouldReturnStatus_500_WhenNameNotValid() throws Exception {
+//        BrandEntity brandBd = new BrandEntity();
+//        brandBd.setId(1L);
+//        brandBd.setName("Test@@brand");
+//        brandBd.setDeleted(false);
+//        brandBd.setModelEntities(Collections.EMPTY_SET);
+//        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(brandBd));
+
+        mockMvc.perform(put("/api/brands")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"Test@@brand\" , \"id\" : 1 , \"deleted\" : false}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+
     }
 
+    @Test
+    @WithMockUser(roles = "admin")
     void delete_ShouldReturnStatus_200_WhenBrandWasDeleted() throws Exception {
+        doNothing().when(brandDao).deleteById(1L);
+        mockMvc.perform(delete("/api/todo/{id}", 1L))
+                .andExpect(status().isOk());
+        // verify(mockRepository, times(1)).deleteById(1L);
     }
 
     void delete_ShouldReturnStatus_500_WhenBrandNotExist() throws Exception {
+        Mockito.when(brandDao.findById(1L)).thenReturn(Optional.empty());
+        mockMvc.perform(delete("/api/brands/1"))
+                .andExpect(status().isNoContent());
     }
 
     void delete_ShouldReturnStatus_500_WhenBrandAlreadyDeleted() throws Exception {
     }
+
 }
+
+//    /**
+//     * Restore brand from deleted
+//     */
+//    @SecuredForAdmin
+//    @PutMapping("/restore")
+//    public void restore(long id){
+//        brandService.restore(id);
+//    }
+//
+//    /**
+//     * Delete brand
+//     */
