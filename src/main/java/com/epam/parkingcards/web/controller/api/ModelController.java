@@ -29,7 +29,7 @@ public class ModelController {
     @PostMapping()
     public String create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
         long id = modelService.create(modelMapper.toModel(modelCreateRequest));
-        return "Success, model id = " + id;
+        return "Success, new model id = " + id;
     }
 
     /**
