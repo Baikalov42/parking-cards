@@ -8,8 +8,6 @@ import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,9 +27,9 @@ public class ModelController {
      */
     @SecuredForAdmin
     @PostMapping()
-    public ResponseEntity<String> create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
+    public String create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
         long id = modelService.create(modelMapper.toModel(modelCreateRequest));
-        return new ResponseEntity<>("Success, new model id = " + id, HttpStatus.OK);
+        return "Success, model id = " + id;
     }
 
     /**
@@ -104,7 +102,7 @@ public class ModelController {
      */
     @SecuredForAdmin
     @PutMapping("/restore")
-    public void restore(long id) {
+    public void restore(long id){
         modelService.restore(id);
     }
 }
