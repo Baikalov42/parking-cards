@@ -56,7 +56,7 @@ public class ModelService {
         }
         return result;
     }
-
+//TODO проверка brandID is exist
     public List<ModelEntity> findAllByBrand(long brandId, int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<ModelEntity> result = modelDao.findByBrandId(brandId, pageable).getContent();
