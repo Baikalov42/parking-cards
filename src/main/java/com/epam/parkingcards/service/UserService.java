@@ -47,7 +47,7 @@ public class UserService {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #id)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserId(authentication, #id)")
     public UserEntity findById(long id) {
         IdValidator.validate(id);
         return userDao.findById(id)
@@ -89,7 +89,7 @@ public class UserService {
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userEntity.id)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserId(authentication, #userEntity.id)")
     public UserEntity update(UserEntity userEntity) {
 
         IdValidator.validate(userEntity.getId());

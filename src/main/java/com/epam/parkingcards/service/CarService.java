@@ -30,7 +30,7 @@ public class CarService {
     private ModelService modelService;
 
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserId(authentication, #carEntity.getUserEntity.id)")
     public long create(CarEntity carEntity) {
 
         modelService.validateForExistenceAndNotDeleted(carEntity
@@ -67,14 +67,14 @@ public class CarService {
         return result;
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userId)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserId(authentication, #userId)")
     public List<CarEntity> findByUserId(long userId) {
         IdValidator.validate(userId);
         userService.validateForExistence(userId);
         return carDao.findByUserId(userId);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #carEntity.getUserEntity.id)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserIdAndHasCar(authentication, #carEntity) ")
     public CarEntity update(CarEntity carEntity) {
         IdValidator.validate(carEntity.getId());
 
