@@ -4,6 +4,8 @@ import com.epam.parkingcards.service.UserService;
 import com.epam.parkingcards.web.mapper.UserMapper;
 import com.epam.parkingcards.web.request.UserRegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +21,15 @@ public class RegistrationController {
     private UserMapper userMapper;
 
     @PostMapping("/register")
-    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
-
+    public ResponseEntity<String> register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
         long id = userService.register(userMapper.toUser(userRegistrationRequest));
-        return "User is registered, id = " + id;
+        return new ResponseEntity<>("User is registered, id = " + id, HttpStatus.OK);
     }
 }
+//    @PostMapping("/register")
+//    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
+//
+//        long id = userService.register(userMapper.toUser(userRegistrationRequest));
+//        return "User is registered, id = " + id;
+//    }
+//}
