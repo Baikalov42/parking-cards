@@ -2,12 +2,10 @@ package com.epam.parkingcards.web.controller;
 
 import com.epam.parkingcards.dao.RoleDao;
 import com.epam.parkingcards.dao.UserDao;
-import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.model.RoleEntity;
 import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.RoleService;
 import com.epam.parkingcards.service.UserService;
-import com.epam.parkingcards.web.controller.api.UserController;
 import com.epam.parkingcards.web.request.UserRegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,24 +15,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-                            //TODO        не получилось
+
 @SpringBootTest
 @ActiveProfiles("test")
 class RegistrationControllerTest {
@@ -47,7 +37,7 @@ class RegistrationControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
+    @MockBean
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RegistrationController registrationController;
@@ -68,7 +58,6 @@ class RegistrationControllerTest {
     }
 
     @Test
- //   @WithMockUser(roles = "admin")
     void create_WhenInputDataIsValid() throws Exception {
         UserRegistrationRequest freshUser = new UserRegistrationRequest();
         freshUser.setFirstName("Anton");
@@ -78,20 +67,28 @@ class RegistrationControllerTest {
         freshUser.setPassword("badpassword");
         freshUser.setConfirmPassword("badpassword");
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(1L);
-        userEntity.setFirstName("Anton");
-        userEntity.setLastName("Antonov");
-        userEntity.setEmail("ant@mail.ru");
-        userEntity.setPhone("+74352784903");
-        userEntity.setPassword("badpassword");
+        UserEntity userEntityFromDb = new UserEntity();
+        userEntityFromDb.setId(1L);
+        userEntityFromDb.setFirstName("Anton");
+        userEntityFromDb.setLastName("Antonov");
+        userEntityFromDb.setEmail("ant@mail.ru");
+        userEntityFromDb.setPhone("+74352784903");
+        userEntityFromDb.setPassword("badpassword");
+
+        UserEntity userEntityToDb = new UserEntity();
+        userEntityToDb.setFirstName("Anton");
+        userEntityToDb.setLastName("Antonov");
+        userEntityToDb.setEmail("ant@mail.ru");
+        userEntityToDb.setPhone("+74352784903");
+        userEntityToDb.setPassword("badpassword");
 
         RoleEntity role = new RoleEntity();
         role.setName("ROLE_user");
         role.setId(1L);
 
+        Mockito.when(passwordEncoder.encode("badpassword")).thenReturn("badpassword");
         Mockito.when(roleDao.findByName("ROLE_user")).thenReturn(java.util.Optional.of(role));
-        Mockito.when(userDao.save(userEntity)).thenReturn(userEntity);
+        Mockito.when(userDao.save(userEntityToDb)).thenReturn(userEntityFromDb);
 
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,34 +97,4 @@ class RegistrationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("User is registered, id = 1"));
     }
-
 }
-
-
-
-//
-//
-//    @PostMapping("/register")
-//    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
-//
-//        long id = userService.register(userMapper.toUser(userRegistrationRequest));
-//        return "User is registered, id = " + id;
-//    }
-//    public long register(UserEntity userEntity) {
-//        try {
-//            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-//            userEntity.setRoleEntities(getDefaultRoles());
-//            return userDao.save(userEntity).getId();
-//
-//        } catch (DataAccessException e) {
-//            throw new DaoException(String.format("Creation error, User: %s ", userEntity), e);
-//        }
-//    }
-//}
-//
-////    private String firstName;
-////    private String lastName;
-////    private String phone;
-////    private String email;
-////    private String password;
-////    private String confirmPassword;
