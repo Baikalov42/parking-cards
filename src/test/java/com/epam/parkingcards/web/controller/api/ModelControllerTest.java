@@ -5,22 +5,18 @@ import com.epam.parkingcards.dao.ModelDao;
 import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.model.ModelEntity;
-import com.epam.parkingcards.service.BrandService;
-import com.epam.parkingcards.service.ModelService;
 import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.request.ModelCreateRequest;
 import com.epam.parkingcards.web.request.ModelUpdateRequest;
 import com.epam.parkingcards.web.response.ModelResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,20 +54,11 @@ class ModelControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    @InjectMocks
     private ModelController modelController;
 
-    @Autowired
-    @InjectMocks
-    private ModelService modelService;
-
-    @Autowired
-    @InjectMocks
-    private BrandService brandService;
-
-    @Mock
+    @MockBean
     private ModelDao modelDao;
-    @Mock
+    @MockBean
     private BrandDao brandDao;
 
     @BeforeEach
@@ -392,7 +379,7 @@ class ModelControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    private static ModelResponse getModelResponse() throws JsonProcessingException {
+    private static ModelResponse getModelResponse() {
 
         ModelResponse modelResponse = new ModelResponse();
 
@@ -404,7 +391,7 @@ class ModelControllerTest {
         return modelResponse;
     }
 
-    private static ModelCreateRequest getModelCreateRequest() throws JsonProcessingException {
+    private static ModelCreateRequest getModelCreateRequest() {
 
         ModelCreateRequest modelCreateRequest = new ModelCreateRequest();
 
@@ -414,7 +401,7 @@ class ModelControllerTest {
         return modelCreateRequest;
     }
 
-    private static ModelUpdateRequest getModelUpdateRequest() throws JsonProcessingException {
+    private static ModelUpdateRequest getModelUpdateRequest() {
         ModelUpdateRequest modelUpdateRequest = new ModelUpdateRequest();
 
         modelUpdateRequest.setId(ONE);

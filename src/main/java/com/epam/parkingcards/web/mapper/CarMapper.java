@@ -55,6 +55,7 @@ public class CarMapper {
         carResponse.setId(carEntity.getId());
         carResponse.setLicensePlate(carEntity.getLicensePlate());
         carResponse.setModelId(carEntity.getModelEntity().getId());
+        carResponse.setUserId(carEntity.getUserEntity().getId());
 
         return carResponse;
     }
