@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-class UserControllerTest {
+class UserRestControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
@@ -53,14 +53,14 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserController userController;
+    private UserRestController userRestController;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
-                .standaloneSetup(userController)
-                .setControllerAdvice(new ExceptionController())
+                .standaloneSetup(userRestController)
+                .setControllerAdvice(new ExceptionRestController())
                 .build();
     }
 

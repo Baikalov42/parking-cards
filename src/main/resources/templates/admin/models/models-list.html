@@ -11,25 +11,22 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Brand</th>
             <th>Model</th>
-            <th>License Plate</th>
-            <th>Owner</th>
+            <th>Brand</th>
             <th></th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="current : ${cars}">
-            <th th:text="${current.modelEntity.brandEntity.name}">brand name</th>
-            <th th:text="${current.modelEntity.name}">model name</th>
-            <th th:text="${current.licensePlate}">license plate</th>
-            <th th:text="${current.userEntity.lastName + ' ' + current.userEntity.firstName }">model name</th>
+        <tr th:each="current : ${models}">
+            <th th:text="${current.name}">model name</th>
+            <th th:text="${current.brandEntity.name}">brand name</th>
 
-            <td><a th:href="@{~/ui/cars/update-page/{id}(id = ${current.id})}"
+
+            <td><a th:href="@{~/ui/models/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
 
-            <td><a th:href="@{~/ui/cars/{id}(id = ${current.id})}" data-method="delete"
+            <td><a th:href="@{~/ui/models/{id}/delete (id = ${current.id})}"
                    class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
         </tr>
 
@@ -38,9 +35,9 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li th:href="@{~/ui/cars/page/1}" class="page-item"><a class="page-link">1</a></li>
-            <li th:href="@{~/ui/cars/page/2}" class="page-item"><a class="page-link">2</a></li>
-            <li th:href="@{~/ui/cars/page/3}" class="page-item"><a class="page-link">3</a></li>
+            <li th:href="@{~/ui/models/page/1}" class="page-item"><a class="page-link">1</a></li>
+            <li th:href="@{~/ui/models/page/2}" class="page-item"><a class="page-link">2</a></li>
+            <li th:href="@{~/ui/models/page/3}" class="page-item"><a class="page-link">3</a></li>
             <li class="page-item"><a class="page-link" href="#">Next</a></li>
         </ul>
     </nav>

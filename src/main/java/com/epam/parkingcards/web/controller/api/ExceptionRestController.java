@@ -7,12 +7,13 @@ import com.epam.parkingcards.web.response.ApiErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
-@ControllerAdvice()
-public class ExceptionController {
+@RestControllerAdvice(annotations = RestController.class)
+public class ExceptionRestController {
 
     @ExceptionHandler({DaoException.class})
     public ResponseEntity<Object> handleDaoException(Exception ex) {

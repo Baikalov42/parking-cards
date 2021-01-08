@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/models")
-public class ModelController {
+public class ModelRestController {
 
     @Autowired
     private ModelService modelService;

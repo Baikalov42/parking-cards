@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CarControllerTest {
+class CarRestControllerTest {
 
     private static final long ONE = 1;
     private static final Pageable PAGEABLE =
@@ -55,7 +55,7 @@ class CarControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private CarController carController;
+    private CarRestController carRestController;
 
     @MockBean
     private CarDao carDao;
@@ -68,8 +68,8 @@ class CarControllerTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
-                .standaloneSetup(carController)
-                .setControllerAdvice(new ExceptionController())
+                .standaloneSetup(carRestController)
+                .setControllerAdvice(new ExceptionRestController())
                 .build();
     }
 

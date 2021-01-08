@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>Cars</title>
+    <title>Users list</title>
 </head>
 <body>
 <div class="container">
@@ -31,7 +31,7 @@
             <td><a th:href="@{~/ui/users/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
 
-            <td><a th:href="@{~/ui/users/{id}(id = ${current.id})}" data-method="delete"
+            <td><a th:href="@{~/ui/users/{id}/delete (id = ${current.id})}"
                    class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
         </tr>
 

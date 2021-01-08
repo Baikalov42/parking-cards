@@ -1,14 +1,15 @@
 package com.epam.parkingcards.web.controller.ui;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
-import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/ui/models")
-public class ModelUiController {
+public class ModelController {
 
     @Autowired
     private ModelService modelService;
@@ -26,6 +27,32 @@ public class ModelUiController {
     public String getAll(@Valid @PathVariable int pageNumber, Model model) {
         List<ModelEntity> all = modelService.findAllActive(pageNumber);
         model.addAttribute("models", all);
-        return "admin/models-list";
+        return "admin/models/models-list";
+    }
+
+    @SecuredForAdmin
+    @GetMapping("/update-page/{id}")
+    public String toUpdatePage(@PathVariable long id, Model model) {
+
+        ModelEntity modelEntity = modelService.findById(id);
+        model.addAttribute("model", modelEntity);
+        return "admin/models/model-edit";
+    }
+
+    @SecuredForAdmin
+    @PostMapping("/edit")
+    public String update(ModelEntity modelEntity, Model model) {
+
+        ModelEntity updated = modelService.update(modelEntity);
+        model.addAttribute("updated", "ok");
+        return "success-message-page";
+    }
+
+    @SecuredForAdmin
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable long id, Model model) {
+
+        modelService.deleteSoftById(id);
+        return "success-message-page";
     }
 }

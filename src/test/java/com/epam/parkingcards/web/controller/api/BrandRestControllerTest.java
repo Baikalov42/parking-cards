@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-class BrandControllerTest {
+class BrandRestControllerTest {
 
     private MockMvc mockMvc;
 
@@ -49,14 +49,14 @@ class BrandControllerTest {
     private ObjectMapper mapper;
 
     @Autowired
-    private BrandController brandController;
+    private BrandRestController brandRestController;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
-                .standaloneSetup(brandController)
-                .setControllerAdvice(new ExceptionController())
+                .standaloneSetup(brandRestController)
+                .setControllerAdvice(new ExceptionRestController())
                 .build();
     }
 

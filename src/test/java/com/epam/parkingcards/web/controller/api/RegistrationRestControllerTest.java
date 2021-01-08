@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-class RegistrationControllerTest {
+class RegistrationRestControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
@@ -39,14 +39,14 @@ class RegistrationControllerTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private RegistrationController registrationController;
+    private RegistrationRestController registrationRestController;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
-                .standaloneSetup(registrationController)
-                .setControllerAdvice(new ExceptionController())
+                .standaloneSetup(registrationRestController)
+                .setControllerAdvice(new ExceptionRestController())
                 .build();
     }
 
