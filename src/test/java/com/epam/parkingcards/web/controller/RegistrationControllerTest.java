@@ -2,6 +2,7 @@ package com.epam.parkingcards.web.controller;
 
 import com.epam.parkingcards.dao.RoleDao;
 import com.epam.parkingcards.dao.UserDao;
+import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.model.RoleEntity;
 import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.RoleService;
@@ -64,8 +65,8 @@ class RegistrationControllerTest {
         freshUser.setLastName("Antonov");
         freshUser.setEmail("ant@mail.ru");
         freshUser.setPhone("+74352784903");
-        freshUser.setPassword("badpassword");
-        freshUser.setConfirmPassword("badpassword");
+        freshUser.setPassword("password");
+        freshUser.setConfirmPassword("password");
 
         UserEntity userEntityFromDb = new UserEntity();
         userEntityFromDb.setId(1L);
@@ -73,14 +74,14 @@ class RegistrationControllerTest {
         userEntityFromDb.setLastName("Antonov");
         userEntityFromDb.setEmail("ant@mail.ru");
         userEntityFromDb.setPhone("+74352784903");
-        userEntityFromDb.setPassword("badpassword");
+        userEntityFromDb.setPassword("password");
 
         UserEntity userEntityToDb = new UserEntity();
         userEntityToDb.setFirstName("Anton");
         userEntityToDb.setLastName("Antonov");
         userEntityToDb.setEmail("ant@mail.ru");
         userEntityToDb.setPhone("+74352784903");
-        userEntityToDb.setPassword("badpassword");
+        userEntityToDb.setPassword("password");
 
         RoleEntity role = new RoleEntity();
         role.setName("ROLE_user");
@@ -96,5 +97,42 @@ class RegistrationControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User is registered, id = 1"));
+    }
+
+    @Test
+    void create_WhenInputDataIsNotValid() throws Exception {
+        UserRegistrationRequest freshUser = new UserRegistrationRequest();
+        freshUser.setFirstName("Anton");
+        freshUser.setLastName("Anton@@ov");
+        freshUser.setEmail("ant@mail.ru");
+        freshUser.setPhone("+74352784903");
+        freshUser.setPassword("pass1word");
+        freshUser.setConfirmPassword("password");
+
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(freshUser))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void create_WhenDefaultRoleNotFound() throws Exception {
+        UserRegistrationRequest freshUser = new UserRegistrationRequest();
+        freshUser.setFirstName("Anton");
+        freshUser.setLastName("Antonov");
+        freshUser.setEmail("ant@mail.ru");
+        freshUser.setPhone("+74352784903");
+        freshUser.setPassword("password");
+        freshUser.setConfirmPassword("password");
+
+        Mockito.when(passwordEncoder.encode("password")).thenReturn("password");
+        Mockito.when(roleDao.findByName("ROLE_user")).thenThrow(new NotFoundException("Role not found"));
+
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(freshUser))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }

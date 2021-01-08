@@ -36,6 +36,4 @@ public class RoleService {
             throw new ValidationException(String.format("Role not exist, id=%d", id));
         }
     }
-
-
 }

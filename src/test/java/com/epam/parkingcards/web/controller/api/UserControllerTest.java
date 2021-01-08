@@ -73,10 +73,10 @@ class UserControllerTest {
     @Autowired
     private UserController userController;
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleService roleService;
+//    @Autowired
+//    private UserService userService;
+//    @Autowired
+//    private RoleService roleService;
 
     @BeforeEach
     public void setup() {
@@ -143,6 +143,7 @@ class UserControllerTest {
         mockMvc.perform(get("/api/users/page/0"))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     @WithMockUser(roles = "admin")
     void searchUserByLicensePlate_ShouldReturnUser_WhenDataValid() throws Exception {
@@ -173,7 +174,8 @@ class UserControllerTest {
     @WithMockUser(username = "name", roles = {"admin", "user"})
     void searchByPart_ShouldReturnListOfResult_WhenDataExist() throws Exception {
         Mockito.when(userDao.findByKeyword("Adm".toLowerCase())).thenReturn(Collections.singletonList(getUserEntity()));
-        mockMvc.perform(post("/api/users/search?keyword=adm"))
+        mockMvc.perform(post("/api/users/search")
+                .param("keyword", "adm"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].firstName", is("Admin")))
@@ -187,7 +189,8 @@ class UserControllerTest {
     @WithMockUser(username = "name", roles = {"admin", "user"})
     void searchByPart_ShouldReturnEmptyList_WhenDataNotExist() throws Exception {
         Mockito.when(userDao.findByKeyword("ZYW".toLowerCase())).thenReturn(Collections.emptyList());
-        mockMvc.perform(post("/api/users/search?keyword=ZYW"))
+        mockMvc.perform(post("/api/users/search")
+                .param("keyword", "ZYW"))
                 .andExpect(status().isNoContent());
     }
 
@@ -195,12 +198,6 @@ class UserControllerTest {
     @WithMockUser(roles = "admin")
 //TODO  ++++update user by himself
     void update_ShouldReturnResponse_WhenDataIsValid() throws Exception {
-        UserUpdateRequest userUpdateRequest = new UserUpdateRequest();
-        userUpdateRequest.setId(1L);
-        userUpdateRequest.setFirstName("Admin");
-        userUpdateRequest.setLastName("Adminov");
-        userUpdateRequest.setEmail("adm@mail.ru");
-        userUpdateRequest.setPhone("+74352784903");
 
         UserEntity userUpdateEntity = new UserEntity();
         userUpdateEntity.setId(1L);
@@ -209,11 +206,20 @@ class UserControllerTest {
         userUpdateEntity.setEmail("adm@mail.ru");
         userUpdateEntity.setPhone("+74352784903");
 
+        UserEntity updatedUserFromBd = new UserEntity();
+        updatedUserFromBd.setId(1L);
+        updatedUserFromBd.setFirstName("Admin");
+        updatedUserFromBd.setLastName("Adminov");
+        updatedUserFromBd.setEmail("adm@mail.ru");
+        updatedUserFromBd.setPhone("+74352784903");
+        updatedUserFromBd.setPassword("oldPass_oldRole_oldCars");
+
+
         Mockito.when(userDao.existsById(1L)).thenReturn(true);
-        Mockito.when(userDao.updateWithoutPasswordAndCars(userUpdateEntity)).thenReturn(userUpdateEntity);
+        Mockito.when(userDao.updateWithoutPasswordAndCars(userUpdateEntity)).thenReturn(updatedUserFromBd);
         mockMvc.perform(put("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userUpdateRequest))
+                .content(objectMapper.writeValueAsString(getUserUpdateRequest()))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
@@ -241,48 +247,68 @@ class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-//TODO  update role to user
+
+    //TODO  update role to user
     @Test
     @WithMockUser(roles = "admin")
     void updateUserByNewRole_ShouldReturnStatus_200_WhenNameDataValid() throws Exception {
-        UserEntity userEntity = getUserEntity();
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setFirstName("Admin");
+        userEntity.setLastName("Adminov");
+        userEntity.setEmail("adm@mail.ru");
+        userEntity.setPhone("+74352784903");
+        userEntity.setPassword("admin");
+//        userEntity.setRoleEntities(Collections.emptySet());
+//        userEntity.setCarEntities(Collections.emptySet());
+
+
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setId(1L);
         roleEntity.setName("ROLE_user");
-        //       if (!userDao.existsById(id))
+
+
         Mockito.when(userDao.existsById(1L)).thenReturn(true);
-        //       if (!roleDao.existsById(id))
         Mockito.when(roleDao.existsById(1L)).thenReturn(true);
-        //       UserEntity userEntity = this.findById(userId); //        userDao.findById(id)
+
         Mockito.when(userDao.findById(1L)).thenReturn(Optional.of(userEntity));
-        //       userEntity.getRoleEntities().add(roleDao.getOne(roleId)); //  roleDao.getOne(roleId)
         Mockito.when(roleDao.getOne(1L)).thenReturn(roleEntity);
-        //       userDao.saveAndFlush(userEntity); //
+
+        userEntity.getRoleEntities().add(roleEntity);
+
         Mockito.when(userDao.saveAndFlush(userEntity)).thenReturn(userEntity);
-        //     doNothing().when(userDao).saveAndFlush(userEntity);
-        mockMvc.perform(put("/add-role/user/1/role/1"))
+        mockMvc.perform(put("/api/users/add-role/user/1/role/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Role set"));
-//    doNothing().when(brandDao).markAsDeleted(1L);
-    }
-
-//TODO  тесты для данного метода:
-
-//    @SecuredForAdmin
-//    @PutMapping("/remove-role/user/{userId}/role/{roleId}")
-//    public ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {
-//        userService.removeRole(userId, roleId);
-//        return new ResponseEntity<>("Role removed", HttpStatus.OK);
-//    }
-    void removeRoleFromUser_ShouldReturnStatus_200_AndString_WhenNameDataValid() throws Exception {
 
     }
-
 
 
     @Test
     @WithMockUser(roles = "admin")
-    void delete_ShouldReturnStatus_200_WhenBrandWasDeleted() throws Exception {
+    void removeRoleFromUser_ShouldReturnStatus_200_AndString_WhenNameDataValid() throws Exception {
+        UserEntity userEntity = getUserEntity();
+
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setId(1L);
+        roleEntity.setName("ROLE_user");
+
+        Mockito.when(userDao.existsById(1L)).thenReturn(true);
+        Mockito.when(roleDao.existsById(1L)).thenReturn(true);
+        Mockito.when(userDao.getOne(1L)).thenReturn(userEntity);
+        Mockito.when(roleDao.getOne(1L)).thenReturn(roleEntity);
+
+        Mockito.when(userDao.saveAndFlush(userEntity)).thenReturn(userEntity);
+        mockMvc.perform(put("/api/users/remove-role/user/1/role/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Role removed"));
+    }
+
+
+    @Test
+    @WithMockUser(roles = "admin")
+    void delete_ShouldReturnStatus_200_WhenUserExist() throws Exception {
         Mockito.when(userDao.existsById(1L)).thenReturn(true);
         doNothing().when(userDao).deleteById(1L);
         mockMvc.perform(delete("/api/users/1"))
@@ -305,9 +331,18 @@ class UserControllerTest {
         userEntity.setEmail("adm@mail.ru");
         userEntity.setPhone("+74352784903");
         userEntity.setPassword("admin");
-        userEntity.setRoleEntities(Collections.emptySet());
-        userEntity.setCarEntities(Collections.emptySet());
+//        userEntity.setRoleEntities(Collections.emptySet());
+//        userEntity.setCarEntities(Collections.emptySet());
         return userEntity;
+    }
 
+    static UserUpdateRequest getUserUpdateRequest() {
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest();
+        userUpdateRequest.setId(1L);
+        userUpdateRequest.setFirstName("Admin");
+        userUpdateRequest.setLastName("Adminov");
+        userUpdateRequest.setEmail("adm@mail.ru");
+        userUpdateRequest.setPhone("+74352784903");
+        return userUpdateRequest;
     }
 }
