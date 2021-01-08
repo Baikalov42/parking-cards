@@ -3,7 +3,6 @@ package com.epam.parkingcards.web.controller.api;
 import com.epam.parkingcards.dao.BrandDao;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.BrandEntity;
-import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.request.BrandCreateRequest;
 import com.epam.parkingcards.web.request.BrandUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Navbar</title>
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light mt-5" style="background-color: #d8ebfc;">
+    <a class="navbar-brand mb-0 h1" th:href="@{/ui/index}">Parking-cards</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav nav-tabs">
+            <li class="nav-item">
+                <a th:href="@{/ui/users/page/0}" class="nav-link">Users</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/ui/cars/page/0}" class="nav-link">Cars <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/ui/models/page/0}" class="nav-link">Models&Brands</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

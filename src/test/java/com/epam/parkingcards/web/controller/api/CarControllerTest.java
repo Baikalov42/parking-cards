@@ -8,7 +8,6 @@ import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.model.RoleEntity;
 import com.epam.parkingcards.model.UserEntity;
-import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.request.CarCreateRequest;
 import com.epam.parkingcards.web.request.CarUpdateRequest;
 import com.epam.parkingcards.web.response.CarResponse;

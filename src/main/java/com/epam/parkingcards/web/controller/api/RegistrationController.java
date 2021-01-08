@@ -1,4 +1,4 @@
-package com.epam.parkingcards.web.controller;
+package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.service.UserService;
 import com.epam.parkingcards.web.mapper.UserMapper;
@@ -20,16 +20,9 @@ public class RegistrationController {
     @Autowired
     private UserMapper userMapper;
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
         long id = userService.register(userMapper.toUser(userRegistrationRequest));
         return new ResponseEntity<>("User is registered, id = " + id, HttpStatus.OK);
     }
 }
-//    @PostMapping("/register")
-//    public String register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
-//
-//        long id = userService.register(userMapper.toUser(userRegistrationRequest));
-//        return "User is registered, id = " + id;
-//    }
-//}

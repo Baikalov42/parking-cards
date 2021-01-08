@@ -1,12 +1,10 @@
-package com.epam.parkingcards.web.controller;
+package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.dao.RoleDao;
 import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.model.RoleEntity;
 import com.epam.parkingcards.model.UserEntity;
-import com.epam.parkingcards.service.RoleService;
-import com.epam.parkingcards.service.UserService;
 import com.epam.parkingcards.web.request.UserRegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,7 +83,7 @@ class RegistrationControllerTest {
         Mockito.when(roleDao.findByName("ROLE_user")).thenReturn(java.util.Optional.of(role));
         Mockito.when(userDao.save(userEntityToDb)).thenReturn(userEntityFromDb);
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(freshUser))
                 .accept(MediaType.APPLICATION_JSON))
@@ -103,7 +101,7 @@ class RegistrationControllerTest {
         freshUser.setPassword("pass1word");
         freshUser.setConfirmPassword("password");
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(freshUser))
                 .accept(MediaType.APPLICATION_JSON))
@@ -123,7 +121,7 @@ class RegistrationControllerTest {
         Mockito.when(passwordEncoder.encode("password")).thenReturn("password");
         Mockito.when(roleDao.findByName("ROLE_user")).thenThrow(new NotFoundException("Role not found"));
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(freshUser))
                 .accept(MediaType.APPLICATION_JSON))

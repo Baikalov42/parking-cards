@@ -5,7 +5,6 @@ import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.RoleEntity;
 import com.epam.parkingcards.model.UserEntity;
-import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.request.UserUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

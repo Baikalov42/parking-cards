@@ -1,4 +1,4 @@
-package com.epam.parkingcards.web.controller;
+package com.epam.parkingcards.web.controller.api;
 
 import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
-@ControllerAdvice
+@ControllerAdvice()
 public class ExceptionController {
 
     @ExceptionHandler({DaoException.class})
