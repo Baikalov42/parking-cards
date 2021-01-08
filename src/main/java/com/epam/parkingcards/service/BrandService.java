@@ -5,7 +5,6 @@ import com.epam.parkingcards.exception.DaoException;
 import com.epam.parkingcards.exception.NotFoundException;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.BrandEntity;
-import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,8 +22,6 @@ public class BrandService {
 
     @Autowired
     private BrandDao brandDao;
-    @Autowired
-    private IdValidator idValidator;
 
     public long create(BrandEntity brandEntity) {
 
@@ -37,10 +34,10 @@ public class BrandService {
     }
 
     public BrandEntity findById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
 
         return brandDao.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
+                .orElseThrow(() -> new NotFoundException(String.format("By id %d, Brand not found", id)));
     }
 
     public List<BrandEntity> findAllActive(int pageNumber) {
@@ -70,14 +67,14 @@ public class BrandService {
         List<BrandEntity> result = brandDao.findByKeyword(keyword.toLowerCase());
         if (result.isEmpty()) {
             throw new NotFoundException(
-                    String.format("By keyword %s, Users not found", keyword));
+                    String.format("By keyword %s, Brands not found", keyword));
         }
         return result;
     }
 
     public BrandEntity update(BrandEntity brandEntity) {
 
-        idValidator.validate(brandEntity.getId());
+        IdValidator.validate(brandEntity.getId());
         validateForExistenceAndNotDeleted(brandEntity.getId());
         validateForNameAlreadyUsedAndDeleted(brandEntity.getName());
 
@@ -89,36 +86,36 @@ public class BrandService {
     }
 
     public void deleteSoftById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistenceAndNotDeleted(id);
 
         try {
             brandDao.markAsDeleted(id);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+            throw new DaoException(String.format("Deleting error: brand id=%d ", id), e);
         }
     }
 
     public void restore(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistence(id);
         try {
             brandDao.restore(id);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Restoring error: id:%d", id), e);
+            throw new DaoException(String.format("Restoring error: brand id:%d", id), e);
         }
     }
 
     private void validateForNameAlreadyUsedAndDeleted(String brandName) {
         long l = brandDao.getCountDeletedByName(brandName);
         if (l > 0) {
-            throw new ValidationException(String.format("Name %s already used, and was deleted", brandName));
+            throw new ValidationException(String.format("Brand name %s already used, and was deleted", brandName));
         }
     }
 
     public void validateForExistence(long id) {
         if (!brandDao.existsById(id)) {
-            throw new ValidationException(String.format("Not exist, id=%d", id));
+            throw new ValidationException(String.format("Not exist, brand id=%d", id));
         }
     }
 

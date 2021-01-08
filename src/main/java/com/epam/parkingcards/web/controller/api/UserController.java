@@ -9,14 +9,21 @@ import com.epam.parkingcards.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-
 public class UserController {
 
     @Autowired
@@ -75,7 +82,7 @@ public class UserController {
      */
     @SecuredForAdmin
     @PutMapping("/add-role/user/{userId}/role/{roleId}")
-    ResponseEntity<String> addRole(@PathVariable long userId, @PathVariable long roleId) {
+    public ResponseEntity<String> addRole(@PathVariable long userId, @PathVariable long roleId) {
         userService.addRole(userId, roleId);
         return new ResponseEntity<>("Role set", HttpStatus.OK);
     }
@@ -85,7 +92,7 @@ public class UserController {
      */
     @SecuredForAdmin
     @PutMapping("/remove-role/user/{userId}/role/{roleId}")
-    ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {
+    public ResponseEntity<String> removeRole(@PathVariable long userId, @PathVariable long roleId) {
         userService.removeRole(userId, roleId);
         return new ResponseEntity<>("Role removed", HttpStatus.OK);
     }
@@ -98,6 +105,5 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public void deleteById(@PathVariable long userId) {
         userService.deleteById(userId);
-
     }
 }

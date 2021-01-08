@@ -13,7 +13,7 @@ public class UserSecurity {
     @Autowired
     private UserService userService;
 
-    public boolean hasUserId(Authentication authentication, Long userId) {
+    public boolean sameUserId(Authentication authentication, Long userId) {
         UserEntity userEntity = userService.findByEmail(authentication.getName());
         return userEntity.getId() == userId;
     }
@@ -27,5 +27,20 @@ public class UserSecurity {
             }
         }
         return false;
+    }
+
+    public boolean sameUserIdAndHasCar(Authentication authentication, CarEntity carEntity) {
+        UserEntity userEntity = userService.findByEmail(authentication.getName());
+
+        boolean isSameUserId = userEntity.getId() == carEntity.getUserEntity().getId();
+        boolean userHasCarId = false;
+
+        for (CarEntity currentCar : userEntity.getCarEntities()) {
+            if (currentCar.getId() == carEntity.getId()) {
+                userHasCarId = true;
+                break;
+            }
+        }
+        return isSameUserId && userHasCarId;
     }
 }

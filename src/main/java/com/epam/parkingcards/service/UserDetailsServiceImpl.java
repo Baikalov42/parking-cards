@@ -28,7 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Email %s not found", email)));
 
         return new org.springframework.security.core.userdetails
-                .User(currentUserEntity.getEmail(), currentUserEntity.getPassword(), mapRolesToAuthorities(currentUserEntity.getRoleEntities()));
+                .User(currentUserEntity.getEmail(), currentUserEntity.getPassword(),
+                mapRolesToAuthorities(currentUserEntity.getRoleEntities()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<RoleEntity> roleEntities) {

@@ -8,7 +8,15 @@ import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,7 +37,7 @@ public class ModelController {
     @PostMapping()
     public String create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
         long id = modelService.create(modelMapper.toModel(modelCreateRequest));
-        return "Success, model id = " + id;
+        return "Success, new model id = " + id;
     }
 
     /**
@@ -102,7 +110,7 @@ public class ModelController {
      */
     @SecuredForAdmin
     @PutMapping("/restore")
-    public void restore(long id){
+    public void restore(long id) {
         modelService.restore(id);
     }
 }
