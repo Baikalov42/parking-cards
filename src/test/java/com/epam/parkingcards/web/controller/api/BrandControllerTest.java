@@ -3,20 +3,17 @@ package com.epam.parkingcards.web.controller.api;
 import com.epam.parkingcards.dao.BrandDao;
 import com.epam.parkingcards.exception.ValidationException;
 import com.epam.parkingcards.model.BrandEntity;
-import com.epam.parkingcards.service.BrandService;
 import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.request.BrandCreateRequest;
 import com.epam.parkingcards.web.request.BrandUpdateRequest;
-import com.epam.parkingcards.web.response.BrandResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,19 +43,14 @@ class BrandControllerTest {
 
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private BrandDao brandDao;
 
     @Autowired
     private ObjectMapper mapper;
 
     @Autowired
-    @InjectMocks
     private BrandController brandController;
-
-    @Autowired
-    @InjectMocks
-    private BrandService brandService;
 
     @BeforeEach
     public void setup() {
@@ -215,7 +207,6 @@ class BrandControllerTest {
         Mockito.when(brandDao.findByIsDeletedFalse(pageable)).thenReturn(new PageImpl<>(Collections.emptyList()));
         mockMvc.perform(get("/api/brands/page/0"))
                 .andExpect(status().isNoContent());
-
     }
 
     @Test
@@ -227,7 +218,8 @@ class BrandControllerTest {
         testBrand.setDeleted(true);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
-        Mockito.when(brandDao.findAllDeleted(pageable)).thenReturn(new PageImpl<>(Collections.singletonList(testBrand)));
+        Mockito.when(brandDao.findAllDeleted(pageable))
+                .thenReturn(new PageImpl<>(Collections.singletonList(testBrand)));
 
         mockMvc.perform(get("/api/brands/deleted/page/0"))
                 .andExpect(status().isOk())
@@ -286,7 +278,6 @@ class BrandControllerTest {
         brandBd.setId(1L);
         brandBd.setName("TestTestbrand");
         brandBd.setDeleted(false);
-        brandBd.setModelEntities(Collections.EMPTY_SET);
 
         Mockito.when(brandDao.findById(1L)).thenReturn(Optional.of(brandBd));
         Mockito.when(brandDao.getCountDeletedByName("TestTestbrand")).thenReturn(0L);
@@ -306,9 +297,6 @@ class BrandControllerTest {
     @WithMockUser(roles = "user")
     void update_ShouldReturnStatus_500_WhenRoleIsUser() throws Exception {
         mockMvc.perform(put("/api/brands"))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(mapper.writeValueAsString(testUpdateRequestBrand))
-//                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
 
     }
@@ -384,5 +372,4 @@ class BrandControllerTest {
         mockMvc.perform(delete("/api/brands/1"))
                 .andExpect(status().isBadRequest());
     }
-
 }

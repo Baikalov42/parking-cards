@@ -11,10 +11,10 @@ public interface UserDao extends JpaRepository<UserEntity, Long>, CustomUserRepo
 
     Optional<UserEntity> findByEmail(String email);
 
-    @Query("SELECT u " +
-            "FROM UserEntity u " +
-            "JOIN u.carEntities c " +
-            "WHERE c.licensePlate = :licensePlate")
+    @Query("SELECT u "
+            + "FROM UserEntity u "
+            + "JOIN u.carEntities c "
+            + "WHERE c.licensePlate = :licensePlate")
     Optional<UserEntity> findByLicensePlate(String licensePlate);
 
     @Query("SELECT u FROM UserEntity u WHERE LOWER(u.firstName) LIKE %:keyword% OR LOWER(u.lastName) LIKE %:keyword%")

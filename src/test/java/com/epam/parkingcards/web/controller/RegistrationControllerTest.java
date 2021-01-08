@@ -43,12 +43,6 @@ class RegistrationControllerTest {
     @Autowired
     private RegistrationController registrationController;
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleService roleService;
-
-
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -59,7 +53,7 @@ class RegistrationControllerTest {
     }
 
     @Test
-    void create_WhenInputDataIsValid() throws Exception {
+    void register_WhenInputDataIsValid() throws Exception {
         UserRegistrationRequest freshUser = new UserRegistrationRequest();
         freshUser.setFirstName("Anton");
         freshUser.setLastName("Antonov");
@@ -87,7 +81,7 @@ class RegistrationControllerTest {
         role.setName("ROLE_user");
         role.setId(1L);
 
-        Mockito.when(passwordEncoder.encode("badpassword")).thenReturn("badpassword");
+        Mockito.when(passwordEncoder.encode("password")).thenReturn("password");
         Mockito.when(roleDao.findByName("ROLE_user")).thenReturn(java.util.Optional.of(role));
         Mockito.when(userDao.save(userEntityToDb)).thenReturn(userEntityFromDb);
 
@@ -100,7 +94,7 @@ class RegistrationControllerTest {
     }
 
     @Test
-    void create_WhenInputDataIsNotValid() throws Exception {
+    void register_WhenInputDataIsNotValid() throws Exception {
         UserRegistrationRequest freshUser = new UserRegistrationRequest();
         freshUser.setFirstName("Anton");
         freshUser.setLastName("Anton@@ov");
@@ -117,7 +111,7 @@ class RegistrationControllerTest {
     }
 
     @Test
-    void create_WhenDefaultRoleNotFound() throws Exception {
+    void register_WhenDefaultRoleNotFound() throws Exception {
         UserRegistrationRequest freshUser = new UserRegistrationRequest();
         freshUser.setFirstName("Anton");
         freshUser.setLastName("Antonov");

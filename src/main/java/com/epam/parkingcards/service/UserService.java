@@ -53,7 +53,8 @@ public class UserService {
         return userDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
     }
-//todo неиспользуемый метод?
+
+    //todo неиспользуемый метод?
     public long getIdByEmail(String email) {
         return this.findByEmail(email).getId();
     }
@@ -65,7 +66,8 @@ public class UserService {
 
     public UserEntity findByLicensePlate(String licensePlate) {
         return userDao.findByLicensePlate(licensePlate)
-                .orElseThrow(() -> new NotFoundException(String.format("By license plate %s, User not found", licensePlate)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("By license plate %s, User not found", licensePlate)));
     }
 
     public List<UserEntity> findAll(int pageNumber) {
@@ -114,8 +116,8 @@ public class UserService {
     }
 
     private Set<RoleEntity> getDefaultRoles() {
-        RoleEntity roleEntityUser = roleDao.findByName("ROLE_user").orElseThrow(
-                () -> new NotFoundException("Role not found"));
+        RoleEntity roleEntityUser = roleDao.findByName("ROLE_user")
+                .orElseThrow(() -> new NotFoundException("Role not found"));
 
         Set<RoleEntity> roleEntities = new HashSet<>();
         roleEntities.add(roleEntityUser);

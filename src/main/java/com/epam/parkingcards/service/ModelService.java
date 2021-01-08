@@ -23,7 +23,7 @@ public class ModelService {
     @Autowired
     private ModelDao modelDao;
     @Autowired
-    private BrandService brandService;;
+    private BrandService brandService;
 
     public long create(ModelEntity modelEntity) {
 
@@ -56,7 +56,8 @@ public class ModelService {
         }
         return result;
     }
-//TODO проверка brandID is exist
+
+    //TODO проверка brandID is exist
     public List<ModelEntity> findAllByBrand(long brandId, int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<ModelEntity> result = modelDao.findByBrandId(brandId, pageable).getContent();
