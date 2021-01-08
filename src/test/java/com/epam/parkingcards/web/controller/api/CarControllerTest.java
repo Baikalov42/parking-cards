@@ -6,6 +6,7 @@ import com.epam.parkingcards.dao.UserDao;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.model.RoleEntity;
 import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.web.controller.ExceptionController;
 import com.epam.parkingcards.web.request.CarCreateRequest;
@@ -14,7 +15,6 @@ import com.epam.parkingcards.web.response.CarResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -136,7 +136,7 @@ class CarControllerTest {
     @WithMockUser(roles = "admin")
     void create_ShouldReturnStatus_204_WhenUserIdNotExist() throws Exception {
 
-        Mockito.when(userDao.findById(ONE)).thenReturn(Optional.empty());
+        when(userDao.findById(ONE)).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/api/cars")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +149,7 @@ class CarControllerTest {
     @WithMockUser(roles = "admin")
     void create_ShouldReturnStatus_204_WhenModelIdNotExist() throws Exception {
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.empty());
+        when(modelDao.findById(ONE)).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/api/cars")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -165,7 +165,7 @@ class CarControllerTest {
         ModelEntity deleted = getModelEntityFromDb();
         deleted.setDeleted(true);
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.of(deleted));
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(deleted));
 
         mockMvc.perform(post("/api/cars")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -241,10 +241,10 @@ class CarControllerTest {
                 .andExpect(status().isOk());
     }
 
-    //TODO исправить метод проверки brand id
+    //TODO исправить метод проверки user id
     @Test
     @WithMockUser(roles = "admin")
-    void getByUserId_ShouldReturnStatus_204_WhenBrandIdNotExist() throws Exception {
+    void getByUserId_ShouldReturnStatus_204_WhenUserIdNotExist() throws Exception {
 
     }
 
@@ -265,12 +265,58 @@ class CarControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(getCarResponse())));
     }
 
-    //TODO
     @Test
-    @WithMockUser(username = "name", roles = "user")
+    @WithMockUser(username = "test@test.test")
+    void update_ShouldReturnResponse_WhenCarBelongUser() throws Exception {
+        UserEntity userEntityFromDb = getUserEntityFromDb();
+        userEntityFromDb.getCarEntities().add(getCarEntityFromDb());
+
+        when(userDao.findByEmail("test@test.test")).thenReturn(Optional.of(userEntityFromDb));
+        when(carDao.updateCarWithoutUserId(getCarEntityFromDb())).thenReturn(getCarEntityFromDb());
+        when(userDao.existsById(ONE)).thenReturn(true);
+        when(carDao.existsById(ONE)).thenReturn(true);
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
+
+        mockMvc.perform(put("/api/cars")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(getCarUpdateRequest()))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(getCarResponse())));
+    }
+
+    @Test
+    @WithMockUser(username = "test@test.test")
+    void update_ShouldReturnStatus_500_When_CarUserId_NotOwn() throws Exception {
+
+        CarUpdateRequest updating = new CarUpdateRequest();
+        updating.setUserId(2);
+
+        when(userDao.findByEmail("test@test.test")).thenReturn(Optional.of(getUserEntityFromDb()));
+
+        mockMvc.perform(put("/api/cars")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(getCarUpdateRequest()))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithMockUser(username = "test@test.test")
     void update_ShouldReturnStatus_500_WhenCarNotBelongUser() throws Exception {
 
+        CarUpdateRequest updating = new CarUpdateRequest();
+        updating.setId(2);
+
+        when(userDao.findByEmail("test@test.test")).thenReturn(Optional.of(getUserEntityFromDb()));
+
+        mockMvc.perform(put("/api/cars")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(getCarUpdateRequest()))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
     }
+
 
     @Test
     @WithMockUser(roles = "admin")
@@ -442,5 +488,13 @@ class CarControllerTest {
         carEntity.setUserEntity(userEntity);
 
         return carEntity;
+    }
+
+    private static RoleEntity getRoleUser() {
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setId(ONE);
+        roleEntity.setName("ROLE_user");
+
+        return roleEntity;
     }
 }

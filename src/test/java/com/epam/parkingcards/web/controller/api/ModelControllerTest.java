@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -100,16 +102,15 @@ class ModelControllerTest {
 
     }
 
-    //TODO исправить daoException на DataAcesEx
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenNameAlreadyExist() throws Exception {
+    void create_ShouldReturnStatus_500_WhenNameNotUnique() throws Exception {
 
         when(modelDao.getCountDeletedByName(getModelEntityToDb().getName())).thenReturn(0L);
         when(brandDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb().getBrandEntity()));
 
-        Mockito.when(modelDao.saveAndFlush(getModelEntityToDb()))
-                .thenThrow(DaoException.class);
+        when(modelDao.saveAndFlush(getModelEntityToDb()))
+                .thenThrow(DuplicateKeyException.class);
 
         mockMvc.perform(post("/api/models")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +123,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void create_ShouldReturnStatus_400_WhenNameAlreadyExistAndDeleted() throws Exception {
 
-        Mockito.when(modelDao.getCountDeletedByName(getModelCreateRequest().getName()))
+        when(modelDao.getCountDeletedByName(getModelCreateRequest().getName()))
                 .thenReturn(ONE);
 
         mockMvc.perform(post("/api/models")
@@ -149,7 +150,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void create_ShouldReturnStatus_204_WhenBrandIdNotExist() throws Exception {
 
-        Mockito.when(brandDao.findById(ONE)).thenReturn(Optional.empty());
+        when(brandDao.findById(ONE)).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/api/models")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -172,7 +173,7 @@ class ModelControllerTest {
     @Test
     @WithMockUser(roles = "admin")
     void getById_ShouldReturnModelResponse_WhenInputId_IsValidAndExist() throws Exception {
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
 
         mockMvc.perform(get("/api/models/1"))
                 .andExpect(status().isOk())
@@ -183,7 +184,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void getById_ShouldReturnStatus_204_WhenInputId_NotExist() throws Exception {
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.empty());
+        when(modelDao.findById(ONE)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/models/1"))
                 .andExpect(status().isNoContent());
@@ -203,7 +204,7 @@ class ModelControllerTest {
 
         List<ModelResponse> list = Collections.singletonList(getModelResponse());
 
-        Mockito.when(modelDao.findByIsDeletedFalse(PAGEABLE))
+        when(modelDao.findByIsDeletedFalse(PAGEABLE))
                 .thenReturn(new PageImpl<>(Collections.singletonList(getModelEntityFromDb())));
 
         mockMvc.perform(get("/api/models/page/0"))
@@ -215,7 +216,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void getAllActive_ShouldReturnStatus_204_WhenDataNotExist() throws Exception {
 
-        Mockito.when(modelDao.findByIsDeletedFalse(PAGEABLE))
+        when(modelDao.findByIsDeletedFalse(PAGEABLE))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
 
         mockMvc.perform(get("/api/models/page/0"))
@@ -227,7 +228,7 @@ class ModelControllerTest {
     void getAllDeleted_ShouldReturnListOfResult_WhenDataExist() throws Exception {
         List<ModelResponse> list = Collections.singletonList(getModelResponse());
 
-        Mockito.when(modelDao.findAllDeleted(PAGEABLE))
+        when(modelDao.findAllDeleted(PAGEABLE))
                 .thenReturn(new PageImpl<>(Collections.singletonList(getModelEntityFromDb())));
 
         mockMvc.perform(get("/api/models/deleted/page/0"))
@@ -239,7 +240,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void getAllDeleted_ShouldReturnStatus_204_WhenDataNotExist() throws Exception {
 
-        Mockito.when(modelDao.findAllDeleted(PAGEABLE)).thenReturn(new PageImpl<>(Collections.emptyList()));
+        when(modelDao.findAllDeleted(PAGEABLE)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
         mockMvc.perform(get("/api/models/deleted/page/0"))
                 .andExpect(status().isNoContent());
@@ -248,7 +249,7 @@ class ModelControllerTest {
     @Test
     @WithMockUser(roles = "admin")
     void getByBrand_ShouldReturnStatus_204_WhenResultIsEmpty() throws Exception {
-        Mockito.when(modelDao.findByBrandId(ONE, PAGEABLE))
+        when(modelDao.findByBrandId(ONE, PAGEABLE))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
 
         mockMvc.perform(
@@ -270,7 +271,7 @@ class ModelControllerTest {
         List<ModelEntity> list = Collections.singletonList(getModelEntityFromDb());
         List<ModelResponse> responses = Collections.singletonList(getModelResponse());
 
-        Mockito.when(modelDao.findByKeyword("tes")).thenReturn(list);
+        when(modelDao.findByKeyword("tes")).thenReturn(list);
 
         mockMvc.perform(post("/api/models/search")
                 .param("keyword", "tes"))
@@ -282,7 +283,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void searchByPart_ShouldReturnEmptyList_WhenDataNotExist() throws Exception {
 
-        Mockito.when(modelDao.findByKeyword("tes")).thenReturn(Collections.emptyList());
+        when(modelDao.findByKeyword("tes")).thenReturn(Collections.emptyList());
 
         mockMvc.perform(post("/api/models/search")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -294,10 +295,10 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void update_ShouldReturnResponse_WhenDataIsValid() throws Exception {
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
-        Mockito.when(brandDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb().getBrandEntity()));
-        Mockito.when(modelDao.getCountDeletedByName("Testname")).thenReturn(0L);
-        Mockito.when(modelDao.saveAndFlush(getModelEntityFromDb())).thenReturn(getModelEntityFromDb());
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
+        when(brandDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb().getBrandEntity()));
+        when(modelDao.getCountDeletedByName("Testname")).thenReturn(0L);
+        when(modelDao.saveAndFlush(getModelEntityFromDb())).thenReturn(getModelEntityFromDb());
 
         mockMvc.perform(put("/api/models")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -324,7 +325,7 @@ class ModelControllerTest {
         ModelEntity deletedModel = getModelEntityFromDb();
         deletedModel.setDeleted(true);
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.of(deletedModel));
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(deletedModel));
 
         mockMvc.perform(put("/api/models")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +352,7 @@ class ModelControllerTest {
     void delete_ShouldReturnStatus_200_WhenBrandWasDeleted() throws Exception {
 
         doNothing().when(modelDao).deleteById(ONE);
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(getModelEntityFromDb()));
 
         mockMvc.perform(delete("/api/models/1"))
                 .andExpect(status().isOk());
@@ -361,7 +362,7 @@ class ModelControllerTest {
     @WithMockUser(roles = "admin")
     void delete_ShouldReturnStatus_500_WhenBrandNotExist() throws Exception {
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.empty());
+        when(modelDao.findById(ONE)).thenReturn(Optional.empty());
 
         mockMvc.perform(delete("/api/models/1"))
                 .andExpect(status().isNoContent());
@@ -373,7 +374,7 @@ class ModelControllerTest {
         ModelEntity deletedModel = getModelEntityFromDb();
         deletedModel.setDeleted(true);
 
-        Mockito.when(modelDao.findById(ONE)).thenReturn(Optional.of(deletedModel));
+        when(modelDao.findById(ONE)).thenReturn(Optional.of(deletedModel));
 
         mockMvc.perform(delete("/api/models/1"))
                 .andExpect(status().isBadRequest());
