@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Cars by user page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>License Plate</th>
+            <th>Owner</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="current : ${cars}">
+            <td th:text="${current.modelEntity.brandEntity.name}">brand name</td>
+            <td th:text="${current.modelEntity.name}">model name</td>
+            <td th:text="${current.licensePlate}">license plate</td>
+            <td th:text="${current.userEntity.lastName + ' ' + current.userEntity.firstName }">model name</td>
+
+            <td><a th:href="@{~/ui/cars/update-page/{id}(id = ${current.id})}"
+                   class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
+
+            <td><a th:href="@{~/ui/cars/{id}/delete (id = ${current.id})}"
+                   class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

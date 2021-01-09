@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/models")
@@ -65,6 +66,11 @@ public class ModelRestController {
 
         List<ModelEntity> modelEntity = modelService.findAllByBrand(brandId, pageNumber);
         return modelMapper.toModelResponses(modelEntity);
+    }
+
+    @GetMapping("/get-by-brand/{brandId}")
+    public Map<Long, String> getModelsMapByBrandId(@PathVariable long brandId) {
+        return modelService.getModelsMapByBrandId(brandId);
     }
 
     /**

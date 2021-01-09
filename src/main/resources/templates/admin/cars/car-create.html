@@ -5,41 +5,52 @@
     <title>Car create page</title>
 </head>
 <body>
-<div class="container">
-    <div th:insert="fragments/navbar :: navbar"></div>
-
-    <form th:action="@{/ui/cars}"
-          th:object="${carCreateRequest}" th:method="post" class="form-size">
-
+    <div class="container">
+        <div th:insert="fragments/navbar :: navbar"></div>
+        
+        <form th:action="@{/ui/cars}"
+        th:object="${carCreateRequest}" th:method="post" class="form-size">
+        
         <div class="row mt-5">
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
                 <div class="form-group">
                     <label for="licensePlate">License plate</label>
                     <input th:field="*{licensePlate}"
-                           type="text"
-                           id="licensePlate"
-                           class="form-control"
-                           placeholder="A123AA123">
+                    type="text"
+                    id="licensePlate"
+                    class="form-control"
+                    placeholder="A123AA123">
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
                 <div class="form-group">
-                    <label for="model">Model</label>
-                    <input th:field="*{modelId}"
-                           type="text"
-                           id="model"
-                           class="form-control"
-                           placeholder="model id">
+                    <label>Brand</label>
+                    <select class="form-control" id="brand">
+                        <option>--</option>
+                        <option th:each="entry : ${modelBrandsMap.entrySet()}"
+                        th:value="${entry.key}"
+                        th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3" style="visibility: hidden;">
+                <div class="form-group">
+                    <label id="model-label">Model</label>
+                    <select th:field="*{modelId}" class="form-control" id="model">
+<!--                        <option th:each="entry : ${modelModelsMap.entrySet()}"-->
+<!--                        th:value="${entry.key}"-->
+<!--                        th:utext="${entry.value}"></option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
                 <div class="form-group">
                     <label for="user">User</label>
-                    <input th:field="*{userId}"
-                           type="text"
-                           id="user"
-                           class="form-control"
-                           placeholder="user id">
+                    <select th:field="*{userId}" class="form-control" id="user">
+                        <option th:each="entry : ${modelUsersMap.entrySet()}"
+                        th:value="${entry.key}"
+                        th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -48,9 +59,28 @@
                 <button type="submit" class="btn btn-success"><i class="fa fa-pen mr-2"></i>Create</button>
             </div>
         </div>
-
+        
     </form>
 </div>
 <div th:insert="fragments/style :: scripts"></div>
+<script type="text/javascript">
+    function sendAjaxRequest() {
+        var brand = $("#brand").val();
+        $.get( "/api/models/get-by-brand/" + brand, function( data ) {
+            $("#model").empty();
+            for (const [key, value] of Object.entries(data)) {
+                var option = "<option value = " + key + ">" + value +  "</option>";
+                $("#model").append(option);
+            }
+            $("#model").addClass("vis");
+            $("#model-label").addClass("vis");
+        });
+    };
+    $(document).ready(function() {
+        $("#brand").change(function() {
+            sendAjaxRequest();
+        });
+    });
+</script>
 </body>
 </html>

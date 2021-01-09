@@ -26,7 +26,10 @@
             <td th:text="${current.lastName}">last name</td>
             <td th:text="${current.email}">email</td>
             <td th:text="${current.phone}">phone</td>
-            <td th:text="${current.carEntities.size()}">cars count</td>
+            <td>
+                <a th:href="@{~/ui/cars/by-user/{id}(id=${current.id})}" style="color: lightslategrey"
+                   th:text="${current.carEntities.size()}">cars count</a>
+            </td>
 
             <td><a th:href="@{~/ui/users/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>

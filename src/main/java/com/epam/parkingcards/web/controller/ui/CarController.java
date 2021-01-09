@@ -2,7 +2,11 @@ package com.epam.parkingcards.web.controller.ui;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.model.CarEntity;
+import com.epam.parkingcards.model.UserEntity;
+import com.epam.parkingcards.service.BrandService;
 import com.epam.parkingcards.service.CarService;
+import com.epam.parkingcards.service.ModelService;
+import com.epam.parkingcards.service.UserService;
 import com.epam.parkingcards.web.mapper.CarMapper;
 import com.epam.parkingcards.web.request.CarCreateRequest;
 import com.epam.parkingcards.web.request.CarUpdateRequest;
@@ -27,10 +31,20 @@ public class CarController {
     private CarService carService;
     @Autowired
     private CarMapper mapper;
+    @Autowired
+    private ModelService modelService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private BrandService brandService;
 
     @GetMapping("/create-page")
     public String toCreatePage(Model model) {
         model.addAttribute("carCreateRequest", new CarCreateRequest());
+        model.addAttribute("modelModelsMap", modelService.getModelsMap());
+        model.addAttribute("modelUsersMap", userService.getUsersMap());
+        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
+
         return "admin/cars/car-create";
     }
 
@@ -43,10 +57,23 @@ public class CarController {
 
     @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
-    public String getAll( @PathVariable int pageNumber, Model model) {
+    public String getAll(@PathVariable int pageNumber, Model model) {
         List<CarEntity> all = carService.findAll(pageNumber);
         model.addAttribute("cars", all);
         return "admin/cars/cars-list";
+    }
+
+    @SecuredForAdmin
+    @GetMapping("/by-user/{userId}")
+    public String getByUserId(@PathVariable long userId, Model model) {
+
+        List<CarEntity> carsByUser = carService.findByUserId(userId);
+        UserEntity user = userService.findById(userId);
+
+        model.addAttribute("cars", carsByUser);
+        model.addAttribute("user", user);
+
+        return "admin/cars/cars-by-user";
     }
 
     @SecuredForAdmin
