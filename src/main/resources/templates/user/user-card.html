@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>Users page</title>
+    <title>User card</title>
 </head>
 <body>
 <div class="container">
@@ -21,14 +21,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="current : ${users}">
-            <td th:text="${current.firstName}">first name</td>
-            <td th:text="${current.lastName}">last name</td>
-            <td th:text="${current.email}">email</td>
-            <td th:text="${current.phone}">phone</td>
-            <td th:text="${current.carEntities.size()}">cars count</td>
+        <tr>
+            <td th:text="${me.firstName}">first name</td>
+            <td th:text="${me.lastName}">last name</td>
+            <td th:text="${me.email}">email</td>
+            <td th:text="${me.phone}">phone</td>
+            <td th:text="${me.carEntities.size()}">cars count</td>
 
-            <td><a th:href="@{~/ui/users/update-page/{id}(id = ${current.id})}"
+            <td><a th:href="@{~/ui/me/update-page}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
 
 <!--            <td><a th:href="@{~/ui/users/{id}/delete (id = ${current.id})}"-->
