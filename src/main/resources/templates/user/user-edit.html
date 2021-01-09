@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container">
-    <div th:insert="fragments/navbar :: navbar"></div>
+    <div th:insert="fragments/userbar :: userbar"></div>
 
     <form th:action="@{/ui/me/edit}"
           th:object="${userUpdateRequest}" th:method="post" class="form-size">

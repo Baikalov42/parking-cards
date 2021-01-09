@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container">
-    <div th:insert="fragments/navbar :: navbar"></div>
+    <div th:insert="fragments/userbar :: userbar"></div>
 
     <table class="table">
         <thead>
@@ -29,11 +29,14 @@
             <td th:text="${me.carEntities.size()}">cars count</td>
 
             <td><a th:href="@{~/ui/me/update-page}"
-                   class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
+                   class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit user</a></td>
 
-<!--            <td><a th:href="@{~/ui/users/{id}/delete (id = ${current.id})}"-->
-<!--                   class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>-->
-<!--        </tr>-->
+            <td><a th:href="@{~/ui/me/cars}"
+                   class="btn btn-info"><i class="fa fa-car-side mr-2"></i>Edit cars</a></td>
+
+            <td><a th:href="@{~/ui/me/create-car}"
+                   class="btn btn-warning"><i class="fa fa-cart-arrow-down mr-2"></i>Add car</a></td>
+        </tr>
 
         </tbody>
     </table>
