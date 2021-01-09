@@ -2,6 +2,7 @@ package com.epam.parkingcards.web.controller.ui;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.model.ModelEntity;
+import com.epam.parkingcards.service.BrandService;
 import com.epam.parkingcards.service.ModelService;
 import com.epam.parkingcards.web.mapper.ModelMapper;
 import com.epam.parkingcards.web.request.ModelCreateRequest;
@@ -27,6 +28,8 @@ public class ModelController {
     private ModelService modelService;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private BrandService brandService;
 
     @GetMapping("/create-page")
     public String toCreatePage(Model model) {
@@ -57,6 +60,7 @@ public class ModelController {
 
         model.addAttribute("modelEntity", modelEntity);
         model.addAttribute("modelUpdateRequest", new ModelUpdateRequest());
+        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
 
         return "admin/models/model-edit";
     }
