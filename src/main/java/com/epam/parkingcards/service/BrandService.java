@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BrandService {
@@ -50,6 +52,15 @@ public class BrandService {
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
         }
         return result;
+    }
+
+    public Map<Long, String> getBrandsMap() {
+        Map<Long, String> brandsMap = new HashMap<>();
+        List<BrandEntity> brands = brandDao.findByIsDeletedFalse();
+        for (BrandEntity brand : brands) {
+            brandsMap.put(brand.getId(), brand.getName());
+        }
+        return brandsMap;
     }
 
     public List<BrandEntity> findAllDeleted(int pageNumber) {

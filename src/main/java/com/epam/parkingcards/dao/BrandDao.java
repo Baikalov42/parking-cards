@@ -30,6 +30,8 @@ public interface BrandDao extends JpaRepository<BrandEntity, Long> {
 
     Page<BrandEntity> findByIsDeletedFalse(Pageable pageable);
 
+    List<BrandEntity> findByIsDeletedFalse();
+
     @Query("SELECT b FROM BrandEntity b WHERE LOWER(b.name) LIKE %:keyword%")
     List<BrandEntity> findByKeyword(String keyword);
 }
