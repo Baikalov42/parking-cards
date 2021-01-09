@@ -8,7 +8,7 @@
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/ui/user/edit}"
+    <form th:action="@{/ui/me/edit}"
           th:object="${userUpdateRequest}" th:method="post" class="form-size">
 
         <div class="row mt-5">
