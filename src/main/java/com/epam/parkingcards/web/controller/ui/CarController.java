@@ -2,6 +2,7 @@ package com.epam.parkingcards.web.controller.ui;
 
 import com.epam.parkingcards.config.security.annotation.SecuredForAdmin;
 import com.epam.parkingcards.model.CarEntity;
+import com.epam.parkingcards.service.BrandService;
 import com.epam.parkingcards.service.CarService;
 import com.epam.parkingcards.service.ModelService;
 import com.epam.parkingcards.service.UserService;
@@ -33,12 +34,15 @@ public class CarController {
     private ModelService modelService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private BrandService brandService;
 
     @GetMapping("/create-page")
     public String toCreatePage(Model model) {
         model.addAttribute("carCreateRequest", new CarCreateRequest());
         model.addAttribute("modelModelsMap", modelService.getModelsMap());
         model.addAttribute("modelUsersMap", userService.getUsersMap());
+        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
 
         return "admin/cars/car-create";
     }

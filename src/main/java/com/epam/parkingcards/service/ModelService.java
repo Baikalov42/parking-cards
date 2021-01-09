@@ -81,6 +81,14 @@ public class ModelService {
         return result;
     }
 
+    public Map<Long, String> getModelsMapByBrandId(long brandId) {
+        Map<Long, String> modelsMap = new HashMap<>();
+        for (ModelEntity modelEntity : modelDao.findByBrandId(brandId)) {
+            modelsMap.put(modelEntity.getId(), modelEntity.getName());
+        }
+        return modelsMap;
+    }
+
     public List<ModelEntity> findAllDeleted(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
         List<ModelEntity> result = modelDao.findAllDeleted(pageable).getContent();
