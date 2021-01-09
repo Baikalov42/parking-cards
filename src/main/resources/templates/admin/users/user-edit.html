@@ -2,43 +2,40 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>User edit</title>
+    <title>User edit page</title>
 </head>
 <body>
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
     <form th:action="@{/ui/users/edit}"
-          th:object="${user}" th:method="post" class="form-size">
+          th:object="${userUpdateRequest}" th:method="post" class="form-size">
 
         <div class="row mt-5">
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input th:field="*{firstName}"
-                           th:value="${user.firstName}"
+                    <label>First Name</label>
+                    <input th:name="firstName"
+                           th:value="${userEntity.firstName}"
                            type="text"
-                           id="firstName"
                            class="form-control">
                 </div>
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input th:field="*{lastName}"
-                           th:value="${user.lastName}"
+                    <label>Last Name</label>
+                    <input th:name="lastName"
+                           th:value="${userEntity.lastName}"
                            type="text"
-                           id="lastName"
                            class="form-control">
                 </div>
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input th:field="*{email}"
-                           th:value="${user.email}"
+                    <label>Email</label>
+                    <input th:name="email"
+                           th:value="${userEntity.email}"
                            type="text"
-                           id="email"
                            class="form-control">
                 </div>
             </div>
@@ -46,17 +43,18 @@
         <div class="row">
             <div class="col col-12 col-md-3">
                 <div class="form-group">
-                    <label for="phone">Phone number</label>
-                    <input th:field="*{phone}"
-                           th:value="${user.phone}"
+                    <label >Phone number</label>
+                    <input th:name="phone"
+                           th:value="${userEntity.phone}"
                            type="text"
-                           id="phone"
                            class="form-control">
                 </div>
             </div>
         </div>
         <div hidden="hidden">
-            <input type="number" th:field="*{id}" th:value="${user.id}">
+            <input type="number"
+                   th:name="id"
+                   th:value="${userEntity.id}">
         </div>
         <div class="row">
             <div class="col col-2">

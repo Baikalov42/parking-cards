@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>Users list</title>
+    <title>Users page</title>
 </head>
 <body>
 <div class="container">
@@ -22,11 +22,11 @@
         </thead>
         <tbody>
         <tr th:each="current : ${users}">
-            <th th:text="${current.firstName}">first name</th>
-            <th th:text="${current.lastName}">last name</th>
-            <th th:text="${current.email}">email</th>
-            <th th:text="${current.phone}">phone</th>
-            <th th:text="${current.carEntities.size()}">cars count</th>
+            <td th:text="${current.firstName}">first name</td>
+            <td th:text="${current.lastName}">last name</td>
+            <td th:text="${current.email}">email</td>
+            <td th:text="${current.phone}">phone</td>
+            <td th:text="${current.carEntities.size()}">cars count</td>
 
             <td><a th:href="@{~/ui/users/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
@@ -40,9 +40,9 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li th:href="@{~/ui/users/page/1}" class="page-item"><a class="page-link">1</a></li>
-            <li th:href="@{~/ui/users/page/2}" class="page-item"><a class="page-link">2</a></li>
-            <li th:href="@{~/ui/users/page/3}" class="page-item"><a class="page-link">3</a></li>
+            <li class="page-item"><a th:href="@{~/ui/users/page/1}" class="page-link">1</a></li>
+            <li class="page-item"><a th:href="@{~/ui/users/page/2}" class="page-link">2</a></li>
+            <li class="page-item"><a th:href="@{~/ui/users/page/3}" class="page-link">3</a></li>
             <li class="page-item"><a class="page-link" href="#">Next</a></li>
         </ul>
     </nav>

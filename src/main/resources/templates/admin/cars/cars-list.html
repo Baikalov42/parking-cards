@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>Cars</title>
+    <title>Cars page</title>
 </head>
 <body>
 <div class="container">
@@ -20,10 +20,10 @@
         </thead>
         <tbody>
         <tr th:each="current : ${cars}">
-            <th th:text="${current.modelEntity.brandEntity.name}">brand name</th>
-            <th th:text="${current.modelEntity.name}">model name</th>
-            <th th:text="${current.licensePlate}">license plate</th>
-            <th th:text="${current.userEntity.lastName + ' ' + current.userEntity.firstName }">model name</th>
+            <td th:text="${current.modelEntity.brandEntity.name}">brand name</td>
+            <td th:text="${current.modelEntity.name}">model name</td>
+            <td th:text="${current.licensePlate}">license plate</td>
+            <td th:text="${current.userEntity.lastName + ' ' + current.userEntity.firstName }">model name</td>
 
             <td><a th:href="@{~/ui/cars/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>

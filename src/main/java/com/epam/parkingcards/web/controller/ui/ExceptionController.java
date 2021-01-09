@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler(Throwable.class)
-    public String handleException(Model model, Exception ex) {
+    public String handleException(Model model, Throwable ex) {
 
-        model.addAttribute("ex", ex);
+        model.addAttribute("ex", ex.getMessage());
         return "error-message-page";
     }
 }

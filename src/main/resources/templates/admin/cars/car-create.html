@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Car create page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/ui/cars}"
+          th:object="${carCreateRequest}" th:method="post" class="form-size">
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="licensePlate">License plate</label>
+                    <input th:field="*{licensePlate}"
+                           type="text"
+                           id="licensePlate"
+                           class="form-control"
+                           placeholder="A123AA123">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="model">Model</label>
+                    <input th:field="*{modelId}"
+                           type="text"
+                           id="model"
+                           class="form-control"
+                           placeholder="model id">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="user">User</label>
+                    <input th:field="*{userId}"
+                           type="text"
+                           id="user"
+                           class="form-control"
+                           placeholder="user id">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-2">
+                <button type="submit" class="btn btn-success"><i class="fa fa-pen mr-2"></i>Create</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

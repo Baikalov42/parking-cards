@@ -2,31 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>Model edit page</title>
+    <title>Brand edit page</title>
 </head>
 <body>
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/ui/models/edit}"
-          th:object="${modelUpdateRequest}" th:method="post" class="form-size">
+    <form th:action="@{/ui/brands/edit}"
+          th:object="${brandEntity}" th:method="post" class="form-size">
 
         <div class="row mt-5">
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label>Model name</label>
+                    <label>Brand name</label>
                     <input th:name="name"
-                           th:value="${modelEntity.name}"
+                           th:value="${brandEntity.name}"
                            type="text"
-                           class="form-control">
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4">
-                <div class="form-group">
-                    <label>Brand</label>
-                    <input th:name="brandId"
-                           th:value="${modelEntity.brandEntity.id}"
-                           type="number"
                            class="form-control">
                 </div>
             </div>
@@ -34,7 +25,7 @@
         <div hidden="hidden">
             <input type="number"
                    th:name="id"
-                   th:value="${modelEntity.id}">
+                   th:value="${brandEntity.id}">
         </div>
         <div class="row">
             <div class="col col-2">

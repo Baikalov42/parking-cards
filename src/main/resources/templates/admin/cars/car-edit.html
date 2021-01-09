@@ -2,49 +2,48 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/style :: style"></div>
-    <title>Car edit</title>
+    <title>Car edit page</title>
 </head>
 <body>
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
     <form th:action="@{/ui/cars/edit}"
-          th:object="${car}" th:method="post" class="form-size">
+          th:object="${carUpdateRequest}" th:method="post" class="form-size">
 
         <div class="row mt-5">
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="firstName">License plate</label>
-                    <input th:field="*{licensePlate}"
-                           th:value="${car.licensePlate}"
+                    <label>License plate</label>
+                    <input th:name="licensePlate"
+                           th:value="${carEntity.licensePlate}"
                            type="text"
-                           id="firstName"
                            class="form-control">
                 </div>
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="model">Model</label>
-                    <input th:field="*{modelEntity.id}"
-                           th:value="${car.modelEntity.id}"
+                    <label>Model</label>
+                    <input th:name="modelId"
+                           th:value="${carEntity.modelEntity.id}"
                            type="number"
-                           id="model"
                            class="form-control">
                 </div>
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="user">User</label>
-                    <input th:field="*{userEntity.id}"
-                           th:value="${car.userEntity.id}"
+                    <label>User</label>
+                    <input th:name="userId"
+                           th:value="${carEntity.userEntity.id}"
                            type="number"
-                           id="user"
                            class="form-control">
                 </div>
             </div>
         </div>
         <div hidden="hidden">
-            <input type="number" th:field="*{id}" th:value="${car.id}">
+            <input type="number"
+                   th:name="id"
+                   th:value="${carEntity.id}">
         </div>
         <div class="row">
             <div class="col col-2">
