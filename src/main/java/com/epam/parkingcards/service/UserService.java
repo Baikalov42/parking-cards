@@ -18,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -79,6 +81,15 @@ public class UserService {
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
         }
         return result;
+    }
+
+    public Map<Long, String> getUsersMap() {
+        Map<Long, String> usersMap = new HashMap<>();
+        for (UserEntity userEntity : userDao.findAll()) {
+            usersMap.put(userEntity.getId(),
+                    String.format("%s %s", userEntity.getFirstName(), userEntity.getLastName()));
+        }
+        return usersMap;
     }
 
     public List<UserEntity> findByKeyword(String keyword) {

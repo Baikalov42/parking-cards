@@ -24,22 +24,22 @@
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="model">Model</label>
-                    <input th:field="*{modelId}"
-                           type="text"
-                           id="model"
-                           class="form-control"
-                           placeholder="model id">
+                    <label>Model</label>
+                    <select th:field="*{modelId}" class="form-control" id="model">
+                        <option th:each="entry : ${modelModelsMap.entrySet()}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
                     <label for="user">User</label>
-                    <input th:field="*{userId}"
-                           type="text"
-                           id="user"
-                           class="form-control"
-                           placeholder="user id">
+                    <select th:field="*{userId}" class="form-control" id="user">
+                        <option th:each="entry : ${modelUsersMap.entrySet()}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
         </div>

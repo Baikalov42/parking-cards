@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ModelService {
@@ -55,6 +57,15 @@ public class ModelService {
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
         }
         return result;
+    }
+
+    public Map<Long, String> getModelsMap() {
+        Map<Long, String> modelsMap = new HashMap<>();
+        List<ModelEntity> models = modelDao.findByIsDeletedFalse();
+        for (ModelEntity model : models) {
+            modelsMap.put(model.getId(), model.getName());
+        }
+        return modelsMap;
     }
 
     //TODO проверка brandID is exist

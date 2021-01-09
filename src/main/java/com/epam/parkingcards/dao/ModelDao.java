@@ -33,6 +33,8 @@ public interface ModelDao extends JpaRepository<ModelEntity, Long> {
 
     Page<ModelEntity> findByIsDeletedFalse(Pageable pageable);
 
+    List<ModelEntity> findByIsDeletedFalse();
+
     @Query("SELECT m FROM ModelEntity m WHERE LOWER(m.name) LIKE %:keyword%")
     List<ModelEntity> findByKeyword(String keyword);
 }
