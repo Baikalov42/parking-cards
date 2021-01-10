@@ -8,7 +8,7 @@
 <div class="container">
     <div th:insert="fragments/userbar :: userbar"></div>
 
-    <form th:action="@{/ui/me/car/edit}"
+    <form th:action="@{/ui/me/car/create}"
           th:object="${carCreateRequest}" th:method="post" class="form-size">
 
         <div class="row mt-5">
@@ -45,10 +45,6 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <div class="form-group">
-<!--                    <input th:name="firstName"-->
-<!--                           th:value="${me.firstName}"-->
-<!--                           type="text"-->
-<!--                           class="form-control">-->
                     <label for="user">User</label>
                     <select th:field="*{userId}" class="form-control" id="user">
                         <option th:each="entry : ${modelUsersMap.entrySet()}"

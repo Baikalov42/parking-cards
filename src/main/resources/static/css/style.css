@@ -4,3 +4,6 @@ font-weight: 200 !important;
 .vis {
     visibility: visible;
 }
+.add {
+    margin: 1em;
+}
