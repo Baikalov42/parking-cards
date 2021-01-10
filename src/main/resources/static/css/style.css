@@ -6,4 +6,6 @@ font-weight: 200 !important;
 }
 .add {
     margin: 1em;
+    text-align: right;
+    padding-right: 2em;
 }

@@ -24,12 +24,12 @@
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="form-group">
-                    <label for="brand">Brand</label>
-                    <input th:field="*{brandId}"
-                           type="text"
-                           id="brand"
-                           class="form-control"
-                           placeholder="brand id">
+                    <label>Brand</label>
+                    <select th:field="*{brandId}" class="form-control" id="brand">
+                        <option th:each="entry : ${modelBrandsMap.entrySet()}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
         </div>

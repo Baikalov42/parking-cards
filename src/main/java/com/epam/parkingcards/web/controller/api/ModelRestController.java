@@ -55,7 +55,7 @@ public class ModelRestController {
      */
     @GetMapping("/page/{pageNumber}")
     public List<ModelResponse> getAllActive(@PathVariable int pageNumber) {
-        return modelMapper.toModelResponses(modelService.findAllActive(pageNumber));
+        return modelMapper.toModelResponses(modelService.findAllActive(pageNumber).getContent());
     }
 
     /**
