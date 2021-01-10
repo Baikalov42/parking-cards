@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Navbar</title>
@@ -23,6 +25,14 @@
             </li>
         </ul>
     </div>
+
+
+    <div sec:authorize="isAnonymous()" th:text="'You are guest'"></div>
+    <a sec:authorize="isAnonymous()" th:href="@{~/login}" class="nav-item nav-link">Login</a>
+
+    <div sec:authorize="!isAnonymous()" sec:authentication="name"></div>
+    <a sec:authorize="!isAnonymous()" th:href="@{~/logout}" class="nav-item nav-link">Logout</a>
+
 </nav>
 </body>
 </html>
