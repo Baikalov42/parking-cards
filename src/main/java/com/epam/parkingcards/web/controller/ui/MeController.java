@@ -1,5 +1,6 @@
 package com.epam.parkingcards.web.controller.ui;
 
+
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.BrandService;
@@ -9,10 +10,9 @@ import com.epam.parkingcards.service.UserService;
 import com.epam.parkingcards.web.mapper.CarMapper;
 import com.epam.parkingcards.web.mapper.UserMapper;
 import com.epam.parkingcards.web.request.CarCreateRequest;
+import com.epam.parkingcards.web.request.CarUpdateRequest;
 import com.epam.parkingcards.web.request.UserUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("/ui/me")
@@ -52,6 +51,14 @@ public class MeController {
         return "user/user-card";
     }
 
+    @GetMapping("/cars")
+    public String getAllCars(Principal principal, Model model) {
+        UserEntity me = userService.findByEmail(principal.getName());
+        List<CarEntity> all = carService.findByUserId(me.getId());
+        model.addAttribute("cars", all);
+        return "user/user-cars";
+    }
+
     @GetMapping("/update-page")
     public String toUpdatePage(Principal principal, Model model) {
         UserEntity me = userService.findByEmail(principal.getName());
@@ -70,13 +77,7 @@ public class MeController {
         return MESSAGE_VIEW;
     }
 
-    @GetMapping("/cars")
-    public String getAllCars(Principal principal, Model model) {
-        UserEntity me = userService.findByEmail(principal.getName());
-        List<CarEntity> all = carService.findByUserId(me.getId());
-        model.addAttribute("cars", all);
-        return "user/user-cars";
-    }
+///////////////CARS/////////////////
 
     @GetMapping("/create-car")
     public String toCreatePage(Principal principal, Model model) {
@@ -94,11 +95,37 @@ public class MeController {
         return "user/user-create-car";
     }
 
-    @PostMapping("/car/edit")
+    @PostMapping("/car/create")
     public String create(@Valid CarCreateRequest request, Model model) {
         long id = carService.create(carMapper.toCar(request));
         model.addAttribute("message", "ok, new id = " + id);
         return MESSAGE_VIEW;
     }
 
+    @GetMapping("cars/delete/{id}")
+    public String delete(@PathVariable long id, Model model) {
+
+        carService.deleteById(id);
+        model.addAttribute("message", id);
+        return MESSAGE_VIEW;
+    }
+
+//    @GetMapping("/update-car")
+//    public String toUpdatePage(Principal principal, Model model) {
+//
+//        UserEntity me = userService.findByEmail(principal.getName());
+//
+//        model.addAttribute("carEntity", carEntity);
+//        model.addAttribute("carUpdateRequest", new CarUpdateRequest());
+//
+//        return "user/user-update-car";
+//    }
+//
+//    @PostMapping("/car/update")
+//    public String update(@Valid CarUpdateRequest request, Model model) {
+//
+//        CarEntity updated = carService.update(mapper.toCar(request));
+//        model.addAttribute("message", updated);
+//        return MESSAGE_VIEW;
+//    }
 }

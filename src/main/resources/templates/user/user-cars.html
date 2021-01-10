@@ -23,10 +23,10 @@
             <td th:text="${current.modelEntity.name}">model name</td>
             <td th:text="${current.licensePlate}">license plate</td>
 
-            <td><a th:href="@{~/ui/cars/update-page/{id}(id = ${current.id})}"
+            <td><a th:href="@{~/ui/me/cars/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
 
-            <td><a th:href="@{~/ui/cars/{id}/delete (id = ${current.id})}"
+            <td><a th:href="@{~/ui/me/cars/delete/{id}(id = ${current.id})}"
                    class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
 
         </tr>
