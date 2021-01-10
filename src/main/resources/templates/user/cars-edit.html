@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Car edit page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/ui/me/cars/edit}"
+          th:object="${carUpdateRequest}" th:method="post" class="form-size">
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label>License plate</label>
+                    <input th:name="licensePlate"
+                           th:value="${carEntity.licensePlate}"
+                           type="text"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label>Brand</label>
+                    <select class="form-control" id="brand">
+                        <option th:value="${carEntity.modelEntity.brandEntity.id}"
+                                th:utext="${carEntity.modelEntity.brandEntity.name}"></option>
+                        <option th:each="entry : ${modelBrandsMap.entrySet()}"
+                                th:unless="${entry.key == carEntity.modelEntity.brandEntity.id}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label id="model-label">Model</label>
+                    <select th:field="*{modelId}" class="form-control" id="model">
+                        <option th:value="${carEntity.modelEntity.id}"
+                                th:utext="${carEntity.modelEntity.name}"></option>
+                        <option th:each="entry : ${modelModelsMap.entrySet()}"
+                                th:unless="${entry.key == carEntity.modelEntity.id}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label for="user">User</label>
+                    <select th:field="*{userId}" class="form-control" id="user">
+                        <option th:value="${carEntity.userEntity.id}"
+                                th:utext="${modelUsersMap.get(carEntity.userEntity.id)}"></option>
+                        <option th:each="entry : ${modelUsersMap.entrySet()}"
+                                th:unless="${entry.key == carEntity.userEntity.id}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div hidden="hidden">
+            <input type="number"
+                   th:name="id"
+                   th:value="${carEntity.id}">
+        </div>
+        <div class="row">
+            <div class="col col-2">
+                <button type="submit" class="btn btn-success"><i class="fa fa-pen mr-2"></i>Submit</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+<script type="text/javascript" th:src="@{/js/ajax.js}"></script>
+</body>
+</html>

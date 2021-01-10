@@ -1,6 +1,5 @@
 package com.epam.parkingcards.web.controller.ui;
 
-
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.BrandService;
@@ -62,22 +61,17 @@ public class MeController {
     @GetMapping("/update-page")
     public String toUpdatePage(Principal principal, Model model) {
         UserEntity me = userService.findByEmail(principal.getName());
-
         model.addAttribute("me", me);
         model.addAttribute("userUpdateRequest", new UserUpdateRequest());
-
         return "user/user-edit";
     }
 
     @PostMapping("/edit")
     public String update(@Valid UserUpdateRequest request, Model model) {
-
         UserEntity update = userService.update(userMapper.toUser(request));
         model.addAttribute("message", "ok");
         return MESSAGE_VIEW;
     }
-
-///////////////CARS/////////////////
 
     @GetMapping("/create-car")
     public String toCreatePage(Principal principal, Model model) {
@@ -91,7 +85,6 @@ public class MeController {
         model.addAttribute("carCreateRequest", new CarCreateRequest());
         model.addAttribute("modelModelsMap", modelService.getModelsMap());
         model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
-
         return "user/user-create-car";
     }
 
@@ -102,30 +95,36 @@ public class MeController {
         return MESSAGE_VIEW;
     }
 
+
+    @GetMapping("cars/update/{id}")
+    public String toUpdatePage(@PathVariable long id, Principal principal, Model model) {
+
+        UserEntity me = userService.findByEmail(principal.getName());
+        Map<Long, String> usersMap = new HashMap<>();
+        usersMap.put(me.getId(),
+                String.format("%s %s", me.getFirstName(), me.getLastName()));
+
+        CarEntity carEntity = carService.findById(id);
+
+        model.addAttribute("carEntity", carEntity);
+        model.addAttribute("carUpdateRequest", new CarUpdateRequest());
+        model.addAttribute("modelModelsMap", modelService.getModelsMap());
+        model.addAttribute("modelUsersMap", usersMap);
+        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
+        return "user/cars-edit";
+    }
+
+    @PostMapping("cars/edit")
+    public String update(@Valid CarUpdateRequest request, Model model) {
+        CarEntity updated = carService.update(carMapper.toCar(request));
+        model.addAttribute("message", updated);
+        return MESSAGE_VIEW;
+    }
+
     @GetMapping("cars/delete/{id}")
     public String delete(@PathVariable long id, Model model) {
-
         carService.deleteById(id);
         model.addAttribute("message", id);
         return MESSAGE_VIEW;
     }
-
-//    @GetMapping("/update-car")
-//    public String toUpdatePage(Principal principal, Model model) {
-//
-//        UserEntity me = userService.findByEmail(principal.getName());
-//
-//        model.addAttribute("carEntity", carEntity);
-//        model.addAttribute("carUpdateRequest", new CarUpdateRequest());
-//
-//        return "user/user-update-car";
-//    }
-//
-//    @PostMapping("/car/update")
-//    public String update(@Valid CarUpdateRequest request, Model model) {
-//
-//        CarEntity updated = carService.update(mapper.toCar(request));
-//        model.addAttribute("message", updated);
-//        return MESSAGE_VIEW;
-//    }
 }
