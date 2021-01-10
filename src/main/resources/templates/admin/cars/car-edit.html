@@ -21,22 +21,43 @@
                            class="form-control">
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
                 <div class="form-group">
-                    <label>Model</label>
-                    <input th:name="modelId"
-                           th:value="${carEntity.modelEntity.id}"
-                           type="number"
-                           class="form-control">
+                    <label>Brand</label>
+                    <select class="form-control" id="brand">
+                        <option th:value="${carEntity.modelEntity.brandEntity.id}"
+                                th:utext="${carEntity.modelEntity.brandEntity.name}"></option>
+                        <option th:each="entry : ${modelBrandsMap.entrySet()}"
+                                th:unless="${entry.key == carEntity.modelEntity.brandEntity.id}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
                 <div class="form-group">
-                    <label>User</label>
-                    <input th:name="userId"
-                           th:value="${carEntity.userEntity.id}"
-                           type="number"
-                           class="form-control">
+                    <label id="model-label">Model</label>
+                    <select th:field="*{modelId}" class="form-control" id="model">
+                        <option th:value="${carEntity.modelEntity.id}"
+                                th:utext="${carEntity.modelEntity.name}"></option>
+                        <option th:each="entry : ${modelModelsMap.entrySet()}"
+                                th:unless="${entry.key == carEntity.modelEntity.id}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label for="user">User</label>
+                    <select th:field="*{userId}" class="form-control" id="user">
+                        <option th:value="${carEntity.userEntity.id}"
+                                th:utext="${modelUsersMap.get(carEntity.userEntity.id)}"></option>
+                        <option th:each="entry : ${modelUsersMap.entrySet()}"
+                                th:unless="${entry.key == carEntity.userEntity.id}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -54,5 +75,22 @@
     </form>
 </div>
 <div th:insert="fragments/style :: scripts"></div>
+<script type="text/javascript">
+    function sendAjaxRequest() {
+        var brand = $("#brand").val();
+        $.get( "/api/models/get-by-brand/" + brand, function( data ) {
+            $("#model").empty();
+            for (const [key, value] of Object.entries(data)) {
+                var option = "<option value = " + key + ">" + value +  "</option>";
+                $("#model").append(option);
+            }
+        });
+    };
+    $(document).ready(function() {
+        $("#brand").change(function() {
+            sendAjaxRequest();
+        });
+    });
+</script>
 </body>
 </html>
