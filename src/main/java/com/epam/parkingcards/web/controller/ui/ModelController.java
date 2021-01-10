@@ -8,6 +8,7 @@ import com.epam.parkingcards.web.mapper.ModelMapper;
 import com.epam.parkingcards.web.request.ModelCreateRequest;
 import com.epam.parkingcards.web.request.ModelUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/ui/models")
@@ -34,6 +37,7 @@ public class ModelController {
     @GetMapping("/create-page")
     public String toCreatePage(Model model) {
         model.addAttribute("modelCreateRequest", new ModelCreateRequest());
+        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
         return "admin/models/model-create";
     }
 
@@ -46,9 +50,17 @@ public class ModelController {
 
     @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
-    public String getAll( @PathVariable int pageNumber, Model model) {
-        List<ModelEntity> all = modelService.findAllActive(pageNumber);
+    public String getAll(@PathVariable int pageNumber, Model model) {
+        pageNumber--;
+        Page<ModelEntity> all = modelService.findAllActive(pageNumber);
         model.addAttribute("models", all);
+        int totalPages = all.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "admin/models/models-list";
     }
 

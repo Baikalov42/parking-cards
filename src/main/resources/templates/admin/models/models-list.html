@@ -7,7 +7,11 @@
 <body>
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
-
+    <div class="row">
+        <div class="col-sm-12 col-md-12 add">
+            <a href="/ui/models/create-page" class="btn btn-outline-info"><i class="fas fa-plus"></i>  Add model</a>
+        </div>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -18,7 +22,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="current : ${models}">
+        <tr th:each="current : ${models.content}">
             <td th:text="${current.name}">model name</td>
             <td th:text="${current.brandEntity.name}">brand name</td>
 
@@ -32,13 +36,19 @@
 
         </tbody>
     </table>
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example" th:if="${models.totalPages > 0}">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a th:href="@{~/ui/models/page/1}" class="page-link">1</a></li>
-            <li class="page-item"><a th:href="@{~/ui/models/page/2}" class="page-link">2</a></li>
-            <li class="page-item"><a th:href="@{~/ui/models/page/3}" class="page-link">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li class="page-item"  th:classappend="${models.number < 1} ? disabled">
+                <a class="page-link" th:href="@{~/ui/models/page/{page}(page = ${models.number})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber==models.number + 1} ? active" >
+                <a th:href="@{~/ui/models/page/{page}(page = ${pageNumber})}"
+                   th:text=${pageNumber} class="page-link"></a>
+            </li>
+            <li class="page-item" th:classappend="${models.number > models.totalPages - 2} ? disabled">
+                <a class="page-link" th:href="@{~/ui/models/page/{page}(page = ${models.number + 2})}">Next</a>
+            </li>
         </ul>
     </nav>
 

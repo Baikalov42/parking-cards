@@ -8,6 +8,7 @@ import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -49,9 +50,9 @@ public class ModelService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Model not found", id)));
     }
 
-    public List<ModelEntity> findAllActive(int pageNumber) {
+    public Page<ModelEntity> findAllActive(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<ModelEntity> result = modelDao.findByIsDeletedFalse(pageable).getContent();
+        Page<ModelEntity> result = modelDao.findByIsDeletedFalse(pageable);
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
