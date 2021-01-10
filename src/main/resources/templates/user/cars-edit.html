@@ -47,33 +47,27 @@
                     </select>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-3">
-                <div class="form-group">
-                    <label for="user">User</label>
-                    <select th:field="*{userId}" class="form-control" id="user">
-                        <option th:value="${carEntity.userEntity.id}"
-                                th:utext="${modelUsersMap.get(carEntity.userEntity.id)}"></option>
-                        <option th:each="entry : ${modelUsersMap.entrySet()}"
-                                th:unless="${entry.key == carEntity.userEntity.id}"
-                                th:value="${entry.key}"
-                                th:utext="${entry.value}"></option>
-                    </select>
+
+            <div hidden="hidden">
+                <input type="number"
+                       th:name="id"
+                       th:value="${carEntity.id}">
+            </div>
+            <div hidden="hidden">
+                <input type="number"
+                       th:name="userId"
+                       th:value="${carEntity.userEntity.id}">
+            </div>
+
+            <div class="row">
+                <div class="col col-2">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-pen mr-2"></i>Submit</button>
                 </div>
             </div>
         </div>
-        <div hidden="hidden">
-            <input type="number"
-                   th:name="id"
-                   th:value="${carEntity.id}">
-        </div>
-        <div class="row">
-            <div class="col col-2">
-                <button type="submit" class="btn btn-success"><i class="fa fa-pen mr-2"></i>Submit</button>
-            </div>
-        </div>
-
     </form>
 </div>
+
 <div th:insert="fragments/style :: scripts"></div>
 <script type="text/javascript" th:src="@{/js/ajax.js}"></script>
 </body>
