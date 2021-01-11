@@ -44,6 +44,9 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic()
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("email")
+                .permitAll();
     }
 }

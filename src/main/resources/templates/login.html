@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Login page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 50px auto;">
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email"
+                   name="email"
+                   class="form-control"
+                   placeholder="E-mail"/>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="Password"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Login" class="btn btn-primary"  />
+        </div>
+
+        <div th:if="${param.error}">
+            <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+        </div>
+        <div th:if="${param.logout}">
+            <p class="text-warning">You have been logged out.</p>
+        </div>
+    </form>
+
+    <div th:insert="fragments/style :: scripts"></div>
+</div>
+</body>
+</html>

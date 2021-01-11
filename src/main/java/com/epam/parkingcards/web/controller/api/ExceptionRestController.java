@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,14 +45,11 @@ public class ExceptionRestController {
     public ResponseEntity<Object> handleBindException(BindException ex) {
         StringBuilder message = new StringBuilder();
 
-        for (FieldError fieldError : ex.getFieldErrors()) {
-            message.append("[")
-                    .append(fieldError.getField())
-                    .append(":")
-                    .append(fieldError.getDefaultMessage())
-                    .append("]")
-                    .append("\n");
+        for (ObjectError error : ex.getAllErrors()) {
+            message.append(error.getDefaultMessage())
+                    .append(" ");
         }
+
         ApiErrorResponse apiError = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST, "Validation error", message.toString());
 
