@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler(Throwable.class)
-    public String handleAllException(Model model, Throwable ex) {
+    public String handleOthers(Model model, Throwable ex) {
 
         model.addAttribute("message", ex.getMessage());
         return "error-message-page";
     }
 
     @ExceptionHandler(BindException.class)
-    public String handleValidationException(Model model, BindException ex) {
+    public String handleBindException(Model model, BindException ex) {
 
         StringBuilder message = new StringBuilder();
 

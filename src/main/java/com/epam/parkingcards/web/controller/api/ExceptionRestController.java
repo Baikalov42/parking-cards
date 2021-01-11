@@ -7,6 +7,8 @@ import com.epam.parkingcards.web.response.ApiErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -39,8 +41,26 @@ public class ExceptionRestController {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleOthers(Exception ex) {
+    @ExceptionHandler({BindException.class})
+    public ResponseEntity<Object> handleBindException(BindException ex) {
+        StringBuilder message = new StringBuilder();
+
+        for (FieldError fieldError : ex.getFieldErrors()) {
+            message.append("[")
+                    .append(fieldError.getField())
+                    .append(":")
+                    .append(fieldError.getDefaultMessage())
+                    .append("]")
+                    .append("\n");
+        }
+        ApiErrorResponse apiError = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST, "Validation error", message.toString());
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({Throwable.class})
+    public ResponseEntity<Object> handleOthers(Throwable ex) {
 
         ApiErrorResponse apiError = new ApiErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR, "Something wrong!", ex.getMessage());

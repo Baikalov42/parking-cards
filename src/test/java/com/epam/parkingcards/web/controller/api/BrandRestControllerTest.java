@@ -86,7 +86,7 @@ class BrandRestControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenNameNotValid() throws Exception {
+    void create_ShouldReturnStatus_400_WhenNameNotValid() throws Exception {
         BrandCreateRequest brand = new BrandCreateRequest();
         brand.setName("Test@@brand");
 
@@ -94,7 +94,7 @@ class BrandRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(brand))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -324,7 +324,7 @@ class BrandRestControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    void update_ShouldReturnStatus_500_WhenNameNotValid() throws Exception {
+    void update_ShouldReturnStatus_400_WhenNameNotValid() throws Exception {
         BrandUpdateRequest testBrand = new BrandUpdateRequest();
         testBrand.setId(1L);
         testBrand.setName("Test@@brand");
@@ -333,7 +333,7 @@ class BrandRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(testBrand))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
 
     }
 
