@@ -8,6 +8,7 @@ function sendAjaxRequest() {
         }
         $("#model").addClass("vis");
         $("#model-label").addClass("vis");
+        $("#placeholder").remove();
     });
 };
 $(document).ready(function() {

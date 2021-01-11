@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label>Brand</label>
                     <select class="form-control" id="brand">
-                        <option>--</option>
+                        <option id="placeholder">--</option>
                         <option th:each="entry : ${modelBrandsMap.entrySet()}"
                         th:value="${entry.key}"
                         th:utext="${entry.value}"></option>
