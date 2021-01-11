@@ -37,9 +37,9 @@
                 <div class="form-group">
                     <label id="model-label">Model</label>
                     <select th:field="*{modelId}" class="form-control" id="model">
-                        <!--                        <option th:each="entry : ${modelModelsMap.entrySet()}"-->
-                        <!--                        th:value="${entry.key}"-->
-                        <!--                        th:utext="${entry.value}"></option>-->
+                                                <option th:each="entry : ${modelModelsMap.entrySet()}"
+                                                th:value="${entry.key}"
+                                                th:utext="${entry.value}"></option>
                     </select>
                 </div>
             </div>
@@ -59,24 +59,6 @@
     </form>
 </div>
 <div th:insert="fragments/style :: scripts"></div>
-<script type="text/javascript">
-    function sendAjaxRequest() {
-        var brand = $("#brand").val();
-        $.get("/api/models/get-by-brand/" + brand, function (data) {
-            $("#model").empty();
-            for (const [key, value] of Object.entries(data)) {
-                var option = "<option value = " + key + ">" + value + "</option>";
-                $("#model").append(option);
-            }
-            $("#model").addClass("vis");
-            $("#model-label").addClass("vis");
-        });
-    };
-    $(document).ready(function () {
-        $("#brand").change(function () {
-            sendAjaxRequest();
-        });
-    });
-</script>
+<script type="text/javascript" th:src="@{/js/ajax.js}"></script>
 </body>
 </html>
