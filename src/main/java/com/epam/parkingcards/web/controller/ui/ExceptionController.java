@@ -31,7 +31,6 @@ public class ExceptionController {
                     .append("]")
                     .append("\n");
         }
-        System.err.println(message.toString());
         model.addAttribute("message", message.toString());
         return "error-message-page";
     }
