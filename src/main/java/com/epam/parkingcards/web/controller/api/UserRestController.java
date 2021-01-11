@@ -56,7 +56,7 @@ public class UserRestController {
     @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public List<UserResponse> getAll(@PathVariable int pageNumber) {
-        return userMapper.toUserResponses(userService.findAll(pageNumber));
+        return userMapper.toUserResponses(userService.findAll(pageNumber).getContent());
     }
 
     /**

@@ -64,6 +64,19 @@ public class MeController {
         return "user/user-edit";
     }
 
+    @GetMapping("cars/update/{id}")
+    public String toUserUpdatePage(@PathVariable long id, Principal principal, Model model) {
+
+        CarEntity carEntity = carService.findById(id);
+
+        model.addAttribute("carEntity", carEntity);
+        model.addAttribute("carUpdateRequest", new CarUpdateRequest());
+        model.addAttribute("modelModelsMap", modelService.getModelsMap());
+        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
+
+        return "user/cars-edit";
+    }
+
     @PostMapping("/edit")
     public String updateUser(@Valid UserUpdateRequest request, Model model) {
         UserEntity update = userService.update(userMapper.toUser(request));
@@ -88,20 +101,6 @@ public class MeController {
         long id = carService.create(carMapper.toCar(request));
         model.addAttribute("message", "ok, new id = " + id);
         return MESSAGE_VIEW;
-    }
-
-
-    @GetMapping("cars/update/{id}")
-    public String toUserUpdatePage(@PathVariable long id, Principal principal, Model model) {
-
-        CarEntity carEntity = carService.findById(id);
-
-        model.addAttribute("carEntity", carEntity);
-        model.addAttribute("carUpdateRequest", new CarUpdateRequest());
-        model.addAttribute("modelModelsMap", modelService.getModelsMap());
-        model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
-
-        return "user/cars-edit";
     }
 
     @PostMapping("cars/edit")

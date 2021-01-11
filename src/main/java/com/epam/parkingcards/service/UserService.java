@@ -10,6 +10,7 @@ import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -72,9 +73,9 @@ public class UserService {
                         String.format("By license plate %s, User not found", licensePlate)));
     }
 
-    public List<UserEntity> findAll(int pageNumber) {
+    public Page<UserEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<UserEntity> result = userDao.findAll(pageable).getContent();
+        Page<UserEntity> result = userDao.findAll(pageable);
 
         if (result.isEmpty()) {
             throw new NotFoundException(

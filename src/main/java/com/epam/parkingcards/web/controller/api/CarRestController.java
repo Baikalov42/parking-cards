@@ -56,7 +56,7 @@ public class CarRestController {
     @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public List<CarResponse> getAll(@Valid @PathVariable int pageNumber) {
-        return carMapper.toCarResponses(carService.findAll(pageNumber));
+        return carMapper.toCarResponses(carService.findAll(pageNumber).getContent());
     }
 
     /**

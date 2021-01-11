@@ -58,7 +58,7 @@ public class BrandRestController {
      */
     @GetMapping("/page/{pageNumber}")
     public List<BrandResponse> getAllActive(@PathVariable int pageNumber) {
-        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber));
+        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber).getContent());
     }
 
     /**

@@ -8,6 +8,7 @@ import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -56,9 +57,9 @@ public class CarService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, Car not found", id)));
     }
 
-    public List<CarEntity> findAll(int pageNumber) {
+    public Page<CarEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<CarEntity> result = carDao.findAll(pageable).getContent();
+        Page<CarEntity> result = carDao.findAll(pageable);
 
         if (result.isEmpty()) {
             throw new NotFoundException(

@@ -33,13 +33,19 @@
 
         </tbody>
     </table>
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example" th:if="${brands.totalPages > 0}">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a th:href="@{~/ui/brands/page/1}" class="page-link">1</a></li>
-            <li class="page-item"><a th:href="@{~/ui/brands/page/2}" class="page-link">2</a></li>
-            <li class="page-item"><a th:href="@{~/ui/brands/page/3}" class="page-link">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li class="page-item"  th:classappend="${brands.number < 1} ? disabled">
+                <a class="page-link" th:href="@{~/ui/brands/page/{page}(page = ${brands.number})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber==brands.number + 1} ? active" >
+                <a th:href="@{~/ui/brands/page/{page}(page = ${pageNumber})}"
+                   th:text=${pageNumber} class="page-link"></a>
+            </li>
+            <li class="page-item" th:classappend="${brands.number > brands.totalPages - 2} ? disabled">
+                <a class="page-link" th:href="@{~/ui/brands/page/{page}(page = ${brands.number + 2})}">Next</a>
+            </li>
         </ul>
     </nav>
 

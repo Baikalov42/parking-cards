@@ -12,17 +12,17 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav nav-tabs">
             <li class="nav-item">
-                <a sec:authorize="hasRole('admin')" th:href="@{/ui/users/page/0}" class="nav-link">Users</a>
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/users/page/1}" class="nav-link">Users</a>
             </li>
             <li class="nav-item">
-                <a sec:authorize="hasRole('admin')" th:href="@{/ui/cars/page/0}" class="nav-link">Cars <span
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/cars/page/1}" class="nav-link">Cars <span
                         class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a sec:authorize="hasRole('admin')" th:href="@{/ui/models/page/1}" class="nav-link">Models</a>
             </li>
             <li class="nav-item">
-                <a sec:authorize="hasRole('admin')" th:href="@{/ui/brands/page/0}" class="nav-link">Brands</a>
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/brands/page/1}" class="nav-link">Brands</a>
             </li>
             <li class="nav-item">
                 <a sec:authorize="isAuthenticated() && !hasRole('admin')" th:href="@{/ui/me}" class="nav-link">My

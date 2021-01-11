@@ -7,6 +7,7 @@ import com.epam.parkingcards.web.mapper.UserMapper;
 import com.epam.parkingcards.web.request.UserRegistrationRequest;
 import com.epam.parkingcards.web.request.UserUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/ui/users")
@@ -44,8 +47,17 @@ public class UserController {
     @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public String getAll(@PathVariable int pageNumber, Model model) {
-        List<UserEntity> all = userService.findAll(pageNumber);
+        pageNumber--;
+
+        Page<UserEntity> all = userService.findAll(pageNumber);
         model.addAttribute("users", all);
+        int totalPages = all.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "admin/users/users-list";
     }
 
