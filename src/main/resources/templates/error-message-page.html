@@ -8,7 +8,7 @@
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
-    <div th:text=" 'Error, call the administrator. Description: ' + ${ex}"
+    <div th:text=" 'Error, call the administrator. Description: ' + ${message}"
          class="alert alert-danger" role="alert">
     </div>
 
