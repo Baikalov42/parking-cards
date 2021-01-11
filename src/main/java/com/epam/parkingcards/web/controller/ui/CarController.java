@@ -95,7 +95,8 @@ public class CarController {
 
         model.addAttribute("carEntity", carEntity);
         model.addAttribute("carUpdateRequest", new CarUpdateRequest());
-        model.addAttribute("modelModelsMap", modelService.getModelsMap());
+        model.addAttribute("modelModelsMap", modelService
+                .getModelsMap(carEntity.getModelEntity().getBrandEntity().getId()));
         model.addAttribute("modelUsersMap", userService.getUsersMap());
         model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
 

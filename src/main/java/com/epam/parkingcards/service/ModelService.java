@@ -69,6 +69,15 @@ public class ModelService {
         return modelsMap;
     }
 
+    public Map<Long, String> getModelsMap(long brandId) {
+        Map<Long, String> modelsMap = new HashMap<>();
+        List<ModelEntity> models = modelDao.findByBrandId(brandId);
+        for (ModelEntity model : models) {
+            modelsMap.put(model.getId(), model.getName());
+        }
+        return modelsMap;
+    }
+
     //TODO проверка brandID is exist
     public List<ModelEntity> findAllByBrand(long brandId, int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
