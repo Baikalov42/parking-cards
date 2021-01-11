@@ -9,7 +9,7 @@
     <div th:insert="fragments/navbar :: navbar"></div>
     <div class="row">
         <div class="col-sm-12 col-md-12 add">
-            <a href="/ui/cars/create-page" class="btn btn-outline-info"><i class="fas fa-plus"></i>  Add car</a>
+            <a href="/ui/cars/create-page" class="btn btn-outline-info"><i class="fas fa-plus"></i> Add car</a>
         </div>
     </div>
     <table class="table">
@@ -40,13 +40,13 @@
     </table>
     <nav aria-label="Page navigation example" th:if="${cars.totalPages > 0}">
         <ul class="pagination">
-            <li class="page-item"  th:classappend="${cars.number < 1} ? disabled">
+            <li class="page-item" th:classappend="${cars.number < 1} ? disabled">
                 <a class="page-link" th:href="@{~/ui/cars/page/{page}(page = ${cars.number})}">Previous</a>
             </li>
             <li class="page-item" th:each="pageNumber : ${pageNumbers}"
-                th:classappend="${pageNumber==cars.number + 1} ? active" >
+                th:classappend="${pageNumber==cars.number + 1} ? active">
                 <a th:href="@{~/ui/cars/page/{page}(page = ${pageNumber})}"
-                   th:text=${pageNumber} class="page-link"></a>
+                   th:text="${pageNumber}" class="page-link"></a>
             </li>
             <li class="page-item" th:classappend="${cars.number > cars.totalPages - 2} ? disabled">
                 <a class="page-link" th:href="@{~/ui/cars/page/{page}(page = ${cars.number + 2})}">Next</a>

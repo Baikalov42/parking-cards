@@ -22,7 +22,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="current : ${models.content}">
+        <tr th:each="current : ${models}">
             <td th:text="${current.name}">model name</td>
             <td th:text="${current.brandEntity.name}">brand name</td>
 
@@ -44,7 +44,7 @@
             <li class="page-item" th:each="pageNumber : ${pageNumbers}"
                 th:classappend="${pageNumber==models.number + 1} ? active" >
                 <a th:href="@{~/ui/models/page/{page}(page = ${pageNumber})}"
-                   th:text=${pageNumber} class="page-link"></a>
+                   th:text="${pageNumber}" class="page-link"></a>
             </li>
             <li class="page-item" th:classappend="${models.number > models.totalPages - 2} ? disabled">
                 <a class="page-link" th:href="@{~/ui/models/page/{page}(page = ${models.number + 2})}">Next</a>
