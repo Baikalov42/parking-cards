@@ -20,7 +20,7 @@ public class RegistrationRestController {
     @Autowired
     private UserMapper userMapper;
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserRegistrationRequest userRegistrationRequest) {
         long id = userService.register(userMapper.toUser(userRegistrationRequest));
         return new ResponseEntity<>("User is registered, id = " + id, HttpStatus.OK);
