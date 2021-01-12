@@ -8,7 +8,7 @@
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/api/register}"
+    <form th:action="@{/register}"
           th:object="${userCreateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="post">
 
         <div class="row mt-5">

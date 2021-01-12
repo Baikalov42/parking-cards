@@ -20,7 +20,7 @@ public class ModelUpdateRequest {
 
     @NotEmpty(message = "Model name, must not be empty.")
     @Pattern(regexp = MODEL_NAME_PATTERN,
-            message = "Model name, must contains, only latin letters and numbers.")
+            message = "Model name, must contains, only latin letters, numbers and '-'.")
     @Size(min = 2, max = 30, message = "Model name, must 2 to 30 characters.")
     private String name;
 }

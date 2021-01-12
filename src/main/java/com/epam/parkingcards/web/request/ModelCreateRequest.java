@@ -17,7 +17,7 @@ public class ModelCreateRequest {
 
     @NotEmpty(message = "Model name, must not be empty.")
     @Pattern(regexp = MODEL_NAME_PATTERN,
-            message = "Brand name, must contains only latin letters and numbers.")
+            message = "Model name, must contains, only latin letters, numbers and '-'.")
     @Size(min = 2, max = 30, message = "Brand name, must be 2 to 30 characters.")
     private String name;
 }
