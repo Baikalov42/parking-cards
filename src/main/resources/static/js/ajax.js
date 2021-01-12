@@ -38,7 +38,7 @@ $(function () {
                 let msg = JSON.parse(xhr.response).detailedMessage;
                 $('#msgs').html("<div class='alert alert-danger'>"+"Error! "+ msg +"</div>");
             } else {
-                $('#msgs').html("<div class='alert alert-success'> Done: "+xhr.response+"</div>");
+                $('#msgs').html("<div class='alert alert-success'>Success!</div>");
                 function redirect() {
                     let link = document.getElementById('back').getAttribute('href');
                     window.location.href = link;
@@ -62,7 +62,7 @@ $(function () {
         xhr.onload = function() {
             if (xhr.status != 200) {
                 let msg = JSON.parse(xhr.response).detailedMessage;
-                row.innerHTML = "<p style='color: green'>"+"Error! "+ msg +"</p>";
+                row.innerHTML = "<p style='color: red'>"+"Error! "+ msg +"</p>";
             } else {
                 row.innerHTML = "<p style='color: green'>Deleted!</p>";
             }
