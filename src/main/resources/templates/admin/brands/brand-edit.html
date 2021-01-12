@@ -9,7 +9,7 @@
     <div th:insert="fragments/navbar :: navbar"></div>
 
     <form th:action="@{/ui/brands/edit}"
-          th:object="${brandEntity}" th:method="post" class="form-size">
+          th:object="${brandUpdateRequest}" th:method="post" class="form-size">
 
         <div class="row mt-5">
             <div class="col-sm-12 col-md-4">

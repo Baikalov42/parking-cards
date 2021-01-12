@@ -85,7 +85,7 @@ class ModelRestControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenNameNotValid() throws Exception {
+    void create_ShouldReturnStatus_400_WhenNameNotValid() throws Exception {
 
         ModelCreateRequest notValidRequest = getModelCreateRequest();
         notValidRequest.setName("Not@@ValidName");
@@ -94,7 +94,7 @@ class ModelRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(notValidRequest))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
 
     }
 
@@ -131,7 +131,7 @@ class ModelRestControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenBrandIdNotValid() throws Exception {
+    void create_ShouldReturnStatus_400_WhenBrandIdNotValid() throws Exception {
         ModelCreateRequest notValidRequest = getModelCreateRequest();
         notValidRequest.setBrandId(-1);
 
@@ -139,7 +139,7 @@ class ModelRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(notValidRequest))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -332,7 +332,7 @@ class ModelRestControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    void update_ShouldReturnStatus_500_WhenNameNotValid() throws Exception {
+    void update_ShouldReturnStatus_400_WhenNameNotValid() throws Exception {
         ModelEntity notValidNameModel = getModelEntityFromDb();
         notValidNameModel.setName("NOT@VALID");
 
@@ -340,7 +340,7 @@ class ModelRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(notValidNameModel))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

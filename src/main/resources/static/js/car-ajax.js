@@ -18,7 +18,7 @@ $(function () {
         xhr.send(json);
         xhr.onload = function() {
             if (xhr.status != 200) {
-                let msg = JSON.parse(xhr.response).shortMessage;
+                let msg = JSON.parse(xhr.response).detailedMessage;
                 $('#msgs').html("<div class='alert alert-danger'>"+"Error! "+ msg +"</div>");
             } else {
                 $('#msgs').html("<div class='alert alert-success'>"+xhr.response+"</div>");

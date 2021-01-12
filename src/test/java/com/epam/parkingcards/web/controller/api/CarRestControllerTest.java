@@ -92,7 +92,7 @@ class CarRestControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenLicensePlateNotValid() throws Exception {
+    void create_ShouldReturnStatus_400_WhenLicensePlateNotValid() throws Exception {
 
         CarCreateRequest notValidRequest = getCarCreateRequest();
         notValidRequest.setLicensePlate("111");
@@ -101,13 +101,13 @@ class CarRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(notValidRequest))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
 
     }
 
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenUserIdNotValid() throws Exception {
+    void create_ShouldReturnStatus_400_WhenUserIdNotValid() throws Exception {
         CarCreateRequest notValidRequest = getCarCreateRequest();
         notValidRequest.setUserId(-1);
 
@@ -115,12 +115,12 @@ class CarRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(notValidRequest))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(roles = "admin")
-    void create_ShouldReturnStatus_500_WhenModelIdNotValid() throws Exception {
+    void create_ShouldReturnStatus_400_WhenModelIdNotValid() throws Exception {
         CarCreateRequest notValidRequest = getCarCreateRequest();
         notValidRequest.setModelId(-1);
 
@@ -128,7 +128,7 @@ class CarRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(notValidRequest))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

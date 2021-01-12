@@ -10,7 +10,7 @@ public class BrandCreateRequest {
 
     public static final String BRAND_NAME_PATTERN = "[A-Za-z]{2,29}";
 
-    @NotEmpty(message = "Name field must not be empty")
+    @NotEmpty(message = "Brand name, must not be empty.")
     @Pattern(regexp = BRAND_NAME_PATTERN)
     private String name;
 }
