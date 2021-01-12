@@ -22,7 +22,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="current : ${models}">
+        <tr th:each="current : ${models}" th:id="${current.id}">
             <td th:text="${current.name}">model name</td>
             <td th:text="${current.brandEntity.name}">brand name</td>
 
@@ -30,8 +30,8 @@
             <td><a th:href="@{~/ui/models/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
 
-            <td><a th:href="@{~/ui/models/{id}/delete (id = ${current.id})}"
-                   class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
+            <td><a th:href="@{~/api/models/{id} (id = ${current.id})}"
+                   class="btn btn-danger delete" th:itemid="${current.id}"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
         </tr>
 
         </tbody>

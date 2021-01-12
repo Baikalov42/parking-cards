@@ -21,14 +21,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="current : ${brands}">
+        <tr th:each="current : ${brands}" th:id="${current.id}">
             <td th:text="${current.name}">brand name</td>
 
             <td><a th:href="@{~/ui/brands/update-page/{id}(id = ${current.id})}"
                    class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
 
-            <td><a th:href="@{~/ui/brands/{id}/delete (id = ${current.id})}"
-                   class="btn btn-danger"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
+            <td><a th:href="@{~/api/brands/{id} (id = ${current.id})}"
+                   class="btn btn-danger delete" th:itemid="${current.id}"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
         </tr>
 
         </tbody>

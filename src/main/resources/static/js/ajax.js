@@ -50,3 +50,23 @@ $(function () {
         
     })
 });
+
+$(function () {
+    $('.delete').click(function (e) {        
+        e.preventDefault();
+        let btn = e.currentTarget;
+        let row = document.getElementById(btn.getAttribute('itemid'));
+        let endpoint = btn.href;
+        let xhr = new XMLHttpRequest();
+        xhr.open('delete', endpoint);
+        xhr.send();
+        xhr.onload = function() {
+            if (xhr.status != 200) {
+                let msg = JSON.parse(xhr.response).detailedMessage;
+                row.innerHTML = "<p style='color: green'>"+"Error! "+ msg +"</p>";
+            } else {
+                row.innerHTML = "<p style='color: green'>Deleted!</p>";
+            }
+        }
+    });
+});
