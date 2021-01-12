@@ -71,7 +71,8 @@ public class MeController {
 
         model.addAttribute("carEntity", carEntity);
         model.addAttribute("carUpdateRequest", new CarUpdateRequest());
-        model.addAttribute("modelModelsMap", modelService.getModelsMap());
+        model.addAttribute("modelModelsMap", modelService
+                .getModelsMap(carEntity.getModelEntity().getBrandEntity().getId()));
         model.addAttribute("modelBrandsMap", brandService.getBrandsMap());
 
         return "user/cars-edit";
