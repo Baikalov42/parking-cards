@@ -8,8 +8,8 @@
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/ui/models}"
-          th:object="${modelCreateRequest}" th:method="post" class="form-size">
+    <form th:action="@{/api/models}"
+          th:object="${modelCreateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="post">
 
         <div class="row mt-5">
             <div class="col-sm-12 col-md-4">
@@ -35,10 +35,15 @@
         </div>
         <div class="row">
             <div class="col col-2">
-                <button type="submit" class="btn btn-success"><i class="fa fa-pen mr-2"></i>Create</button>
+                <button type="submit" class="btn btn-success" id="submit-button"><i class="fa fa-pen mr-2"></i>Create</button>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12" id="msgs">
 
+            </div>
+        </div>
+        <a href="/ui/models/page/1" id="back" style="display: none"></a>
     </form>
 </div>
 <div th:insert="fragments/style :: scripts"></div>

@@ -16,3 +16,37 @@ $(document).ready(function() {
         sendAjaxRequest();
     });
 });
+
+$(function () {
+    $('#submit-button').click(function (e) {        
+        e.preventDefault();
+
+        let formData = new FormData(ajaxform);
+        let object = {};
+        formData.forEach(function(value, key){
+            object[key] = value;
+        });
+        let json = JSON.stringify(object);
+        console.log(json);
+        let endpoint = document.getElementById('ajaxform').getAttribute('action');
+        let method = document.getElementById('ajaxform').getAttribute('ajaxmethod');
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, endpoint);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(json);
+        xhr.onload = function() {
+            if (xhr.status != 200) {
+                let msg = JSON.parse(xhr.response).detailedMessage;
+                $('#msgs').html("<div class='alert alert-danger'>"+"Error! "+ msg +"</div>");
+            } else {
+                $('#msgs').html("<div class='alert alert-success'> Done: "+xhr.response+"</div>");
+                function redirect() {
+                    let link = document.getElementById('back').getAttribute('href');
+                    window.location.href = link;
+                }
+                setTimeout(redirect, 1000);
+            }
+        }
+        
+    })
+});

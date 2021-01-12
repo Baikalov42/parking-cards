@@ -8,8 +8,8 @@
 <div class="container">
     <div th:insert="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/ui/cars}"
-          th:object="${carCreateRequest}" th:method="post" class="form-size" id="newcarform">
+    <form th:action="@{/api/cars}"
+          th:object="${carCreateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="post">
 
         <div class="row mt-5">
             <div class="col-sm-12 col-md-3">
@@ -64,10 +64,9 @@
 
             </div>
         </div>
+        <a href="/ui/cars/page/1" id="back" style="display: none"></a>
     </form>
 </div>
 <div th:insert="fragments/style :: scripts"></div>
-<script type="text/javascript" th:src="@{/js/ajax.js}"></script>
-<script type="text/javascript" th:src="@{/js/car-ajax.js}"></script>
 </body>
 </html>

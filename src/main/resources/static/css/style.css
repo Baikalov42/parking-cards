@@ -12,3 +12,19 @@ font-weight: 200 !important;
 .alert {
     margin-top: 0.5em;
 }
+.alert-danger {
+    background-color: white;
+    border-color: crimson;
+    color: crimson;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+}
+.alert-success {
+    background-color: white;
+    border-color: green;
+    color: green;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+}
