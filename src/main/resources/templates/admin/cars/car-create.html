@@ -33,13 +33,10 @@
                     </select>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-3" style="visibility: hidden;">
+            <div class="col-sm-12 col-md-3" style="display:none" id="model-select">
                 <div class="form-group">
-                    <label id="model-label">Model</label>
+                    <label>Model</label>
                     <select th:field="*{modelId}" class="form-control" id="model">
-                        <!--                        <option th:each="entry : ${modelModelsMap.entrySet()}"-->
-                        <!--                        th:value="${entry.key}"-->
-                        <!--                        th:utext="${entry.value}"></option>-->
                     </select>
                 </div>
             </div>

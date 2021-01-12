@@ -6,8 +6,7 @@ function sendAjaxRequest() {
             var option = "<option value = " + key + ">" + value +  "</option>";
             $("#model").append(option);
         }
-        $("#model").addClass("vis");
-        $("#model-label").addClass("vis");
+        $("#model-select").show();
         $("#placeholder").remove();
     });
 };
