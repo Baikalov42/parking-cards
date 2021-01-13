@@ -23,6 +23,7 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/ui/models")
+@SecuredForAdmin
 public class ModelController {
 
     public static final String MESSAGE_VIEW = "success-message-page";
@@ -48,7 +49,6 @@ public class ModelController {
         return MESSAGE_VIEW;
     }
 
-    @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public String getAll(@PathVariable int pageNumber, Model model) {
         pageNumber--;
@@ -64,7 +64,6 @@ public class ModelController {
         return "admin/models/models-list";
     }
 
-    @SecuredForAdmin
     @GetMapping("/update-page/{id}")
     public String toUpdatePage(@PathVariable long id, Model model) {
 
@@ -77,7 +76,6 @@ public class ModelController {
         return "admin/models/model-edit";
     }
 
-    @SecuredForAdmin
     @PostMapping("/edit")
     public String update(@Valid ModelUpdateRequest request, Model model) {
 
@@ -86,7 +84,6 @@ public class ModelController {
         return "success-message-page";
     }
 
-    @SecuredForAdmin
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable long id, Model model) {
 

@@ -26,6 +26,7 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/ui/cars")
+@SecuredForAdmin
 public class CarController {
 
     public static final String MESSAGE_VIEW = "success-message-page";
@@ -58,7 +59,6 @@ public class CarController {
         return MESSAGE_VIEW;
     }
 
-    @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public String getAll(@PathVariable int pageNumber, Model model) {
         pageNumber--;
@@ -74,7 +74,6 @@ public class CarController {
         return "admin/cars/cars-list";
     }
 
-    @SecuredForAdmin
     @GetMapping("/by-user/{userId}")
     public String getByUserId(@PathVariable long userId, Model model) {
 
@@ -87,7 +86,6 @@ public class CarController {
         return "admin/cars/cars-by-user";
     }
 
-    @SecuredForAdmin
     @GetMapping("/update-page/{id}")
     public String toUpdatePage(@PathVariable long id, Model model) {
 
@@ -103,7 +101,6 @@ public class CarController {
         return "admin/cars/car-edit";
     }
 
-    @SecuredForAdmin
     @PostMapping("/edit")
     public String update(@Valid CarUpdateRequest request, Model model) {
 
@@ -112,7 +109,6 @@ public class CarController {
         return MESSAGE_VIEW;
     }
 
-    @SecuredForAdmin
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable long id, Model model) {
 

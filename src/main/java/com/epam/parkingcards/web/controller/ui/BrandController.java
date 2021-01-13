@@ -22,6 +22,7 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/ui/brands")
+@SecuredForAdmin
 public class BrandController {
 
     public static final String MESSAGE_VIEW = "success-message-page";
@@ -44,7 +45,6 @@ public class BrandController {
         return MESSAGE_VIEW;
     }
 
-    @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public String getAll(@Valid @PathVariable int pageNumber, Model model) {
         pageNumber--;
@@ -60,7 +60,6 @@ public class BrandController {
         return "admin/brands/brands-list";
     }
 
-    @SecuredForAdmin
     @GetMapping("/update-page/{id}")
     public String toUpdatePage(@PathVariable long id, Model model) {
 
@@ -72,7 +71,7 @@ public class BrandController {
         return "admin/brands/brand-edit";
     }
 
-    @SecuredForAdmin
+
     @PostMapping("/edit")
     public String update(@Valid BrandUpdateRequest request, Model model) {
 
@@ -81,7 +80,6 @@ public class BrandController {
         return MESSAGE_VIEW;
     }
 
-    @SecuredForAdmin
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable long id, Model model) {
 
