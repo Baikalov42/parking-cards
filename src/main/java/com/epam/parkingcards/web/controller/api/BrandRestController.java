@@ -92,9 +92,9 @@ public class BrandRestController {
      * Restore brand from deleted
      */
     @SecuredForAdmin
-    @PutMapping("/restore")
-    public void restore(long id) {
-        brandService.restore(id);
+    @PutMapping("/restore/{brandId}}")
+    public void restore(@PathVariable long brandId) {
+        brandService.restore(brandId);
     }
 
     /**

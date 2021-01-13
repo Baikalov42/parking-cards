@@ -115,8 +115,8 @@ public class ModelRestController {
      * Restore model from deleted
      */
     @SecuredForAdmin
-    @PutMapping("/restore")
-    public void restore(long id) {
-        modelService.restore(id);
+    @PutMapping("/restore/{modelId}")
+    public void restore(@PathVariable long modelId) {
+        modelService.restore(modelId);
     }
 }
