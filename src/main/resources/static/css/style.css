@@ -28,3 +28,6 @@ font-weight: 200 !important;
     border-width: 1px;
     border-radius: 5px;
 }
+.navbar {
+    background-color: #d8ebfc;
+}
