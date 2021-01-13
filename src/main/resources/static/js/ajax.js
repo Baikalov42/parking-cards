@@ -62,9 +62,9 @@ $(function () {
         xhr.onload = function() {
             if (xhr.status != 200) {
                 let msg = JSON.parse(xhr.response).detailedMessage;
-                row.innerHTML = "<p style='color: red'>"+"Error! "+ msg +"</p>";
+                row.innerHTML = "<div class='alert alert-danger'>"+"Error! "+ msg +"</div>";
             } else {
-                row.innerHTML = "<p style='color: green'>Deleted!</p>";
+                row.innerHTML = "<div class='alert alert-success text-center'>Deleted!</div>";
             }
         }
     });
