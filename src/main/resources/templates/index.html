@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Index</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <div class="card-body">
+        <h5 class="card-title">Welcome to "Parking-cards" application</h5>
+        <p class="card-text">
+            Some welcome text or description, welcome text or description. Some welcome,
+            text or description. One more welcome test. Some welcome text or description, welcome text or description.
+            Some welcome,
+            text or description. One more welcome test.Some welcome text or description, welcome text or description.
+            Some welcome,
+            text or description. One more welcome test.
+        </p>
+
+        <a sec:authorize="isAnonymous()"
+           th:href="@{~/login}"
+           class="btn btn-primary">Login</a>
+
+        <a sec:authorize="isAnonymous()"
+           th:href="@{~/ui/users/create-page}"
+           class="btn btn-success">Register</a>
+
+    </div>
+
+    <div th:insert="fragments/style :: scripts"></div>
+</div>
+</body>
+</html>

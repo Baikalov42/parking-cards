@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>User edit page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/api/users/}"
+          th:object="${userUpdateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="put">
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input th:name="firstName"
+                           th:value="${userEntity.firstName}"
+                           type="text"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input th:name="lastName"
+                           th:value="${userEntity.lastName}"
+                           type="text"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input th:name="email"
+                           th:value="${userEntity.email}"
+                           type="text"
+                           class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-12 col-md-3">
+                <div class="form-group">
+                    <label >Phone number</label>
+                    <input th:name="phone"
+                           th:value="${userEntity.phone}"
+                           type="text"
+                           class="form-control">
+                </div>
+            </div>
+        </div>
+        <div hidden="hidden">
+            <input type="number"
+                   th:name="id"
+                   th:value="${userEntity.id}">
+        </div>
+        <div class="row">
+            <div class="col col-2">
+                <button type="submit" class="btn btn-success" id="submit-button"><i class="fa fa-pen mr-2"></i>Submit</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12" id="msgs">
+
+            </div>
+        </div>
+        <a href="/ui/users/page/1" id="back" style="display: none"></a>
+    </form>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

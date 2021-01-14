@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>User card</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Cars count</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${me.firstName}">first name</td>
+            <td th:text="${me.lastName}">last name</td>
+            <td th:text="${me.email}">email</td>
+            <td th:text="${me.phone}">phone</td>
+            <td th:text="${me.carEntities.size()}">cars count</td>
+
+            <td><a th:href="@{~/ui/me/update-page}"
+                   class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit user</a></td>
+
+            <td><a th:href="@{~/ui/me/cars}"
+                   class="btn btn-info"><i class="fa fa-car-side mr-2"></i>Edit cars</a></td>
+
+            <td><a th:href="@{~/ui/me/create-car}"
+                   class="btn btn-warning"><i class="fa fa-cart-arrow-down mr-2"></i>Add car</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

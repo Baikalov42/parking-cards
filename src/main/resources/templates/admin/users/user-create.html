@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>User create page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/register}"
+          th:object="${userCreateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="post">
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input th:field="*{firstName}"
+                           type="text"
+                           id="firstName"
+                           class="form-control"
+                           placeholder="Ivan">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input th:field="*{lastName}"
+                           type="text"
+                           id="lastName"
+                           class="form-control"
+                           placeholder="Ivanov">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input th:field="*{email}"
+                           type="text"
+                           id="email"
+                           class="form-control"
+                           placeholder="ivan@example.com">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="phone">Phone number</label>
+                    <input th:field="*{phone}"
+                           type="text"
+                           id="phone"
+                           class="form-control"
+                           placeholder="+70005559966">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input th:field="*{password}"
+                           type="password"
+                           id="password"
+                           class="form-control"
+                           placeholder="password">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label for="confirmPassword">Password confirm</label>
+                    <input th:field="*{confirmPassword}"
+                           type="password"
+                           id="confirmPassword"
+                           class="form-control"
+                           placeholder="password again">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-2">
+                <button type="submit" class="btn btn-success" id="submit-button"><i class="fa fa-pen mr-2"></i>Register</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12" id="msgs">
+
+            </div>
+        </div>
+        <a href="/" id="back" style="display: none"></a>
+    </form>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

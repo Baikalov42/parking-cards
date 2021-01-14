@@ -39,14 +39,14 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/**")
                 .authenticated()
-//                .antMatchers("/me/**").hasAnyRole("user", "admin")
-//                .antMatchers("/my-page/{id}/**").access("@userSecurity.hasUserId(authentication, #id)")
-//                .antMatchers("/admin/**").hasRole("admin")
                 .antMatchers("/index/**").permitAll()
                 .antMatchers("/register/**").permitAll()
                 .and()
                 .httpBasic()
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("email")
+                .permitAll();
     }
 }

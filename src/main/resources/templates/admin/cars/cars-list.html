@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Cars page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 add">
+            <a href="/ui/cars/create-page" class="btn btn-outline-info"><i class="fas fa-plus"></i> Add car</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>License Plate</th>
+            <th>Owner</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="current : ${cars}" th:id="${current.id}">
+            <td th:text="${current.modelEntity.brandEntity.name}">brand name</td>
+            <td th:text="${current.modelEntity.name}">model name</td>
+            <td th:text="${current.licensePlate}">license plate</td>
+            <td th:text="${current.userEntity.lastName + ' ' + current.userEntity.firstName }">model name</td>
+
+            <td><a th:href="@{~/ui/cars/update-page/{id}(id = ${current.id})}"
+                   class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
+
+            <td><a th:href="@{~/api/cars/{id} (id = ${current.id})}"
+                   class="btn btn-danger delete" th:itemid="${current.id}"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example" th:if="${cars.totalPages > 0}">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${cars.number < 1} ? disabled">
+                <a class="page-link" th:href="@{~/ui/cars/page/{page}(page = ${cars.number})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber==cars.number + 1} ? active">
+                <a th:href="@{~/ui/cars/page/{page}(page = ${pageNumber})}"
+                   th:text="${pageNumber}" class="page-link"></a>
+            </li>
+            <li class="page-item" th:classappend="${cars.number > cars.totalPages - 2} ? disabled">
+                <a class="page-link" th:href="@{~/ui/cars/page/{page}(page = ${cars.number + 2})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

@@ -18,6 +18,9 @@ public interface ModelDao extends JpaRepository<ModelEntity, Long> {
     @Query("SELECT m FROM ModelEntity m WHERE m.brandEntity.id = :brandId AND m.isDeleted = false")
     Page<ModelEntity> findByBrandId(long brandId, Pageable pageable);
 
+    @Query("SELECT m FROM ModelEntity m WHERE m.brandEntity.id = :brandId AND m.isDeleted = false")
+    List<ModelEntity> findByBrandId(long brandId);
+
     @Query("SELECT COUNT (m) FROM ModelEntity m WHERE m.name = :modelName AND m.isDeleted = true")
     Long getCountDeletedByName(String modelName);
 
@@ -32,6 +35,8 @@ public interface ModelDao extends JpaRepository<ModelEntity, Long> {
     void restore(long modelId);
 
     Page<ModelEntity> findByIsDeletedFalse(Pageable pageable);
+
+    List<ModelEntity> findByIsDeletedFalse();
 
     @Query("SELECT m FROM ModelEntity m WHERE LOWER(m.name) LIKE %:keyword%")
     List<ModelEntity> findByKeyword(String keyword);

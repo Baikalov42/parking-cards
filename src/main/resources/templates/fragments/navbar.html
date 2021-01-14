@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Navbar</title>
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light mt-5">
+    <a class="navbar-brand mb-0 h1" th:href="@{/ui/index}"><img th:src="@{/img/logo-training.png}" width="120" alt="Parking-cards"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav nav-tabs">
+            <li class="nav-item">
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/users/page/1}" class="nav-link">Users</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/cars/page/1}" class="nav-link">Cars <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/models/page/1}" class="nav-link">Models</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('admin')" th:href="@{/ui/brands/page/1}" class="nav-link">Brands</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="isAuthenticated() && !hasRole('admin')" th:href="@{/ui/me}" class="nav-link">My
+                    card</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div sec:authorize="isAnonymous()" th:text="'You are guest'"></div>
+    <a sec:authorize="isAnonymous()" th:href="@{~/login}" class="nav-item nav-link">Login</a>
+
+    <div sec:authorize="!isAnonymous()" sec:authentication="name"></div>
+    <a sec:authorize="!isAnonymous()" th:href="@{~/logout}" class="nav-item nav-link">Logout</a>
+
+</nav>
+</body>
+</html>

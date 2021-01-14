@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Success page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Success!</h4>
+        <p th:text="${message}"></p>
+    </div>
+
+    <div th:insert="fragments/style :: scripts"></div>
+</div>
+</body>
+</html>

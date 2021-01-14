@@ -10,6 +10,7 @@ import com.epam.parkingcards.model.UserEntity;
 import com.epam.parkingcards.service.utils.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,8 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -31,8 +34,6 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private RoleDao roleDao;
-    @Autowired
-    private IdValidator idValidator;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -49,9 +50,9 @@ public class UserService {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #id)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserId(authentication, #id)")
     public UserEntity findById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         return userDao.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
     }
@@ -67,18 +68,28 @@ public class UserService {
 
     public UserEntity findByLicensePlate(String licensePlate) {
         return userDao.findByLicensePlate(licensePlate)
-                .orElseThrow(() -> new NotFoundException(String.format("By license plate %s, User not found", licensePlate)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("By license plate %s, User not found", licensePlate)));
     }
 
-    public List<UserEntity> findAll(int pageNumber) {
+    public Page<UserEntity> findAll(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, "id");
-        List<UserEntity> result = userDao.findAll(pageable).getContent();
+        Page<UserEntity> result = userDao.findAll(pageable);
 
         if (result.isEmpty()) {
             throw new NotFoundException(
                     String.format("Result is empty, page number = %d, page size = %d", pageNumber, PAGE_SIZE));
         }
         return result;
+    }
+
+    public Map<Long, String> getUsersMap() {
+        Map<Long, String> usersMap = new HashMap<>();
+        for (UserEntity userEntity : userDao.findAll()) {
+            usersMap.put(userEntity.getId(),
+                    String.format("%s %s", userEntity.getFirstName(), userEntity.getLastName()));
+        }
+        return usersMap;
     }
 
     public List<UserEntity> findByKeyword(String keyword) {
@@ -91,10 +102,10 @@ public class UserService {
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.hasUserId(authentication, #userEntity.id)")
+    @PreAuthorize("hasAuthority('ROLE_admin') or @userSecurity.sameUserId(authentication, #userEntity.id)")
     public UserEntity update(UserEntity userEntity) {
 
-        idValidator.validate(userEntity.getId());
+        IdValidator.validate(userEntity.getId());
         validateForExistence(userEntity.getId());
 
         try {
@@ -105,19 +116,19 @@ public class UserService {
     }
 
     public void deleteById(long id) {
-        idValidator.validate(id);
+        IdValidator.validate(id);
         validateForExistence(id);
 
         try {
             userDao.deleteById(id);
         } catch (DataAccessException e) {
-            throw new DaoException(String.format("Deleting error: id=%d ", id), e);
+            throw new DaoException(String.format("Deleting error: user id=%d ", id), e);
         }
     }
 
     private Set<RoleEntity> getDefaultRoles() {
-        RoleEntity roleEntityUser = roleDao.findByName("ROLE_user").orElseThrow(
-                () -> new NotFoundException("Role not found"));
+        RoleEntity roleEntityUser = roleDao.findByName("ROLE_user")
+                .orElseThrow(() -> new NotFoundException("Role not found"));
 
         Set<RoleEntity> roleEntities = new HashSet<>();
         roleEntities.add(roleEntityUser);

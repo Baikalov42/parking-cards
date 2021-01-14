@@ -16,28 +16,28 @@ public class UserRegistrationRequest {
     public static final String NAME_PATTERN = "[A-Za-z]{2,30}";
     public static final String PHONE_PATTERN = "[+][0-9]{11}";
 
-    @NotEmpty(message = "Name field must not be empty")
-    @Pattern(regexp = NAME_PATTERN, message = "Only latin letters")
-    @Size(min = 2, max = 30, message = "Use 2 to 30 characters")
+    @NotEmpty(message = "First name, must not be empty.")
+    @Pattern(regexp = NAME_PATTERN, message = "First name must contains, only latin letters.")
+    @Size(min = 2, max = 30, message = "For first name, use 2 to 30 characters.")
     private String firstName;
 
-    @NotEmpty(message = "Last name field must not be empty")
-    @Pattern(regexp = NAME_PATTERN, message = "Only latin letters")
-    @Size(min = 2, max = 30, message = "Use 2 to 30 characters")
+    @NotEmpty(message = "Last name, must not be empty.")
+    @Pattern(regexp = NAME_PATTERN, message = "Last name must contains, only latin letters.")
+    @Size(min = 2, max = 30, message = "Use 2 to 30 characters.")
     private String lastName;
 
-    @NotEmpty(message = "Phone number field must not be empty")
-    @Size(min = 12, max = 12, message = "Must be 12 symbols.")
-    @Pattern(regexp = PHONE_PATTERN, message = "Use only numbers, example : '+79880056400")
+    @NotEmpty(message = "Phone, must not be empty.")
+    @Size(min = 12, max = 12, message = "Phone, must be 12 symbols.")
+    @Pattern(regexp = PHONE_PATTERN, message = "Phone, must contains, only + and numbers.")
     private String phone;
 
-    @Email(message = "Must be in email format")
-    @NotEmpty(message = "Model id must not be empty")
+    @Email(message = "E-mail, must be right format.")
+    @NotEmpty(message = "E-mail, must not be empty.")
     private String email;
 
     @NotNull
-    @NotEmpty(message = "Password must not be empty")
-    @Size(min = 4, message = "At least 4 symbols")
+    @NotEmpty(message = "Password, must not be empty.")
+    @Size(min = 4, message = "Password, min size 4 symbols.")
     private String password;
 
     private String confirmPassword;

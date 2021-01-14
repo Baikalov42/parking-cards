@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Brand edit page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/api/brands/}"
+          th:object="${brandUpdateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="put">
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label>Brand name</label>
+                    <input th:name="name"
+                           th:value="${brandEntity.name}"
+                           type="text"
+                           class="form-control">
+                </div>
+            </div>
+        </div>
+        <div hidden="hidden">
+            <input type="number"
+                   th:name="id"
+                   th:value="${brandEntity.id}">
+        </div>
+        <div class="row">
+            <div class="col col-2">
+                <button type="submit" class="btn btn-success"id="submit-button"><i class="fa fa-pen mr-2"></i>Submit</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12" id="msgs">
+
+            </div>
+        </div>
+        <a href="/ui/brands/page/1" id="back" style="display: none"></a>
+    </form>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

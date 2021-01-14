@@ -8,14 +8,24 @@ import com.epam.parkingcards.web.response.BrandResponse;
 import com.epam.parkingcards.model.BrandEntity;
 import com.epam.parkingcards.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/brands")
-public class BrandController {
+public class BrandRestController {
 
     @Autowired
     private BrandService brandService;
@@ -27,9 +37,10 @@ public class BrandController {
      */
     @SecuredForAdmin
     @PostMapping()
-    public String create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
+    public ResponseEntity<String> create(@RequestBody @Valid BrandCreateRequest brandCreateRequest) {
+
         long id = brandService.create(brandMapper.toBrand(brandCreateRequest));
-        return "Success, brand id = " + id;
+        return new ResponseEntity<>("Success, new brand id = " + id, HttpStatus.OK);
     }
 
     /**
@@ -47,7 +58,7 @@ public class BrandController {
      */
     @GetMapping("/page/{pageNumber}")
     public List<BrandResponse> getAllActive(@PathVariable int pageNumber) {
-        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber));
+        return brandMapper.toBrandResponses(brandService.findAllActive(pageNumber).getContent());
     }
 
     /**
@@ -81,9 +92,9 @@ public class BrandController {
      * Restore brand from deleted
      */
     @SecuredForAdmin
-    @PutMapping("/restore")
-    public void restore(long id){
-        brandService.restore(id);
+    @PutMapping("/restore/{brandId}}")
+    public void restore(@PathVariable long brandId) {
+        brandService.restore(brandId);
     }
 
     /**

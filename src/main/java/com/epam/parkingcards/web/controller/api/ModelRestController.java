@@ -8,14 +8,23 @@ import com.epam.parkingcards.web.response.ModelResponse;
 import com.epam.parkingcards.model.ModelEntity;
 import com.epam.parkingcards.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/models")
-public class ModelController {
+public class ModelRestController {
 
     @Autowired
     private ModelService modelService;
@@ -29,7 +38,7 @@ public class ModelController {
     @PostMapping()
     public String create(@RequestBody @Valid ModelCreateRequest modelCreateRequest) {
         long id = modelService.create(modelMapper.toModel(modelCreateRequest));
-        return "Success, model id = " + id;
+        return "Success, new model id = " + id;
     }
 
     /**
@@ -46,7 +55,7 @@ public class ModelController {
      */
     @GetMapping("/page/{pageNumber}")
     public List<ModelResponse> getAllActive(@PathVariable int pageNumber) {
-        return modelMapper.toModelResponses(modelService.findAllActive(pageNumber));
+        return modelMapper.toModelResponses(modelService.findAllActive(pageNumber).getContent());
     }
 
     /**
@@ -57,6 +66,11 @@ public class ModelController {
 
         List<ModelEntity> modelEntity = modelService.findAllByBrand(brandId, pageNumber);
         return modelMapper.toModelResponses(modelEntity);
+    }
+
+    @GetMapping("/get-by-brand/{brandId}")
+    public Map<Long, String> getModelsMapByBrandId(@PathVariable long brandId) {
+        return modelService.getModelsMapByBrandId(brandId);
     }
 
     /**
@@ -101,8 +115,8 @@ public class ModelController {
      * Restore model from deleted
      */
     @SecuredForAdmin
-    @PutMapping("/restore")
-    public void restore(long id){
-        modelService.restore(id);
+    @PutMapping("/restore/{modelId}")
+    public void restore(@PathVariable long modelId) {
+        modelService.restore(modelId);
     }
 }

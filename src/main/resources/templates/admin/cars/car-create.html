@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Car create page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+
+    <form th:action="@{/api/cars}"
+          th:object="${carCreateRequest}" th:method="post" class="form-size" id="ajaxform" ajaxmethod="post">
+
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label for="licensePlate">License plate</label>
+                    <input th:field="*{licensePlate}"
+                           type="text"
+                           id="licensePlate"
+                           class="form-control"
+                           placeholder="A123AA123">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label>Brand</label>
+                    <select class="form-control" id="brand">
+                        <option id="placeholder">--</option>
+                        <option th:each="entry : ${modelBrandsMap.entrySet()}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3" style="display:none" id="model-select">
+                <div class="form-group">
+                    <label>Model</label>
+                    <select th:field="*{modelId}" class="form-control" id="model">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    <label for="user">User</label>
+                    <select th:field="*{userId}" class="form-control" id="user">
+                        <option th:each="entry : ${modelUsersMap.entrySet()}"
+                                th:value="${entry.key}"
+                                th:utext="${entry.value}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-2">
+                <button type="submit" class="btn btn-success" id="submit-button"><i class="fa fa-pen mr-2"></i>Create</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12" id="msgs">
+
+            </div>
+        </div>
+        <a href="/ui/cars/page/1" id="back" style="display: none"></a>
+    </form>
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

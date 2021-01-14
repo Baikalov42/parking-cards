@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/style :: style"></div>
+    <title>Models page</title>
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/navbar :: navbar"></div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 add">
+            <a href="/ui/models/create-page" class="btn btn-outline-info"><i class="fas fa-plus"></i>  Add model</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Model</th>
+            <th>Brand</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="current : ${models}" th:id="${current.id}">
+            <td th:text="${current.name}">model name</td>
+            <td th:text="${current.brandEntity.name}">brand name</td>
+
+
+            <td><a th:href="@{~/ui/models/update-page/{id}(id = ${current.id})}"
+                   class="btn btn-success"><i class="fa fa-pen mr-2"></i>Edit</a></td>
+
+            <td><a th:href="@{~/api/models/{id} (id = ${current.id})}"
+                   class="btn btn-danger delete" th:itemid="${current.id}"><i class="fa fa-trash-alt mr-2"></i>Delete</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example" th:if="${models.totalPages > 0}">
+        <ul class="pagination">
+            <li class="page-item"  th:classappend="${models.number < 1} ? disabled">
+                <a class="page-link" th:href="@{~/ui/models/page/{page}(page = ${models.number})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber==models.number + 1} ? active" >
+                <a th:href="@{~/ui/models/page/{page}(page = ${pageNumber})}"
+                   th:text="${pageNumber}" class="page-link"></a>
+            </li>
+            <li class="page-item" th:classappend="${models.number > models.totalPages - 2} ? disabled">
+                <a class="page-link" th:href="@{~/ui/models/page/{page}(page = ${models.number + 2})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+<div th:insert="fragments/style :: scripts"></div>
+</body>
+</html>

@@ -8,14 +8,24 @@ import com.epam.parkingcards.web.response.CarResponse;
 import com.epam.parkingcards.model.CarEntity;
 import com.epam.parkingcards.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/cars")
-public class CarController {
+public class CarRestController {
 
     @Autowired
     private CarService carService;
@@ -26,9 +36,9 @@ public class CarController {
      * Create car and add to user
      */
     @PostMapping
-    public String create(@RequestBody @Valid CarCreateRequest carCreateRequest) {
+    public ResponseEntity<String> create(@RequestBody @Valid CarCreateRequest carCreateRequest) {
         long id = carService.create(carMapper.toCar(carCreateRequest));
-        return "Success, car id = " + id;
+        return new ResponseEntity<>("Success, new car id = " + id, HttpStatus.OK);
     }
 
     /**
@@ -46,14 +56,14 @@ public class CarController {
     @SecuredForAdmin
     @GetMapping("/page/{pageNumber}")
     public List<CarResponse> getAll(@Valid @PathVariable int pageNumber) {
-        return carMapper.toCarResponses(carService.findAll(pageNumber));
+        return carMapper.toCarResponses(carService.findAll(pageNumber).getContent());
     }
 
     /**
      * Get users cars
      */
     @GetMapping("/by-user-id/{userId}")
-    public List<CarResponse> getByUserId(@PathVariable long userId){
+    public List<CarResponse> getByUserId(@PathVariable long userId) {
         return carMapper.toCarResponses(carService.findByUserId(userId));
     }
 
