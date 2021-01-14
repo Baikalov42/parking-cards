@@ -83,7 +83,7 @@ class RegistrationRestControllerTest {
         Mockito.when(roleDao.findByName("ROLE_user")).thenReturn(java.util.Optional.of(role));
         Mockito.when(userDao.save(userEntityToDb)).thenReturn(userEntityFromDb);
 
-        mockMvc.perform(post("/api/register")
+        mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(freshUser))
                 .accept(MediaType.APPLICATION_JSON))
@@ -101,7 +101,7 @@ class RegistrationRestControllerTest {
         freshUser.setPassword("pass1word");
         freshUser.setConfirmPassword("password");
 
-        mockMvc.perform(post("/api/register")
+        mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(freshUser))
                 .accept(MediaType.APPLICATION_JSON))
@@ -121,7 +121,7 @@ class RegistrationRestControllerTest {
         Mockito.when(passwordEncoder.encode("password")).thenReturn("password");
         Mockito.when(roleDao.findByName("ROLE_user")).thenThrow(new NotFoundException("Role not found"));
 
-        mockMvc.perform(post("/api/register")
+        mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(freshUser))
                 .accept(MediaType.APPLICATION_JSON))

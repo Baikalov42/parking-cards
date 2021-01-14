@@ -240,7 +240,6 @@ class CarRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-    //TODO исправить метод проверки user id
     @Test
     @WithMockUser(roles = "admin")
     void getByUserId_ShouldReturnStatus_204_WhenUserIdNotExist() throws Exception {

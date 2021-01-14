@@ -171,7 +171,6 @@ class BrandRestControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    //TODO какие коды возвращает Spring при ошибках валидации и какие должен?
     @Test
     @WithMockUser(roles = "admin")
     void getById_ShouldReturnStatus_400_WhenInputId_NotValid() throws Exception {

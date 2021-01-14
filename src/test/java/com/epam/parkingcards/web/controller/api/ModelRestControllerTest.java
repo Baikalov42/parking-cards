@@ -253,7 +253,6 @@ class ModelRestControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    //TODO исправить метод проверки brand id
     @Test
     @WithMockUser(roles = "admin")
     void getByBrand_ShouldReturnStatus_204_WhenBrandIdNotExist() throws Exception {

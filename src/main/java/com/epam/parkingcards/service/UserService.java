@@ -57,7 +57,6 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(String.format("By id %d, User not found", id)));
     }
 
-    //todo неиспользуемый метод?
     public long getIdByEmail(String email) {
         return this.findByEmail(email).getId();
     }
